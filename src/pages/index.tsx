@@ -4,12 +4,12 @@ import { Topbar } from "../components/topbar";
 export function Home() {
   return (
     <div>
-      {/* <Topbar /> */}
-      <div className="bg-background">
-        <div className="grid lg:grid-cols-5">
-          <MainSideBar />
+      <Topbar pathname="/" />
+      {/* <div className="bg-background">
+        <div className="grid grid-cols-6">
+          <MainSideBar pathname="/" />
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
