@@ -10,7 +10,7 @@ export function App() {
                 <Route path="/" element={<NotFound />} />
                 <Route path="/members">
                     <Route path="" element={<Members />} />
-                    <Route path=":id" element={<MemberDetails />} />
+                    <Route path=":username" element={<MemberDetails />} />
                 </Route>
                 <Route path="/teams" element={<NotFound />} />
                 <Route path="/projects" element={<NotFound />} />

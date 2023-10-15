@@ -46,12 +46,7 @@ export function DeleteButton({
     );
 
     return (
-        <Button
-            size="sm"
-            variant="destructive"
-            className="cursor-pointer"
-            asChild
-        >
+        <Button size="sm" className="cursor-pointer" asChild>
             {to ? (
                 <Link to={to}>
                     <Content />

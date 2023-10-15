@@ -4,29 +4,38 @@ import { Member } from "../../adapters/member";
 import { useParams } from "react-router-dom";
 import { SectionHeader } from "../../components/section-header";
 import { DeleteButton } from "../../components/buttons";
+import { Separator } from "../../components/ui/separator";
+import { MemberForm } from "./details-form";
 
 export function MemberDetails() {
-    const { id } = useParams();
+    const { username } = useParams();
 
-    const [member, setMember] = useState<Member | null>(null);
+    const [member, setMember] = useState<Member>();
 
-    function getMember(id?: string) {
+    function getMember(username?: string) {
         fetch("/api/members.json")
             .then((res) => res.json())
             .then((res) => {
-                setMember(res.find((res: any) => res.id === id) || null);
+                setMember(
+                    res.find(
+                        (res: any) =>
+                            res.username === username?.replace("@", ""),
+                    ) || null,
+                );
             });
     }
 
     useEffect(() => {
         const controller = new AbortController();
 
-        getMember(id);
+        getMember(username);
 
         return () => {
             controller.abort();
         };
-    }, [id]);
+    });
+
+    if (!member) return <></>;
 
     return (
         <div>
@@ -44,15 +53,16 @@ export function MemberDetails() {
             </SectionHeader>
             <div className="bg-background">
                 <div className="p-6">
-                    <div className="">
-                        <div className="grid grid-cols-4">
-                            <div className="flex flex-col">
-                                {Array.from(new Array(8)).map((_, i) => (
-                                    <span key={i}>Item</span>
-                                ))}
-                            </div>
-                            <div className="col-span-3"></div>
+                    <div className="space-y-6">
+                        <div>
+                            <h3 className="text-lg font-medium">Edit Member</h3>
+                            <p className="text-sm text-muted-foreground">
+                                Some of this informations are public for other
+                                users
+                            </p>
                         </div>
+                        <Separator />
+                        <MemberForm member={member} />
                     </div>
                 </div>
             </div>

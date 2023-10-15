@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Topbar } from "../../components/topbar";
 import { Member, memberColumns } from "../../adapters/member";
-import { DataTable } from "../../components/ui/data-table";
+import { DataTable } from "../../components/ui/data-table/data-table";
 import { SectionHeader } from "../../components/section-header";
 import { Search } from "../../components/search";
 import { AddButton } from "../../components/buttons";
