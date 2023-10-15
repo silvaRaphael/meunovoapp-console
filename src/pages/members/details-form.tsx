@@ -15,7 +15,7 @@ import {
 } from "../../components/ui/form";
 import { Input } from "../../components/ui/input";
 import { Textarea } from "../../components/ui/textarea";
-import { toast } from "../../components/ui/toast/use-toast";
+import { useToast } from "../../components/ui/toast/use-toast";
 import { Member } from "../../adapters/member";
 import {
     Popover,
@@ -34,7 +34,12 @@ import {
 } from "../../components/ui/command";
 import { useEffect, useState } from "react";
 import { Role } from "../../adapters/roles";
-import { Card, CardContent } from "../../components/ui/card";
+import { Card, CardContent, CardHeader } from "../../components/ui/card";
+import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage,
+} from "../../components/ui/avatar";
 
 const memberFormSchema = z.object({
     username: z
@@ -92,13 +97,13 @@ export function MemberForm({ member }: { member: Member }) {
             email: member.email,
             role: member.role.id,
             bio: member.bio,
-            since: member.since,
+            since: new Date(member.since),
         },
         mode: "onChange",
     });
 
     function onSubmit(data: MemberFormValues) {
-        toast({
+        console.log({
             title: "You submitted the following values:",
             description: (
                 <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
@@ -129,8 +134,8 @@ export function MemberForm({ member }: { member: Member }) {
     });
 
     return (
-        <div className="grid grid-cols-3 gap-x-4">
-            <div className="col-span-2">
+        <div className="flex gap-x-4">
+            <div className="flex-grow">
                 <Form {...form}>
                     <form
                         onSubmit={form.handleSubmit(onSubmit)}
@@ -353,8 +358,38 @@ export function MemberForm({ member }: { member: Member }) {
                     </form>
                 </Form>
             </div>
-            <Card>
-                <CardContent></CardContent>
+            <Card className="w-[300px] h-min sticky top-56">
+                <CardHeader>
+                    <Avatar className="h-24 w-24 mx-auto">
+                        <AvatarImage
+                            src={member.avatar}
+                            alt={`@${member.username}`}
+                        />
+                        <AvatarFallback>
+                            {[member.name.charAt(0), member.lastName.charAt(0)]
+                                .join("")
+                                .toUpperCase()}
+                        </AvatarFallback>
+                    </Avatar>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                    <div className="flex flex-col space-y-1 items-center">
+                        <p className="text-sm text-center font-medium leading-none">
+                            @{member.username}
+                        </p>
+                        <p className="text-xs text-center leading-none text-muted-foreground">
+                            {member.email}
+                        </p>
+                    </div>
+                    <div className="flex flex-col space-y-1 items-center">
+                        <p className="text-sm text-center font-medium leading-none">
+                            {member.role.title}
+                        </p>
+                        <p className="text-xs text-center leading-none text-muted-foreground">
+                            {format(new Date(member.since), "PPP")}
+                        </p>
+                    </div>
+                </CardContent>
             </Card>
         </div>
     );
