@@ -6,6 +6,7 @@ import { Checkbox } from "../components/ui/checkbox";
 import { Button } from "../components/ui/button";
 import { Pencil, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { actions } from "../components/actions";
 
 export interface Member {
     id: string;
@@ -112,14 +113,8 @@ export const memberColumns: ColumnDef<Member>[] = [
         cell: ({ row }) => {
             return (
                 <div className="text-right">
-                    <Button variant="ghost" size="icon" asChild>
-                        <Link to={`/members/${row.original.id}`}>
-                            <Pencil size={16} />
-                        </Link>
-                    </Button>
-                    <Button variant="ghost" size="icon">
-                        <Trash2 size={16} />
-                    </Button>
+                    <actions.Edit to={`/members/${row.original.id}`} />
+                    <actions.Delete />
                 </div>
             );
         },
