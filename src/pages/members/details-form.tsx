@@ -15,7 +15,6 @@ import {
 } from "../../components/ui/form";
 import { Input } from "../../components/ui/input";
 import { Textarea } from "../../components/ui/textarea";
-import { useToast } from "../../components/ui/toast/use-toast";
 import { Member } from "../../adapters/member";
 import {
     Popover,
@@ -40,6 +39,7 @@ import {
     AvatarFallback,
     AvatarImage,
 } from "../../components/ui/avatar";
+import { useNavigate } from "react-router-dom";
 
 const memberFormSchema = z.object({
     username: z
@@ -86,6 +86,8 @@ const memberFormSchema = z.object({
 type MemberFormValues = z.infer<typeof memberFormSchema>;
 
 export function MemberForm({ member }: { member: Member }) {
+    const navigate = useNavigate();
+
     const [roles, setRoles] = useState<Role[]>([]);
 
     const form = useForm<MemberFormValues>({
@@ -105,14 +107,10 @@ export function MemberForm({ member }: { member: Member }) {
     function onSubmit(data: MemberFormValues) {
         console.log({
             title: "You submitted the following values:",
-            description: (
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">
-                        {JSON.stringify(data, null, 2)}
-                    </code>
-                </pre>
-            ),
+            data,
         });
+
+        navigate("/members");
     }
 
     function getRoles() {
