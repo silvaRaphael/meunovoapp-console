@@ -1,7 +1,24 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
+
+@layer utilities {
+  ::-webkit-scrollbar {
+    width: 0;
+  }
+  .horizontal-scrollbar::-webkit-scrollbar {
+    height: 2px;
+  }
+  .vertical-scrollbar::-webkit-scrollbar {
+    width: 2px;
+  }
+  
+  .horizontal-scrollbar::-webkit-scrollbar-thumb,
+  .vertical-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #e5e7eb;
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -65,10 +82,11 @@
     --ring: 24 5.7% 82.9%;
   }
 }
- 
+
 @layer base {
   * {
     @apply border-border;
+    box-sizing: border-box;
   }
   body {
     @apply bg-background text-foreground;

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { Topbar } from "../../components/topbar";
 import { Member, memberColumns } from "../../adapters/member";
 import { DataTable } from "../../components/ui/data-table/data-table";
 import { SectionHeader } from "../../components/section-header";
 import { Search } from "../../components/search";
 import { AddButton } from "../../components/buttons";
+import { Page } from "../../components/page";
 
 export function Members() {
     const [members, setMembers] = useState<Member[]>([]);
@@ -28,20 +28,19 @@ export function Members() {
     }, []);
 
     return (
-        <div>
-            <Topbar pathname="/members" />
-            <SectionHeader
-                title={`Members (${members.length})`}
-                pathname="/members"
-            >
-                <Search />
-                <AddButton />
-            </SectionHeader>
-            <div className="bg-background">
-                <div className="p-6">
-                    <DataTable columns={memberColumns} data={members} />
-                </div>
-            </div>
-        </div>
+        <Page
+            pathname="/members"
+            header={
+                <SectionHeader
+                    title={`Members (${members.length})`}
+                    pathname="/members"
+                >
+                    <Search />
+                    <AddButton />
+                </SectionHeader>
+            }
+        >
+            <DataTable columns={memberColumns} data={members} />
+        </Page>
     );
 }

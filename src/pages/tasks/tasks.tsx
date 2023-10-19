@@ -2,18 +2,18 @@ import { Page } from "../../components/page";
 import { Search } from "../../components/search";
 import { SectionHeader } from "../../components/section-header";
 
-export function Dashboard() {
+export function Tasks() {
     return (
         <Page
             pathname="/"
             header={
-                <SectionHeader title={`Dashboard`} pathname="/">
+                <SectionHeader title={`Tasks`} pathname="/tasks">
                     <Search />
                 </SectionHeader>
             }
         >
             <div className="flex justify-center items-center h-[500px]">
-                D A S H B O A R D
+                T A S K S
             </div>
         </Page>
     );

@@ -1,15 +1,17 @@
 export interface User {
-  username: string;
-  name: string;
-  lastName: string;
-  email: string;
-  avatar?: string;
+    username: string;
+    name: string;
+    lastName: string;
+    email: string;
+    genre?: "feminine" | "masculine";
+    avatar?: string;
 }
 
 export const user: User = {
-  username: "rsilva",
-  name: "raphael",
-  lastName: "silva",
-  email: "rsilva@email.com",
-  avatar: "https://ui.shadcn.com/avatars/02.png",
+    username: "rsilva",
+    name: "raphael",
+    lastName: "silva",
+    email: "rsilva@email.com",
+    genre: "masculine",
+    avatar: "https://ui.shadcn.com/avatars/02.png",
 };
