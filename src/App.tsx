@@ -19,7 +19,7 @@ export function App() {
                 <Route path="/teams" element={<Teams />} />
                 <Route path="/projects" element={<Projects />} />
                 <Route path="/tasks" element={<Tasks />} />
-                <Route path="" element={<NotFound />} />
+                <Route path="*" element={<NotFound />} />
             </Routes>
         </BrowserRouter>
     );
