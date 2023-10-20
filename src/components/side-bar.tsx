@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { sideMenu } from "../config/site";
-import { Code2, Hash, LogOutIcon } from "lucide-react";
+import { ChevronLeft, Container, Hash, LogOutIcon, Menu } from "lucide-react";
+import { Button } from "./ui/button";
 
 export const sideBarWidth = 200;
 
@@ -13,14 +14,17 @@ export function SideBar({ pathname }: { pathname: string }) {
             }}
         >
             <div className="flex flex-col h-full">
-                <div className="flex items-center px-4 border-b h-12 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+                <div className="flex justify-between items-center px-4 border-b h-12 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
                     <Link
                         to="/"
                         className="flex items-center text-sm font-medium"
                     >
-                        <Code2 className="me-1" size={18} />
+                        <Container className="me-1" size={18} />
                         MODULAR
                     </Link>
+                    <Button variant="ghost" size="sm" className="p-2">
+                        <ChevronLeft size={16} />
+                    </Button>
                 </div>
                 <nav
                     className="flex flex-col overflow-y-auto vertical-scrollbar"

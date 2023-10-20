@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Members } from "./pages/members/members";
 import { NotFound } from "./pages/not-found";
-import { MemberDetails } from "./pages/members/details";
+import { MemberDetails } from "./pages/members/details/details";
 import { Dashboard } from "./pages/dashboard/dashboard";
 import { Teams } from "./pages/teams/teams";
 import { Projects } from "./pages/projects/projects";

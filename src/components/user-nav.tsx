@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { user } from "../config/user";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
@@ -8,7 +9,6 @@ import {
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
-    DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 
@@ -46,24 +46,16 @@ export function UserNav() {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                    <DropdownMenuItem>
-                        Profile
-                        <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                    <DropdownMenuItem className="cursor-pointer" asChild>
+                        <Link to="/profile">Profile</Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
-                        Billing
-                        <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+                    <DropdownMenuItem className="cursor-pointer" asChild>
+                        <Link to="/settings">Settings</Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
-                        Settings
-                        <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>New Team</DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                    Log out
-                    <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+                <DropdownMenuItem className="cursor-pointer" asChild>
+                    <Link to="/logout">Log out</Link>
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

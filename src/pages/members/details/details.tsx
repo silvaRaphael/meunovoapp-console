@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { Topbar } from "../../components/top-bar";
-import { Member } from "../../adapters/member";
+import { Topbar } from "../../../components/top-bar";
+import { Member } from "../../../adapters/member";
 import { useParams } from "react-router-dom";
-import { SectionHeader } from "../../components/section-header";
-import { Separator } from "../../components/ui/separator";
+import { SectionHeader } from "../../../components/section-header";
+import { Separator } from "../../../components/ui/separator";
 import { MemberForm } from "./details-form";
-import { Button } from "../../components/ui/button";
-import { Page } from "../../components/page";
+import { Button } from "../../../components/ui/button";
+import { Page } from "../../../components/page";
 
 export function MemberDetails() {
     const { username } = useParams();

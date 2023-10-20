@@ -5,6 +5,7 @@ import { MenuItem, menuItems } from "../config/site";
 import { sideBarWidth } from "./side-bar";
 import { useEffect, useState } from "react";
 import { ThemeToggle } from "./theme-toggle";
+import { Notifications } from "./notifications";
 
 export function TopBar({ pathname }: { pathname: string }) {
     const navigate = useNavigate();
@@ -88,6 +89,7 @@ export function TopBar({ pathname }: { pathname: string }) {
             </nav>
             <div className="flex items-center justify-end space-x-2 ps-2 pe-4 border-l h-full">
                 <div className="flex items-center space-x-1">
+                    <Notifications />
                     <ThemeToggle />
                 </div>
                 <UserNav />
