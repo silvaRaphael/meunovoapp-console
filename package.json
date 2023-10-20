@@ -19,10 +19,8 @@
         "@radix-ui/react-tabs": "^1.0.4",
         "@radix-ui/react-toast": "^1.1.5",
         "@tanstack/react-table": "^8.10.7",
-        "@testing-library/jest-dom": "^5.17.0",
         "@testing-library/react": "^13.4.0",
         "@testing-library/user-event": "^13.5.0",
-        "@types/jest": "^27.5.2",
         "@types/node": "^16.18.58",
         "@types/react": "^18.2.25",
         "@types/react-dom": "^18.2.11",
@@ -48,14 +46,11 @@
     "scripts": {
         "start": "react-scripts start",
         "build": "react-scripts build",
-        "test": "react-scripts test",
-        "eject": "react-scripts eject",
         "populate": "npx tsx public/api/populate.ts"
     },
     "eslintConfig": {
         "extends": [
-            "react-app",
-            "react-app/jest"
+            "react-app"
         ]
     },
     "browserslist": {

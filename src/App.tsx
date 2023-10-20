@@ -10,7 +10,7 @@ import { ThemeProvider } from "./components/theme-provider";
 
 export function App() {
     return (
-        <ThemeProvider defaultTheme="dark" storageKey="modular-ui-theme">
+        <ThemeProvider defaultTheme="system" storageKey="modular-ui-theme">
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<Dashboard />} />

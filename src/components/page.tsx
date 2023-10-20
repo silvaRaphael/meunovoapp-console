@@ -1,7 +1,7 @@
-import { ReactElement, ReactNode } from "react";
+import { ReactElement, ReactNode, useState } from "react";
 import { SectionHeader } from "./section-header";
-import { SideBar, sideBarWidth } from "./side-bar";
-import { TopBar } from "./top-bar-new";
+import { SideBar, sideBarWidth, sideBarWidthCollapsed } from "./side-bar";
+import { TopBar } from "./top-bar";
 
 interface Props {
     pathname: string;
@@ -10,21 +10,40 @@ interface Props {
 }
 
 export function Page({ pathname, header, children }: Props) {
+    const [isOpen, setIsOpen] = useState<boolean>(
+        () => localStorage.getItem("side-bar-is-open") === "true",
+    );
+
+    function toggleSideBar() {
+        localStorage.setItem("side-bar-is-open", String(!isOpen));
+        setIsOpen(!isOpen);
+    }
+
     return (
-        <div className="flex">
-            <SideBar pathname={pathname} />
-            <div
-                className="min-h-screen"
-                style={{
-                    paddingLeft: sideBarWidth,
-                }}
-            >
-                <TopBar pathname={pathname} />
-                {header}
-                <div className="bg-background">
-                    <div className="p-6">{children}</div>
+        <>
+            <TopBar
+                pathname={pathname}
+                isOpen={isOpen}
+                toggleSideBar={toggleSideBar}
+            />
+            <div className="flex">
+                <SideBar
+                    pathname={pathname}
+                    isOpen={isOpen}
+                    toggleSideBar={toggleSideBar}
+                />
+                <div
+                    className="w-full max-h-screen "
+                    style={{
+                        paddingLeft: isOpen
+                            ? sideBarWidth
+                            : sideBarWidthCollapsed,
+                    }}
+                >
+                    {header}
+                    <div className="p-4">{children}</div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }

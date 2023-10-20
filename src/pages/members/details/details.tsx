@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Topbar } from "../../../components/top-bar";
 import { Member } from "../../../adapters/member";
 import { useParams } from "react-router-dom";
 import { SectionHeader } from "../../../components/section-header";

@@ -1,31 +1,29 @@
 import { Link } from "react-router-dom";
 import { sideMenu } from "../config/site";
-import { ChevronLeft, Container, Hash, LogOutIcon, Menu } from "lucide-react";
-import { Button } from "./ui/button";
+import { Hash, LogOutIcon } from "lucide-react";
+import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 
 export const sideBarWidth = 200;
+export const sideBarWidthCollapsed = 48;
 
-export function SideBar({ pathname }: { pathname: string }) {
+export function SideBar({
+    pathname,
+    toggleSideBar,
+    isOpen,
+}: {
+    pathname: string;
+    toggleSideBar: any;
+    isOpen: boolean;
+}) {
     return (
         <div
-            className="border-r fixed"
+            className="fixed bg-background z-50"
             style={{
-                width: `calc(${sideBarWidth}px)`,
+                width: isOpen ? sideBarWidth : sideBarWidthCollapsed,
+                height: "calc(100vh - 48px)",
             }}
         >
-            <div className="flex flex-col h-full">
-                <div className="flex justify-between items-center px-4 border-b h-12 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-                    <Link
-                        to="/"
-                        className="flex items-center text-sm font-medium"
-                    >
-                        <Container className="me-1" size={18} />
-                        MODULAR
-                    </Link>
-                    <Button variant="ghost" size="sm" className="p-2">
-                        <ChevronLeft size={16} />
-                    </Button>
-                </div>
+            <div className="flex flex-col h-full border-r">
                 <nav
                     className="flex flex-col overflow-y-auto vertical-scrollbar"
                     style={{
@@ -38,23 +36,35 @@ export function SideBar({ pathname }: { pathname: string }) {
                             key={i}
                         >
                             <div className="text-xs font-semibold px-4 py-3">
-                                {item.title}
+                                {isOpen ? (
+                                    item.title
+                                ) : (
+                                    <DotsHorizontalIcon width={14} />
+                                )}
                             </div>
                             <div className="px-4 space-y-2">
                                 {item.menu.map((item, i) => (
                                     <Link
                                         key={i}
                                         to={item.path}
-                                        className={`flex items-center text-sm font-medium transition-colors hover:text-primary ${
+                                        className={`flex items-center text-sm h-5 font-medium transition-colors hover:text-primary ${
                                             pathname !== item.path
                                                 ? "text-muted-foreground"
                                                 : ""
                                         }`}
                                     >
-                                        {item?.icon ?? (
-                                            <Hash className="mr-1 h-4 w-4" />
+                                        {(
+                                            <div
+                                                className={`${
+                                                    !isOpen && "scale-110"
+                                                }`}
+                                            >
+                                                {item?.icon}
+                                            </div>
+                                        ) ?? (
+                                            <Hash className="mr-1" size={14} />
                                         )}
-                                        {item.label}
+                                        {isOpen && item.label}
                                     </Link>
                                 ))}
                             </div>
@@ -66,7 +76,7 @@ export function SideBar({ pathname }: { pathname: string }) {
                     className="flex items-center text-xs font-medium px-4 border-t h-10"
                 >
                     <LogOutIcon className="me-1" size={12} />
-                    Log out
+                    {isOpen && "Log out"}
                 </Link>
             </div>
         </div>

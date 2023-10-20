@@ -46,7 +46,7 @@ export function Notifications() {
                             No notifications yet
                         </p>
                     ) : (
-                        notifications.map((item: Notification) => {
+                        notifications.map((item: Notification, i) => {
                             const child = (
                                 <div className="flex flex-col space-y-1">
                                     <span className="text-sm font-medium leading-none">
@@ -59,6 +59,7 @@ export function Notifications() {
                             );
                             return (
                                 <DropdownMenuItem
+                                    key={i}
                                     className="cursor-pointer"
                                     asChild
                                 >
