@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { sideMenu } from "../config/site";
 import { Code2, Hash, LogOutIcon } from "lucide-react";
 
-export const sideBarWidth = 250;
+export const sideBarWidth = 200;
 
 export function SideBar({ pathname }: { pathname: string }) {
     return (
@@ -13,7 +13,7 @@ export function SideBar({ pathname }: { pathname: string }) {
             }}
         >
             <div className="flex flex-col h-full">
-                <div className="flex items-center px-4 border-b h-10">
+                <div className="flex items-center px-4 border-b h-12 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
                     <Link
                         to="/"
                         className="flex items-center text-sm font-medium"
@@ -25,7 +25,7 @@ export function SideBar({ pathname }: { pathname: string }) {
                 <nav
                     className="flex flex-col overflow-y-auto vertical-scrollbar"
                     style={{
-                        height: "calc(100vh - 40px - 40px)",
+                        height: "calc(100vh - 48px - 40px)",
                     }}
                 >
                     {sideMenu.map((item, i) => (

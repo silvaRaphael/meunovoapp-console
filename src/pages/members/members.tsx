@@ -3,8 +3,8 @@ import { Member, memberColumns } from "../../adapters/member";
 import { DataTable } from "../../components/ui/data-table/data-table";
 import { SectionHeader } from "../../components/section-header";
 import { Search } from "../../components/search";
-import { AddButton } from "../../components/buttons";
 import { Page } from "../../components/page";
+import { Button } from "../../components/ui/button";
 
 export function Members() {
     const [members, setMembers] = useState<Member[]>([]);
@@ -36,7 +36,7 @@ export function Members() {
                     pathname="/members"
                 >
                     <Search />
-                    <AddButton />
+                    <Button>Create</Button>
                 </SectionHeader>
             }
         >

@@ -1,11 +1,11 @@
 import { Hash } from "lucide-react";
-import { topMenu } from "../config/site";
 import { Link } from "react-router-dom";
+import { menuItems } from "../config/site";
 
 export function MainNav({ pathname }: { pathname: string }) {
     return (
         <nav className="flex items-center space-x-4 mx-6">
-            {topMenu.map((item, i) => (
+            {menuItems.map((item, i) => (
                 <Link
                     key={i}
                     to={item.path}

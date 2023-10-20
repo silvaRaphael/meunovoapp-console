@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { UseFormReturn, useForm } from "react-hook-form";
 import * as z from "zod";
 
 import { cn } from "../../lib/utils";
@@ -39,7 +39,8 @@ import {
     AvatarFallback,
     AvatarImage,
 } from "../../components/ui/avatar";
-import { useNavigate } from "react-router-dom";
+import { AlertCircle, Check, Loader2 } from "lucide-react";
+import { SubmitButton } from "../../components/submit-button";
 
 const memberFormSchema = z.object({
     username: z
@@ -86,8 +87,6 @@ const memberFormSchema = z.object({
 type MemberFormValues = z.infer<typeof memberFormSchema>;
 
 export function MemberForm({ member }: { member: Member }) {
-    const navigate = useNavigate();
-
     const [roles, setRoles] = useState<Role[]>([]);
 
     const form = useForm<MemberFormValues>({
@@ -104,13 +103,22 @@ export function MemberForm({ member }: { member: Member }) {
         mode: "onChange",
     });
 
-    function onSubmit(data: MemberFormValues) {
+    async function onSubmit(data: MemberFormValues) {
+        try {
+            await new Promise((resolve, rejects) => {
+                setTimeout(() => {
+                    resolve(1);
+                    // rejects("test");
+                }, 1000);
+            });
+        } catch (error) {
+            console.error(error);
+        }
+
         console.log({
             title: "You submitted the following values:",
             data,
         });
-
-        navigate("/members");
     }
 
     function getRoles() {
@@ -352,7 +360,7 @@ export function MemberForm({ member }: { member: Member }) {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit">Update member</Button>
+                        <SubmitButton label="Update Member" form={form} />
                     </form>
                 </Form>
             </div>

@@ -83,30 +83,7 @@ export const sideMenu: SideBarMenu[] = [
     },
 ];
 
-export const topMenu: MenuItem[] = [
-    {
-        label: "Dashboard",
-        path: "/",
-        icon: <LayoutDashboard className="mr-1" size={14} />,
-    },
-    {
-        label: "Members",
-        path: "/members",
-        icon: <User className="mr-1" size={14} />,
-    },
-    {
-        label: "Teams",
-        path: "/teams",
-        icon: <Users className="mr-1" size={14} />,
-    },
-    {
-        label: "Projects",
-        path: "/projects",
-        icon: <ClipboardList className="mr-1" size={14} />,
-    },
-    {
-        label: "Tasks",
-        path: "/tasks",
-        icon: <ListTodo className="mr-1" size={14} />,
-    },
-];
+export let menuItems: MenuItem[] = [];
+for (const item of sideMenu) {
+    menuItems.push(...item.menu);
+}

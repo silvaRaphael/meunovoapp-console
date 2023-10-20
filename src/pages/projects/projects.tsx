@@ -5,7 +5,7 @@ import { SectionHeader } from "../../components/section-header";
 export function Projects() {
     return (
         <Page
-            pathname="/"
+            pathname="/projects"
             header={
                 <SectionHeader title={`Projects`} pathname="/projects">
                     <Search />

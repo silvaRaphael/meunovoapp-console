@@ -13,11 +13,11 @@ export function SectionHeader({
     children?: ReactNode;
 }) {
     return (
-        <div className="border-b bg-gray-50">
+        <div className="border-b">
             <div className="flex h-12 items-center px-4">
                 <div className="text-sm font-medium flex space-x-2">
                     <Link to={pathname}>{title}</Link>
-                    <div className="flex space-x-1">
+                    <div className="flex space-x-1 opacity-60">
                         {tree?.map((item, i) =>
                             item.pathname ? (
                                 <Link key={i} to={item.pathname}>
