@@ -1,31 +1,19 @@
 import { ReactElement } from "react";
 import { Button } from "./ui/button";
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "./ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 
 interface Props {
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
     triggerButton?: ReactElement;
     title: string;
     description?: string;
     confirmButton?: ReactElement;
 }
 
-export function ConfirmationAlert({
-    triggerButton,
-    title,
-    description,
-    confirmButton,
-}: Props) {
+export function ConfirmationAlert({ open, onOpenChange, triggerButton, title, description, confirmButton }: Props) {
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>{triggerButton}</DialogTrigger>
             <DialogContent className="max-w-[425px]">
                 <DialogHeader>

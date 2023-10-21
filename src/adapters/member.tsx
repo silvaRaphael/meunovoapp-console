@@ -45,33 +45,19 @@ export const memberColumns: ColumnDef<Member>[] = [
     // },
     {
         accessorKey: "name",
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Member" />
-        ),
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Member" />,
         cell: ({ row }) => {
             return (
                 <div className="flex items-center space-x-2">
                     <Avatar className="h-8 w-8 border">
-                        <AvatarImage
-                            src={row.original?.avatar}
-                            alt={`@${row.original.username}`}
-                        />
-                        <AvatarFallback>
-                            {[
-                                row.original.name.charAt(0),
-                                row.original.lastName.charAt(0),
-                            ]
-                                .join("")
-                                .toUpperCase()}
-                        </AvatarFallback>
+                        <AvatarImage src={row.original?.avatar} alt={`@${row.original.username}`} />
+                        <AvatarFallback>{[row.original.name.charAt(0), row.original.lastName.charAt(0)].join("").toUpperCase()}</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
                         <span className="text-left text-sm font-medium">
                             {row.original.name} {row.original.lastName}
                         </span>
-                        <span className="text-xs text-muted-foreground">
-                            @{row.original.username}
-                        </span>
+                        <span className="text-xs text-muted-foreground">@{row.original.username}</span>
                     </div>
                 </div>
             );
@@ -79,23 +65,15 @@ export const memberColumns: ColumnDef<Member>[] = [
     },
     {
         accessorKey: "email",
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Email" />
-        ),
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Email" />,
         cell: ({ row }) => {
-            return (
-                <div className="text-left font-medium">
-                    {row.getValue("email")}
-                </div>
-            );
+            return <div className="text-left font-medium">{row.getValue("email")}</div>;
         },
     },
     {
         accessorKey: "role",
         enableSorting: false,
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Role" />
-        ),
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Role" />,
         cell: ({ row }) => {
             const role: Role = row.getValue("role");
             return (
@@ -107,11 +85,13 @@ export const memberColumns: ColumnDef<Member>[] = [
     },
     {
         id: "actions",
-        cell: ({ row }) => (
-            <div className="text-right">
-                <actions.Edit to={`/members/@${row.original.username}`} />
-                <actions.Delete />
-            </div>
-        ),
+        cell: ({ row }) => {
+            return (
+                <div className="text-right">
+                    <actions.Edit to={`/members/@${row.original.username}`} />
+                    <actions.Delete onClick={() => (row.original as any).deleteAction(row.original)} />
+                </div>
+            );
+        },
     },
 ];
