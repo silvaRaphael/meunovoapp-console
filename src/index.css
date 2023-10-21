@@ -15,8 +15,13 @@
   
   .horizontal-scrollbar::-webkit-scrollbar-thumb,
   .vertical-scrollbar::-webkit-scrollbar-thumb {
-    background-color: #e5e7eb;
+    background-color: #e0e0e0;
   }
+
+    .dark .horizontal-scrollbar::-webkit-scrollbar-thumb,
+    .dark .vertical-scrollbar::-webkit-scrollbar-thumb {
+      background-color: #1c1c1c;
+    }
 }
 
 

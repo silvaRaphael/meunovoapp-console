@@ -6,15 +6,7 @@ import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 export const sideBarWidth = 200;
 export const sideBarWidthCollapsed = 48;
 
-export function SideBar({
-    pathname,
-    toggleSideBar,
-    isOpen,
-}: {
-    pathname: string;
-    toggleSideBar: any;
-    isOpen: boolean;
-}) {
+export function SideBar({ pathname, isOpen }: { pathname: string; isOpen: boolean }) {
     return (
         <div
             className="fixed bg-background z-50"
@@ -31,39 +23,18 @@ export function SideBar({
                     }}
                 >
                     {sideMenu.map((item, i) => (
-                        <div
-                            className="flex flex-col justify-start pb-2"
-                            key={i}
-                        >
-                            <div className="text-xs font-semibold px-4 py-3">
-                                {isOpen ? (
-                                    item.title
-                                ) : (
-                                    <DotsHorizontalIcon width={14} />
-                                )}
-                            </div>
+                        <div className="flex flex-col justify-start pb-2" key={i}>
+                            <div className="text-xs font-semibold px-4 py-3">{isOpen ? item.title : <DotsHorizontalIcon width={14} />}</div>
                             <div className="px-4 space-y-2">
                                 {item.menu.map((item, i) => (
                                     <Link
                                         key={i}
                                         to={item.path}
                                         className={`flex items-center text-sm h-5 font-medium transition-colors hover:text-primary ${
-                                            pathname !== item.path
-                                                ? "text-muted-foreground"
-                                                : ""
+                                            pathname !== item.path ? "text-muted-foreground" : ""
                                         }`}
                                     >
-                                        {(
-                                            <div
-                                                className={`${
-                                                    !isOpen && "scale-110"
-                                                }`}
-                                            >
-                                                {item?.icon}
-                                            </div>
-                                        ) ?? (
-                                            <Hash className="mr-1" size={14} />
-                                        )}
+                                        {<div className={`${!isOpen && "scale-110"}`}>{item?.icon}</div> ?? <Hash className="mr-1" size={14} />}
                                         {isOpen && item.label}
                                     </Link>
                                 ))}
@@ -71,10 +42,7 @@ export function SideBar({
                         </div>
                     ))}
                 </nav>
-                <Link
-                    to="/logout"
-                    className="flex items-center text-xs font-medium px-4 border-t h-10"
-                >
+                <Link to="/logout" className="flex items-center text-xs font-medium px-4 border-t h-10">
                     <LogOutIcon className="me-1" size={12} />
                     {isOpen && "Log out"}
                 </Link>

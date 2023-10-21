@@ -1,48 +1,48 @@
 import { useEffect, useState } from "react";
-import { Member } from "../../../adapters/member";
+import { Team } from "../../../adapters/team";
 import { useNavigate, useParams } from "react-router-dom";
 import { SectionHeader } from "../../../components/section-header";
 import { Separator } from "../../../components/ui/separator";
-import { MemberForm } from "./form";
+import { TeamForm } from "./form";
 import { Button } from "../../../components/ui/button";
 import { Page } from "../../../components/page";
 import { ConfirmationAlert } from "../../../components/confirmation-alert";
 import { SubmitButton } from "../../../components/submit-button";
 import { toast } from "../../../components/ui/toast/use-toast";
 
-export function MemberDetails() {
-    const { username } = useParams();
+export function TeamDetails() {
+    const { slug } = useParams();
     const navigate = useNavigate();
-    const [member, setMember] = useState<Member>();
+    const [team, setTeam] = useState<Team>();
 
-    function getMember(username?: string) {
-        fetch("/api/members.json")
+    function getTeam(slug?: string) {
+        fetch("/api/teams.json")
             .then((res) => res.json())
             .then((res) => {
-                setMember(res.find((res: any) => res.username === username?.replace("@", "")) || null);
+                setTeam(res.find((res: any) => res.slug === slug) || null);
             });
     }
 
     useEffect(() => {
         const controller = new AbortController();
 
-        getMember(username);
+        getTeam(slug);
 
         return () => {
             controller.abort();
         };
-    }, [username]);
+    }, [slug]);
 
-    if (!member) return <></>;
+    if (!team) return <></>;
 
     return (
         <Page
-            pathname="/members"
+            pathname="/teams"
             header={
-                <SectionHeader title="Members" pathname="/members" tree={!!member ? [{ label: `${member.name} ${member.lastName}` }] : []}>
+                <SectionHeader title="Teams" pathname="/teams" tree={!!team ? [{ label: team.name }] : []}>
                     <ConfirmationAlert
                         triggerButton={<Button>Remove</Button>}
-                        title="Are you sure you want to delete this member?"
+                        title="Are you sure you want to delete this team?"
                         description="This action cannot be undone. This will permanently delete this data."
                         confirmButton={
                             <SubmitButton
@@ -62,10 +62,10 @@ export function MemberDetails() {
                                     });
                                 }}
                                 onSuccess={() => {
-                                    navigate("/members", {
+                                    navigate("/teams", {
                                         state: {
                                             toast: {
-                                                title: "Member removed successfully!",
+                                                title: "Team removed successfully!",
                                             },
                                         },
                                     });
@@ -78,11 +78,11 @@ export function MemberDetails() {
         >
             <div className="space-y-6">
                 <div>
-                    <h3 className="text-lg font-medium">Edit Member</h3>
+                    <h3 className="text-lg font-medium">Edit Team</h3>
                     <p className="text-sm text-muted-foreground">Some of this informations are public for other users</p>
                 </div>
                 <Separator />
-                <MemberForm member={member} />
+                <TeamForm team={team} />
             </div>
         </Page>
     );

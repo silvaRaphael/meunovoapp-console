@@ -58,7 +58,6 @@ export function Members() {
                 open={openDelete}
                 onOpenChange={setOpenDelete}
                 title="Are you sure you want to delete this member?"
-                description="This action cannot be undone. This will permanently delete this data."
                 confirmButton={
                     <SubmitButton
                         label="Delete"

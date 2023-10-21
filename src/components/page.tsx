@@ -38,9 +38,9 @@ export function Page({ pathname, header, children }: Props) {
         <>
             <TopBar pathname={pathname} isOpen={isOpen} toggleSideBar={toggleSideBar} />
             <div className="flex">
-                <SideBar pathname={pathname} isOpen={isOpen} toggleSideBar={toggleSideBar} />
+                <SideBar pathname={pathname} isOpen={isOpen} />
                 <div
-                    className="w-full max-h-screen "
+                    className="w-full max-h-screen"
                     style={{
                         paddingLeft: isOpen ? sideBarWidth : sideBarWidthCollapsed,
                     }}

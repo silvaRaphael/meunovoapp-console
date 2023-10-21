@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ReactElement, ReactNode } from "react";
 import { Button } from "./ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 
@@ -8,18 +8,20 @@ interface Props {
     triggerButton?: ReactElement;
     title: string;
     description?: string;
+    children?: ReactNode;
     confirmButton?: ReactElement;
 }
 
-export function ConfirmationAlert({ open, onOpenChange, triggerButton, title, description, confirmButton }: Props) {
+export function ContentAlert({ open, onOpenChange, triggerButton, title, description, children, confirmButton }: Props) {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>{triggerButton}</DialogTrigger>
-            <DialogContent className="max-w-[360px]">
+            <DialogContent className="max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle className="me-5">{title}</DialogTitle>
-                    <DialogDescription>{description ?? "This action cannot be undone. This will permanently delete this data."}</DialogDescription>
+                    <DialogTitle>{title}</DialogTitle>
+                    <DialogDescription>{description}</DialogDescription>
                 </DialogHeader>
+                {children}
                 <DialogFooter>
                     <DialogClose asChild>
                         <Button variant="secondary">Close</Button>
