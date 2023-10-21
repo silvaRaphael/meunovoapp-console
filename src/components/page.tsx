@@ -1,7 +1,9 @@
-import { ReactElement, ReactNode, useState } from "react";
+import { ReactElement, ReactNode, useEffect, useState } from "react";
 import { SectionHeader } from "./section-header";
 import { SideBar, sideBarWidth, sideBarWidthCollapsed } from "./side-bar";
 import { TopBar } from "./top-bar";
+import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "./ui/toast/use-toast";
 
 interface Props {
     pathname: string;
@@ -10,14 +12,30 @@ interface Props {
 }
 
 export function Page({ pathname, header, children }: Props) {
+    const location = useLocation();
+    const navigate = useNavigate();
+
     const [isOpen, setIsOpen] = useState<boolean>(
         () => localStorage.getItem("side-bar-is-open") === "true",
     );
+
+    function showToast() {
+        if (location?.state?.toast?.title) {
+            toast({
+                title: location?.state?.toast?.title,
+                description: location?.state?.toast?.description,
+                duration: location?.state?.toast?.duration || 3000,
+            });
+            navigate(location.pathname, { replace: true });
+        }
+    }
 
     function toggleSideBar() {
         localStorage.setItem("side-bar-is-open", String(!isOpen));
         setIsOpen(!isOpen);
     }
+
+    useEffect(() => showToast());
 
     return (
         <>

@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { Members } from "./pages/members/members";
 import { NotFound } from "./pages/not-found";
 import { MemberDetails } from "./pages/members/details/details";
@@ -7,10 +7,12 @@ import { Teams } from "./pages/teams/teams";
 import { Projects } from "./pages/projects/projects";
 import { Tasks } from "./pages/tasks/tasks";
 import { ThemeProvider } from "./components/theme-provider";
+import { Toaster } from "./components/ui/toast/toaster";
 
 export function App() {
     return (
         <ThemeProvider defaultTheme="system" storageKey="modular-ui-theme">
+            <Toaster />
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<Dashboard />} />
