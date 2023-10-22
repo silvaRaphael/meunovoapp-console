@@ -22,7 +22,7 @@ export const members: Member[] = Array.from(new Array(35)).map(() => {
         lastName: faker.person.lastName(),
         avatar: faker.internet.avatar(),
         jobTitle: jobTitles[faker.number.int({ min: 0, max: jobTitles.length - 1 })],
-        role: roles[faker.number.int({ min: 1, max: 2 })],
+        role: roles[faker.number.int({ min: 1, max: 3 })],
         bio: faker.person.bio(),
         since: faker.date.past(),
     };

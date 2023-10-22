@@ -24,7 +24,7 @@ export function Members() {
                 res = res.map((item: Member): MemberRow => {
                     return {
                         ...item,
-                        deleteAction(item) {
+                        deleteAction() {
                             setOpenDelete(true);
                         },
                     };

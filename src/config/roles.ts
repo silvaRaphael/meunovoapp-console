@@ -1,11 +1,3 @@
-export interface Role {
-    id?: string;
-    name: string;
-    slug: string;
-}
+export type Role = "owner" | "admin" | "manager" | "member";
 
-export const roles: Role[] = [
-    { name: "Admin", slug: "admin" },
-    { name: "Manager", slug: "manager" },
-    { name: "Member", slug: "member" },
-];
+export const roles: Role[] = ["owner", "admin", "manager", "member"];

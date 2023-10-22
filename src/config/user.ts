@@ -1,4 +1,4 @@
-import { Role, roles } from "./roles";
+import { Role } from "./roles";
 
 export interface User {
     username: string;
@@ -17,5 +17,7 @@ export const user: User = {
     email: "rsilva@email.com",
     genre: "masculine",
     avatar: "https://ui.shadcn.com/avatars/02.png",
-    role: roles[0],
+    // role: "owner",
+    // role: "manager",
+    role: "member",
 };

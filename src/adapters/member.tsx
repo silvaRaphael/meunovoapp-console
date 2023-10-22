@@ -5,6 +5,7 @@ import { JobTitle } from "./job-title";
 import { Badge } from "../components/ui/badge";
 import { MemberInfo } from "../components/member-info";
 import { Role } from "../config/roles";
+import { UpperFirst } from "../lib/helper";
 
 export interface Member {
     id: string;
@@ -55,7 +56,7 @@ export const memberColumns: ColumnDef<Member>[] = [
             const role: Role = row.getValue("role");
             return (
                 <div className="flex items-center">
-                    <Badge variant="outline">{role.name}</Badge>
+                    <Badge variant="outline">{UpperFirst(role)}</Badge>
                 </div>
             );
         },
