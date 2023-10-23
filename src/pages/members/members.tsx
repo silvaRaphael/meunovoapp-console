@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Member, memberColumns } from "../../adapters/member";
 import { DataTable } from "../../components/ui/data-table/data-table";
 import { SectionHeader } from "../../components/section-header";
 import { Search } from "../../components/search";
@@ -8,9 +7,11 @@ import { Button } from "../../components/ui/button";
 import { SubmitButton } from "../../components/submit-button";
 import { toast } from "../../components/ui/toast/use-toast";
 import { ConfirmationAlert } from "../../components/confirmation-alert";
+import { Member } from "./data/member";
+import { memberColumns } from "./data/columns";
 
 interface MemberRow extends Member {
-    deleteAction?: (props: any) => any;
+    deleteAction?: (props: Member) => any;
 }
 
 export function Members() {
@@ -58,6 +59,7 @@ export function Members() {
                 open={openDelete}
                 onOpenChange={setOpenDelete}
                 title="Are you sure you want to delete this member?"
+                description="This action cannot be undone. This will permanently delete this data."
                 confirmButton={
                     <SubmitButton
                         label="Delete"

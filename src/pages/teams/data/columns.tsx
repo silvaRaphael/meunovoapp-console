@@ -1,27 +1,17 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { Avatar } from "../components/ui/avatar";
+import { Avatar } from "../../../components/ui/avatar";
 import { AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import { Actions } from "../components/actions";
-import { DataTableColumnHeader } from "../components/ui/data-table/data-table-column-header";
-import { Badge } from "../components/ui/badge";
-import { Member } from "./member";
+import { Actions } from "../../../components/actions";
+import { DataTableColumnHeader } from "../../../components/ui/data-table/data-table-column-header";
+import { Badge } from "../../../components/ui/badge";
 import format from "date-fns/format";
-import { MemberInfo } from "../components/member-info";
-
-export interface Team {
-    id: string;
-    name: string;
-    slug: string;
-    description: string;
-    manager: Member;
-    members: Member[];
-    since: Date;
-}
+import { MemberInfo } from "../../../components/member-info";
+import { Team } from "./team";
 
 export const teamColumns: ColumnDef<Team>[] = [
     {
         accessorKey: "name",
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Team" />,
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Team" noDislocate />,
         cell: ({ row }) => {
             return <div className="text-left font-medium">{row.getValue("name")}</div>;
         },
@@ -69,7 +59,7 @@ export const teamColumns: ColumnDef<Team>[] = [
                         </div>
                     </div>
                     <Badge variant="outline" className="cursor-pointer" onClick={() => (row.original as any).seeMembers(row.original)}>
-                        See all
+                        see all
                     </Badge>
                 </div>
             );
@@ -91,7 +81,7 @@ export const teamColumns: ColumnDef<Team>[] = [
             return (
                 <div className="text-right">
                     <Actions.Edit to={`/teams/${row.original.slug}`} />
-                    <Actions.Delete onClick={() => (row.original as any).deleteAction(row.original)} />
+                    {(row.original as any).deleteAction && <Actions.Delete onClick={() => (row.original as any).deleteAction(row.original)} />}
                 </div>
             );
         },

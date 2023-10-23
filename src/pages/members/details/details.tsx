@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Member } from "../../../adapters/member";
 import { useNavigate, useParams } from "react-router-dom";
 import { SectionHeader } from "../../../components/section-header";
 import { Separator } from "../../../components/ui/separator";
@@ -9,6 +8,10 @@ import { Page } from "../../../components/page";
 import { ConfirmationAlert } from "../../../components/confirmation-alert";
 import { SubmitButton } from "../../../components/submit-button";
 import { toast } from "../../../components/ui/toast/use-toast";
+import { Member } from "../data/member";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
+import { MemberTeams } from "./teams";
+import { MemberProjects } from "./projects";
 
 export function MemberDetails() {
     const { username } = useParams();
@@ -76,13 +79,28 @@ export function MemberDetails() {
                 </SectionHeader>
             }
         >
-            <div className="space-y-6">
+            <div className="space-y-6 pb-40">
                 <div>
                     <h3 className="text-lg font-medium">Edit Member</h3>
                     <p className="text-sm text-muted-foreground">Some of this informations are public for other users</p>
                 </div>
                 <Separator />
-                <MemberForm member={member} />
+                <Tabs defaultValue="member">
+                    <TabsList>
+                        <TabsTrigger value="member">Member</TabsTrigger>
+                        <TabsTrigger value="teams">Teams</TabsTrigger>
+                        <TabsTrigger value="projects">Projects</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="member" className="pt-3">
+                        <MemberForm member={member} />
+                    </TabsContent>
+                    <TabsContent value="teams" className="pt-3">
+                        <MemberTeams member={member} />
+                    </TabsContent>
+                    <TabsContent value="projects" className="pt-3">
+                        <MemberProjects member={member} />
+                    </TabsContent>
+                </Tabs>
             </div>
         </Page>
     );

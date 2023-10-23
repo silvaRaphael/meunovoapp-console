@@ -17,7 +17,8 @@ export const user: User = {
     email: "rsilva@email.com",
     genre: "masculine",
     avatar: "https://ui.shadcn.com/avatars/02.png",
-    // role: "owner",
+    role: "owner",
+    // role: "admin",
     // role: "manager",
-    role: "member",
+    // role: "member",
 };

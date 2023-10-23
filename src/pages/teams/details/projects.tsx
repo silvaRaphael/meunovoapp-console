@@ -1,45 +1,39 @@
 import { useEffect, useState } from "react";
-import { DataTable } from "../../components/ui/data-table/data-table";
-import { SectionHeader } from "../../components/section-header";
-import { Search } from "../../components/search";
-import { Page } from "../../components/page";
-import { Button } from "../../components/ui/button";
-import { SubmitButton } from "../../components/submit-button";
-import { toast } from "../../components/ui/toast/use-toast";
-import { ConfirmationAlert } from "../../components/confirmation-alert";
-import { ContentAlert } from "../../components/content-alert";
-import { Actions } from "../../components/actions";
-import { Project } from "./data/project";
-import { projectColumns } from "./data/columns";
-import { Team } from "../teams/data/team";
+import { DataTable } from "../../../components/ui/data-table/data-table";
+import { SubmitButton } from "../../../components/submit-button";
+import { toast } from "../../../components/ui/toast/use-toast";
+import { ConfirmationAlert } from "../../../components/confirmation-alert";
+import { ContentAlert } from "../../../components/content-alert";
+import { Actions } from "../../../components/actions";
+import { Project } from "../../projects/data/project";
+import { Team } from "../../teams/data/team";
+import { projectColumns } from "../../projects/data/columns";
 
 export interface ProjectRow extends Project {
-    deleteAction?: (props: Project) => any;
     seeTeams?: (props: Project) => any;
 }
 
-export function Projects() {
+export function TeamProjects({ team }: { team: Team }) {
     const [projects, setProjects] = useState<ProjectRow[]>([]);
     const [openDelete, setOpenDelete] = useState<boolean>(false);
     const [projectName, setProjectName] = useState<string>("");
     const [teamsList, setTeamsList] = useState<Team[] | null>(null);
 
-    function getProjects() {
+    function getProjects(team: Team) {
         fetch("/api/projects.json")
             .then((res) => res.json())
             .then((res) => {
-                res = res.map((item: Project): ProjectRow => {
-                    return {
-                        ...item,
-                        deleteAction() {
-                            setOpenDelete(true);
-                        },
-                        seeTeams(item) {
-                            setTeamsList(item.teams);
-                            setProjectName(item.title);
-                        },
-                    };
-                });
+                res = res
+                    .filter((item: Project) => item.teams.filter((item: Team) => item.id === team.id).length)
+                    .map((item: Project): ProjectRow => {
+                        return {
+                            ...item,
+                            seeTeams(item) {
+                                setTeamsList(item.teams);
+                                setProjectName(item.title);
+                            },
+                        };
+                    });
                 setProjects(res);
             });
     }
@@ -47,23 +41,15 @@ export function Projects() {
     useEffect(() => {
         const controller = new AbortController();
 
-        getProjects();
+        getProjects(team);
 
         return () => {
             controller.abort();
         };
-    }, []);
+    }, [team]);
 
     return (
-        <Page
-            pathname="/projects"
-            header={
-                <SectionHeader title={`Projects (${projects.length})`} pathname="/projects">
-                    <Search />
-                    <Button>Create</Button>
-                </SectionHeader>
-            }
-        >
+        <>
             <DataTable columns={projectColumns} data={projects} />
             <ConfirmationAlert
                 open={openDelete}
@@ -111,6 +97,6 @@ export function Projects() {
                     )}
                 </div>
             </ContentAlert>
-        </Page>
+        </>
     );
 }

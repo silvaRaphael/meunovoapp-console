@@ -1,46 +1,40 @@
 import { useEffect, useState } from "react";
-import { DataTable } from "../../components/ui/data-table/data-table";
-import { SectionHeader } from "../../components/section-header";
-import { Search } from "../../components/search";
-import { Page } from "../../components/page";
-import { Button } from "../../components/ui/button";
-import { SubmitButton } from "../../components/submit-button";
-import { toast } from "../../components/ui/toast/use-toast";
-import { ConfirmationAlert } from "../../components/confirmation-alert";
-import { Member } from "../members/data/member";
-import { ContentAlert } from "../../components/content-alert";
-import { MemberInfo } from "../../components/member-info";
-import { Actions } from "../../components/actions";
-import { Team } from "./data/team";
-import { teamColumns } from "./data/columns";
+import { Team } from "../../teams/data/team";
+import { Member } from "../data/member";
+import { DataTable } from "../../../components/ui/data-table/data-table";
+import { ConfirmationAlert } from "../../../components/confirmation-alert";
+import { ContentAlert } from "../../../components/content-alert";
+import { MemberInfo } from "../../../components/member-info";
+import { Actions } from "../../../components/actions";
+import { toast } from "../../../components/ui/toast/use-toast";
+import { SubmitButton } from "../../../components/submit-button";
+import { teamColumns } from "../../teams/data/columns";
 
 interface TeamRow extends Team {
-    deleteAction?: (props: Team) => any;
     seeMembers?: (props: Team) => any;
 }
 
-export function Teams() {
+export function MemberTeams({ member }: { member: Member }) {
     const [teams, setTeams] = useState<TeamRow[]>([]);
     const [openDelete, setOpenDelete] = useState<boolean>(false);
     const [teamName, setTeamName] = useState<string>("");
     const [membersList, setMembersList] = useState<Member[] | null>(null);
 
-    function getTeams() {
+    function getTeams(member: Member) {
         fetch("/api/teams.json")
             .then((res) => res.json())
             .then((res) => {
-                res = res.map((item: Team): TeamRow => {
-                    return {
-                        ...item,
-                        deleteAction() {
-                            setOpenDelete(true);
-                        },
-                        seeMembers(item) {
-                            setMembersList(item.members);
-                            setTeamName(item.name);
-                        },
-                    };
-                });
+                res = res
+                    .filter((item: Team) => item.manager.id === member.id || item.members.filter((item: Member) => item.id === member.id).length)
+                    .map((item: Team): TeamRow => {
+                        return {
+                            ...item,
+                            seeMembers(item) {
+                                setMembersList(item.members);
+                                setTeamName(item.name);
+                            },
+                        };
+                    });
                 setTeams(res);
             });
     }
@@ -48,23 +42,15 @@ export function Teams() {
     useEffect(() => {
         const controller = new AbortController();
 
-        getTeams();
+        getTeams(member);
 
         return () => {
             controller.abort();
         };
-    }, []);
+    }, [member]);
 
     return (
-        <Page
-            pathname="/teams"
-            header={
-                <SectionHeader title={`Teams (${teams.length})`} pathname="/teams">
-                    <Search />
-                    <Button>Create</Button>
-                </SectionHeader>
-            }
-        >
+        <>
             <DataTable columns={teamColumns} data={teams} />
             <ConfirmationAlert
                 open={openDelete}
@@ -112,6 +98,6 @@ export function Teams() {
                     )}
                 </div>
             </ContentAlert>
-        </Page>
+        </>
     );
 }

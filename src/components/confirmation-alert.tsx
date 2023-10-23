@@ -18,7 +18,7 @@ export function ConfirmationAlert({ open, onOpenChange, triggerButton, title, de
             <DialogContent className="max-w-[360px]">
                 <DialogHeader>
                     <DialogTitle className="me-5">{title}</DialogTitle>
-                    <DialogDescription>{description ?? "This action cannot be undone. This will permanently delete this data."}</DialogDescription>
+                    <DialogDescription>{description}</DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
                     <DialogClose asChild>

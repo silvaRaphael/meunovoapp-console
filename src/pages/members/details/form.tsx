@@ -7,18 +7,18 @@ import { Button } from "../../../components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../../../components/ui/form";
 import { Input } from "../../../components/ui/input";
 import { Textarea } from "../../../components/ui/textarea";
-import { Member } from "../../../adapters/member";
+import { Member } from "../data/member";
 import { Popover, PopoverContent, PopoverTrigger } from "../../../components/ui/popover";
 import format from "date-fns/format";
 import { CalendarIcon, CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { Calendar } from "../../../components/ui/calendar";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "../../../components/ui/command";
 import { useEffect, useState } from "react";
-import { JobTitle } from "../../../adapters/job-title";
 import { Card, CardContent, CardHeader } from "../../../components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "../../../components/ui/avatar";
 import { SubmitButton } from "../../../components/submit-button";
 import { toast } from "../../../components/ui/toast/use-toast";
+import { JobTitle } from "../../../config/job-titles";
 
 const memberFormSchema = z.object({
     username: z
@@ -53,7 +53,7 @@ const memberFormSchema = z.object({
     jobTitle: z.array(
         z
             .string({
-                required_error: "Please select a jobTitle to display.",
+                required_error: "Please select a job title to display.",
             })
             .uuid(),
     ),
@@ -101,195 +101,184 @@ export function MemberForm({ member }: { member: Member }) {
     }, []);
 
     return (
-        <div className="flex gap-x-4">
-            <div className="flex-grow">
-                <Form {...form}>
-                    <form className="grid grid-cols-4 gap-x-4">
-                        <div className="col-span-3 space-y-8">
-                            <div className="grid grid-cols-3 gap-x-4">
-                                <FormField
-                                    control={form.control}
-                                    name="name"
-                                    render={({ field }) => (
-                                        <FormItem className="flex flex-col">
-                                            <FormLabel>Name</FormLabel>
+        <Form {...form}>
+            <form className="grid grid-cols-4 gap-x-4">
+                <div className="col-span-3 space-y-8">
+                    <div className="grid grid-cols-3 gap-x-4">
+                        <FormField
+                            control={form.control}
+                            name="name"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-col">
+                                    <FormLabel>Name</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Your name" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="lastName"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-col">
+                                    <FormLabel>Last Name</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Your last name" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="username"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-col">
+                                    <FormLabel>Username</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Your username" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                    <div className="grid grid-cols-3 gap-x-4">
+                        <FormField
+                            control={form.control}
+                            name="jobTitle"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-col">
+                                    <FormLabel>JobTitle</FormLabel>
+                                    <Popover>
+                                        <PopoverTrigger asChild>
                                             <FormControl>
-                                                <Input placeholder="Your name" {...field} />
+                                                <Button variant="outline" role="combobox" className={cn("justify-between", !field.value && "text-muted-foreground")}>
+                                                    <span className="text-left leading-4">
+                                                        {field.value.length
+                                                            ? jobTitles
+                                                                  .filter((jobTitle) => field.value.includes(jobTitle.id))
+                                                                  .map((item) => item.name)
+                                                                  .join(", ")
+                                                            : "Select jobTitle"}
+                                                    </span>
+                                                    <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                                </Button>
                                             </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="lastName"
-                                    render={({ field }) => (
-                                        <FormItem className="flex flex-col">
-                                            <FormLabel>Last Name</FormLabel>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="p-0">
+                                            <Command>
+                                                <CommandInput placeholder="Search jobTitle..." />
+                                                <CommandEmpty>No jobTitle found.</CommandEmpty>
+                                                <CommandGroup>
+                                                    {jobTitles.map((jobTitle, i) => (
+                                                        <CommandItem
+                                                            value={jobTitle.name}
+                                                            key={jobTitle.id}
+                                                            onSelect={() => {
+                                                                let selectedJobTitles = form.getValues().jobTitle;
+                                                                if (selectedJobTitles.includes(jobTitle.id)) {
+                                                                    selectedJobTitles = selectedJobTitles.filter((item) => item !== jobTitle.id);
+                                                                } else {
+                                                                    selectedJobTitles.push(jobTitle.id);
+                                                                }
+                                                                form.setValue("jobTitle", selectedJobTitles);
+                                                            }}
+                                                        >
+                                                            <CheckIcon className={cn("mr-2 h-4 w-4", field.value.includes(jobTitle.id) ? "opacity-100" : "opacity-0")} />
+                                                            {jobTitle.name}
+                                                        </CommandItem>
+                                                    ))}
+                                                </CommandGroup>
+                                            </Command>
+                                        </PopoverContent>
+                                    </Popover>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="since"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-col">
+                                    <FormLabel>Hiring Date</FormLabel>
+                                    <Popover>
+                                        <PopoverTrigger asChild>
                                             <FormControl>
-                                                <Input placeholder="Your last name" {...field} />
+                                                <Button variant={"outline"} className={cn("pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
+                                                    {field.value ? format(new Date(field.value), "PPP") : <span>Pick a date</span>}
+                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                </Button>
                                             </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="username"
-                                    render={({ field }) => (
-                                        <FormItem className="flex flex-col">
-                                            <FormLabel>Username</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="Your username" {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
-                            <div className="grid grid-cols-3 gap-x-4">
-                                <FormField
-                                    control={form.control}
-                                    name="jobTitle"
-                                    render={({ field }) => (
-                                        <FormItem className="flex flex-col">
-                                            <FormLabel>JobTitle</FormLabel>
-                                            <Popover>
-                                                <PopoverTrigger asChild>
-                                                    <FormControl>
-                                                        <Button variant="outline" role="combobox" className={cn("justify-between", !field.value && "text-muted-foreground")}>
-                                                            <span className="text-left leading-4">
-                                                                {field.value.length
-                                                                    ? jobTitles
-                                                                          .filter((jobTitle) => field.value.includes(jobTitle.id))
-                                                                          .map((item) => item.name)
-                                                                          .join(", ")
-                                                                    : "Select jobTitle"}
-                                                            </span>
-                                                            <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                                        </Button>
-                                                    </FormControl>
-                                                </PopoverTrigger>
-                                                <PopoverContent className="p-0">
-                                                    <Command>
-                                                        <CommandInput placeholder="Search jobTitle..." />
-                                                        <CommandEmpty>No jobTitle found.</CommandEmpty>
-                                                        <CommandGroup>
-                                                            {jobTitles.map((jobTitle, i) => (
-                                                                <CommandItem
-                                                                    value={jobTitle.name}
-                                                                    key={jobTitle.id}
-                                                                    onSelect={() => {
-                                                                        let selectedJobTitles = form.getValues().jobTitle;
-                                                                        if (selectedJobTitles.includes(jobTitle.id)) {
-                                                                            selectedJobTitles = selectedJobTitles.filter((item) => item !== jobTitle.id);
-                                                                        } else {
-                                                                            selectedJobTitles.push(jobTitle.id);
-                                                                        }
-                                                                        form.setValue("jobTitle", selectedJobTitles);
-                                                                    }}
-                                                                >
-                                                                    <CheckIcon className={cn("mr-2 h-4 w-4", field.value.includes(jobTitle.id) ? "opacity-100" : "opacity-0")} />
-                                                                    {jobTitle.name}
-                                                                </CommandItem>
-                                                            ))}
-                                                        </CommandGroup>
-                                                    </Command>
-                                                </PopoverContent>
-                                            </Popover>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="since"
-                                    render={({ field }) => (
-                                        <FormItem className="flex flex-col">
-                                            <FormLabel>Hiring Date</FormLabel>
-                                            <Popover>
-                                                <PopoverTrigger asChild>
-                                                    <FormControl>
-                                                        <Button variant={"outline"} className={cn("pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
-                                                            {field.value ? format(new Date(field.value), "PPP") : <span>Pick a date</span>}
-                                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                        </Button>
-                                                    </FormControl>
-                                                </PopoverTrigger>
-                                                <PopoverContent className="w-auto p-0" align="start">
-                                                    <Calendar
-                                                        mode="single"
-                                                        defaultMonth={new Date(field.value)}
-                                                        selected={new Date(field.value)}
-                                                        onSelect={field.onChange}
-                                                        disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
-                                                        initialFocus
-                                                    />
-                                                </PopoverContent>
-                                            </Popover>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
-                            <FormField
-                                control={form.control}
-                                name="bio"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Bio</FormLabel>
-                                        <FormControl>
-                                            <Textarea placeholder="Tell us a little bit about yourself" className="resize-none" rows={5} {...field} />
-                                        </FormControl>
-                                        <FormDescription>This will be shown in your profile</FormDescription>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <SubmitButton
-                                label="Update Member"
-                                onSubmit={async () => {
-                                    await new Promise((resolve, rejects) => {
-                                        setTimeout(() => {
-                                            resolve(1);
-                                            // rejects("An error occured!");
-                                        }, 1000);
-                                    });
-                                }}
-                                onError={(error: any) => {
-                                    toast({
-                                        variant: "destructive",
-                                        title: error || "An error occured!",
-                                    });
-                                }}
-                                onSuccess={() => {
-                                    toast({
-                                        title: "Member updated successfully!",
-                                    });
-                                }}
-                            />
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0" align="start">
+                                            <Calendar mode="single" defaultMonth={new Date(field.value)} selected={new Date(field.value)} onSelect={field.onChange} initialFocus />
+                                        </PopoverContent>
+                                    </Popover>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                    <FormField
+                        control={form.control}
+                        name="bio"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Bio</FormLabel>
+                                <FormControl>
+                                    <Textarea placeholder="Tell us a little bit about yourself" className="resize-none" rows={5} {...field} />
+                                </FormControl>
+                                <FormDescription>This will be shown in your profile</FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <SubmitButton
+                        label="Update Member"
+                        onSubmit={async () => {
+                            await new Promise((resolve, rejects) => {
+                                setTimeout(() => {
+                                    resolve(1);
+                                    // rejects("An error occured!");
+                                }, 1000);
+                            });
+                        }}
+                        onError={(error: any) => {
+                            toast({
+                                variant: "destructive",
+                                title: error || "An error occured!",
+                            });
+                        }}
+                        onSuccess={() => {
+                            toast({
+                                title: "Member updated successfully!",
+                            });
+                        }}
+                    />
+                </div>
+                <Card className="w-full h-min">
+                    <CardHeader>
+                        <Avatar className="h-24 w-24 mx-auto">
+                            <AvatarImage src={member.avatar} alt={`@${member.username}`} />
+                            <AvatarFallback>{[member.name.charAt(0), member.lastName.charAt(0)].join("").toUpperCase()}</AvatarFallback>
+                        </Avatar>
+                    </CardHeader>
+                    <CardContent className="space-y-1">
+                        <div className="flex flex-col space-y-1 items-center">
+                            <p className="text-sm text-center font-medium leading-none">@{member.username}</p>
+                            <p className="text-xs text-center leading-none text-muted-foreground">{member.email}</p>
                         </div>
-                        <Card className="w-full h-min">
-                            <CardHeader>
-                                <Avatar className="h-24 w-24 mx-auto">
-                                    <AvatarImage src={member.avatar} alt={`@${member.username}`} />
-                                    <AvatarFallback>{[member.name.charAt(0), member.lastName.charAt(0)].join("").toUpperCase()}</AvatarFallback>
-                                </Avatar>
-                            </CardHeader>
-                            <CardContent className="space-y-1">
-                                <div className="flex flex-col space-y-1 items-center">
-                                    <p className="text-sm text-center font-medium leading-none">@{member.username}</p>
-                                    <p className="text-xs text-center leading-none text-muted-foreground">{member.email}</p>
-                                </div>
-                                <div className="flex flex-col space-y-1 items-center">
-                                    <p className="text-sm text-center font-medium leading-none">{member.jobTitle.name}</p>
-                                    <p className="text-xs text-center leading-none text-muted-foreground">{format(new Date(member.since), "PPP")}</p>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </form>
-                </Form>
-            </div>
-        </div>
+                        <div className="flex flex-col space-y-1 items-center">
+                            <p className="text-sm text-center font-medium leading-none">{member.jobTitle.name}</p>
+                            <p className="text-xs text-center leading-none text-muted-foreground">{format(new Date(member.since), "PPP")}</p>
+                        </div>
+                    </CardContent>
+                </Card>
+            </form>
+        </Form>
     );
 }

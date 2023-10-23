@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { sideMenu, sideMenu2 } from "../config/site";
+import { sideMenu } from "../config/site";
 import { Hash, LogOutIcon } from "lucide-react";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { user } from "../config/user";
@@ -23,7 +23,7 @@ export function SideBar({ pathname, isOpen }: { pathname: string; isOpen: boolea
                         height: "calc(100vh - 48px - 40px)",
                     }}
                 >
-                    {sideMenu2
+                    {sideMenu
                         .find((item) => item.role.includes(user.role))
                         ?.menu.map((item, i) => (
                             <div className="flex flex-col justify-start pb-2" key={i}>

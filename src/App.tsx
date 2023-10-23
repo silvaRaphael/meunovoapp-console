@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Members } from "./pages/members/members";
 import { NotFound } from "./pages/not-found";
 import { MemberDetails } from "./pages/members/details/details";
@@ -9,6 +9,8 @@ import { Tasks } from "./pages/tasks/tasks";
 import { ThemeProvider } from "./components/theme-provider";
 import { Toaster } from "./components/ui/toast/toaster";
 import { TeamDetails } from "./pages/teams/details/details";
+import { ProjectDetails } from "./pages/projects/details/details";
+import { TaskDetails } from "./pages/tasks/details/details";
 
 export function App() {
     return (
@@ -25,8 +27,14 @@ export function App() {
                         <Route path="" element={<Teams />} />
                         <Route path=":slug" element={<TeamDetails />} />
                     </Route>
-                    <Route path="/projects" element={<Projects />} />
-                    <Route path="/tasks" element={<Tasks />} />
+                    <Route path="/projects">
+                        <Route path="" element={<Projects />} />
+                        <Route path=":id" element={<ProjectDetails />} />
+                    </Route>
+                    <Route path="/tasks">
+                        <Route path="" element={<Tasks />} />
+                        <Route path=":id" element={<TaskDetails />} />
+                    </Route>
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             </BrowserRouter>

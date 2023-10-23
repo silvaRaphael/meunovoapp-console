@@ -2,49 +2,47 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { SectionHeader } from "../../../components/section-header";
 import { Separator } from "../../../components/ui/separator";
-import { TeamForm } from "./form";
+import { TaskForm } from "./form";
 import { Button } from "../../../components/ui/button";
 import { Page } from "../../../components/page";
 import { ConfirmationAlert } from "../../../components/confirmation-alert";
 import { SubmitButton } from "../../../components/submit-button";
 import { toast } from "../../../components/ui/toast/use-toast";
-import { Team } from "../data/team";
-import { TeamProjects } from "./projects";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
+import { Task } from "../data/task";
 
-export function TeamDetails() {
-    const { slug } = useParams();
+export function TaskDetails() {
+    const { id } = useParams();
     const navigate = useNavigate();
-    const [team, setTeam] = useState<Team>();
+    const [task, setTask] = useState<Task>();
 
-    function getTeam(slug?: string) {
-        fetch("/api/teams.json")
+    function getTask(id?: string) {
+        fetch("/api/tasks.json")
             .then((res) => res.json())
             .then((res) => {
-                setTeam(res.find((res: any) => res.slug === slug) || null);
+                setTask(res.find((res: any) => res.id === id) || null);
             });
     }
 
     useEffect(() => {
         const controller = new AbortController();
 
-        getTeam(slug);
+        getTask(id);
 
         return () => {
             controller.abort();
         };
-    }, [slug]);
+    }, [id]);
 
-    if (!team) return <></>;
+    if (!task) return <></>;
 
     return (
         <Page
-            pathname="/teams"
+            pathname="/tasks"
             header={
-                <SectionHeader title="Teams" pathname="/teams" tree={!!team ? [{ label: team.name }] : []}>
+                <SectionHeader title="Tasks" pathname="/tasks" tree={!!task ? [{ label: task.title }] : []}>
                     <ConfirmationAlert
                         triggerButton={<Button>Remove</Button>}
-                        title="Are you sure you want to delete this team?"
+                        title="Are you sure you want to delete this task?"
                         description="This action cannot be undone. This will permanently delete this data."
                         confirmButton={
                             <SubmitButton
@@ -64,10 +62,10 @@ export function TeamDetails() {
                                     });
                                 }}
                                 onSuccess={() => {
-                                    navigate("/teams", {
+                                    navigate("/tasks", {
                                         state: {
                                             toast: {
-                                                title: "Team removed successfully!",
+                                                title: "Task removed successfully!",
                                             },
                                         },
                                     });
@@ -80,22 +78,11 @@ export function TeamDetails() {
         >
             <div className="space-y-6 pb-40">
                 <div>
-                    <h3 className="text-lg font-medium">Edit Team</h3>
+                    <h3 className="text-lg font-medium">Edit Task</h3>
                     <p className="text-sm text-muted-foreground">Some of this informations are public for other users</p>
                 </div>
                 <Separator />
-                <Tabs defaultValue="team">
-                    <TabsList>
-                        <TabsTrigger value="team">Team</TabsTrigger>
-                        <TabsTrigger value="projects">Projects</TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="team" className="pt-3">
-                        <TeamForm team={team} />
-                    </TabsContent>
-                    <TabsContent value="projects" className="pt-3">
-                        <TeamProjects team={team} />
-                    </TabsContent>
-                </Tabs>
+                <TaskForm task={task} />
             </div>
         </Page>
     );

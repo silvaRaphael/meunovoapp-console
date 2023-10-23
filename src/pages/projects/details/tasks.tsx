@@ -1,35 +1,29 @@
 import { useEffect, useState } from "react";
-import { DataTable } from "../../components/ui/data-table/data-table";
-import { SectionHeader } from "../../components/section-header";
-import { Search } from "../../components/search";
-import { Page } from "../../components/page";
-import { Button } from "../../components/ui/button";
-import { SubmitButton } from "../../components/submit-button";
-import { toast } from "../../components/ui/toast/use-toast";
-import { ConfirmationAlert } from "../../components/confirmation-alert";
-import { Task } from "./data/task";
-import { taskColumns } from "./data/columns";
+import { DataTable } from "../../../components/ui/data-table/data-table";
+import { SubmitButton } from "../../../components/submit-button";
+import { toast } from "../../../components/ui/toast/use-toast";
+import { ConfirmationAlert } from "../../../components/confirmation-alert";
+import { taskColumns } from "../../tasks/data/columns";
+import { Task } from "../../tasks/data/task";
+import { Project } from "../data/project";
 
-export interface TaskRow extends Task {
-    deleteAction?: (props: Task) => any;
-}
+export interface TaskRow extends Task {}
 
-export function Tasks() {
+export function ProjectTasks({ project }: { project: Project }) {
     const [tasks, setTasks] = useState<TaskRow[]>([]);
     const [openDelete, setOpenDelete] = useState<boolean>(false);
 
-    function getTasks() {
+    function getTasks(project: Project) {
         fetch("/api/tasks.json")
             .then((res) => res.json())
             .then((res) => {
-                res = res.map((item: Task): TaskRow => {
-                    return {
-                        ...item,
-                        deleteAction() {
-                            setOpenDelete(true);
-                        },
-                    };
-                });
+                res = res
+                    .filter((item: Task) => item.project.id === project.id)
+                    .map((item: Task): TaskRow => {
+                        return {
+                            ...item,
+                        };
+                    });
                 setTasks(res);
             });
     }
@@ -37,24 +31,16 @@ export function Tasks() {
     useEffect(() => {
         const controller = new AbortController();
 
-        getTasks();
+        getTasks(project);
 
         return () => {
             controller.abort();
         };
-    }, []);
+    }, [project]);
 
     return (
-        <Page
-            pathname="/tasks"
-            header={
-                <SectionHeader title={`Tasks (${tasks.length})`} pathname="/tasks">
-                    <Search />
-                    <Button>Create</Button>
-                </SectionHeader>
-            }
-        >
-            <DataTable columns={taskColumns} data={tasks} />
+        <>
+            <DataTable columns={taskColumns.filter((item) => item.id !== "project")} data={tasks} />
             <ConfirmationAlert
                 open={openDelete}
                 onOpenChange={setOpenDelete}
@@ -86,6 +72,6 @@ export function Tasks() {
                     />
                 }
             />
-        </Page>
+        </>
     );
 }
