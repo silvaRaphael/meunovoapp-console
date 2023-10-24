@@ -10,6 +10,7 @@ import { cn } from "../../../lib/utils";
 import { Task } from "./task";
 import { Project } from "../../projects/data/project";
 import { Link } from "react-router-dom";
+import { MemberInfo } from "../../../components/member-info";
 
 export const taskColumns: ColumnDef<Task>[] = [
     {
@@ -43,10 +44,25 @@ export const taskColumns: ColumnDef<Task>[] = [
             return (
                 <div className="flex item-center space-x-1">
                     <div className="text-left font-medium truncate max-w-[240px]">{project.title}</div>
-                    <Badge variant="outline">
-                        <Link to={`/projects/${project.id}`}>see</Link>
-                    </Badge>
+                    <Link to={`/projects/${project.id}`}>
+                        <Badge variant="outline">see</Badge>
+                    </Link>
                 </div>
+            );
+        },
+    },
+    {
+        accessorKey: "member",
+        id: "member",
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Member" />,
+        cell: ({ row }) => {
+            return (
+                <MemberInfo
+                    avatar={row.original.member?.avatar}
+                    username={row.original.member?.username}
+                    name={row.original.member?.name}
+                    lastName={row.original.member?.lastName}
+                />
             );
         },
     },

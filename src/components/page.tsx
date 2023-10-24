@@ -7,7 +7,7 @@ import { toast } from "./ui/toast/use-toast";
 
 interface Props {
     pathname: string;
-    header: ReactElement<typeof SectionHeader>;
+    header?: ReactElement<typeof SectionHeader>;
     children?: ReactNode;
 }
 

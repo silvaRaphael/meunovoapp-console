@@ -12,6 +12,7 @@ import { Member } from "../data/member";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
 import { MemberTeams } from "./teams";
 import { MemberProjects } from "./projects";
+import { MemberTasks } from "./tasks";
 
 export function MemberDetails() {
     const { username } = useParams();
@@ -90,6 +91,7 @@ export function MemberDetails() {
                         <TabsTrigger value="member">Member</TabsTrigger>
                         <TabsTrigger value="teams">Teams</TabsTrigger>
                         <TabsTrigger value="projects">Projects</TabsTrigger>
+                        <TabsTrigger value="tasks">Tasks</TabsTrigger>
                     </TabsList>
                     <TabsContent value="member" className="pt-3">
                         <MemberForm member={member} />
@@ -99,6 +101,9 @@ export function MemberDetails() {
                     </TabsContent>
                     <TabsContent value="projects" className="pt-3">
                         <MemberProjects member={member} />
+                    </TabsContent>
+                    <TabsContent value="tasks" className="pt-3">
+                        <MemberTasks member={member} />
                     </TabsContent>
                 </Tabs>
             </div>

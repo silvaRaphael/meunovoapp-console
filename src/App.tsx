@@ -11,6 +11,7 @@ import { Toaster } from "./components/ui/toast/toaster";
 import { TeamDetails } from "./pages/teams/details/details";
 import { ProjectDetails } from "./pages/projects/details/details";
 import { TaskDetails } from "./pages/tasks/details/details";
+import { Schedule } from "./pages/schedule/schedule";
 
 export function App() {
     return (
@@ -34,6 +35,9 @@ export function App() {
                     <Route path="/tasks">
                         <Route path="" element={<Tasks />} />
                         <Route path=":id" element={<TaskDetails />} />
+                    </Route>
+                    <Route path="/schedule">
+                        <Route path="" element={<Schedule />} />
                     </Route>
                     <Route path="*" element={<NotFound />} />
                 </Routes>
