@@ -13,5 +13,6 @@ export interface Project {
     // tasks: Task[];
     priority: Priority;
     status: Status;
+    start: Date;
     due: Date;
 }
