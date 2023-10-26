@@ -103,7 +103,10 @@ export const projectColumns: ColumnDef<Project>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Progress" />,
         cell: ({ row }) => {
             const title: string = row.getValue("title");
-            return <Progress value={title.length} />;
+            const status = row.original.status;
+            const progress = status === "waiting" ? 0 : status === "completed" ? 100 : title.length;
+
+            return <Progress value={progress} />;
         },
     },
     {

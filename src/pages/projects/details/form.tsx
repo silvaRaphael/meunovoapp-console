@@ -123,7 +123,7 @@ export function ProjectForm({ project }: { project: Project }) {
                                     <Popover>
                                         <PopoverTrigger asChild>
                                             <FormControl>
-                                                <Button variant="outline" role="combobox" className={cn("justify-between", !field.value && "text-muted-foreground")}>
+                                                <Button variant="outline" role="combobox" className={cn("justify-between bg-muted/50", !field.value && "text-muted-foreground")}>
                                                     <span className="text-left leading-4">
                                                         {field.value
                                                             ? members.filter((member) => field.value === member.id).map((item) => `${item.name} ${item.lastName}`)
@@ -168,7 +168,7 @@ export function ProjectForm({ project }: { project: Project }) {
                                         <Popover>
                                             <PopoverTrigger asChild>
                                                 <FormControl>
-                                                    <Button variant={"outline"} className={cn("pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
+                                                    <Button variant={"outline"} className={cn("pl-3 text-left font-normal bg-muted/50", !field.value && "text-muted-foreground")}>
                                                         {field.value ? format(new Date(field.value), "PPP") : <span>Pick a date</span>}
                                                         <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                                     </Button>
@@ -238,7 +238,11 @@ export function ProjectForm({ project }: { project: Project }) {
                                         <Popover>
                                             <PopoverTrigger asChild>
                                                 <FormControl>
-                                                    <Button variant="outline" role="combobox" className={cn("justify-between", !field.value && "text-muted-foreground")}>
+                                                    <Button
+                                                        variant="outline"
+                                                        role="combobox"
+                                                        className={cn("justify-between bg-muted/50", !field.value && "text-muted-foreground")}
+                                                    >
                                                         <span className="text-left leading-4">Select teams</span>
                                                         <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                                     </Button>

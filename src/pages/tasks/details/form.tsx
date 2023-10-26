@@ -13,11 +13,10 @@ import format from "date-fns/format";
 import { CalendarIcon, CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { Calendar } from "../../../components/ui/calendar";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "../../../components/ui/command";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Member } from "../../members/data/member";
 import { SubmitButton } from "../../../components/submit-button";
 import { toast } from "../../../components/ui/toast/use-toast";
-import { Team } from "../../teams/data/team";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../../components/ui/select";
 import { statuses } from "../../projects/data/status";
 import { priorities } from "../../projects/data/priority";
@@ -71,6 +70,19 @@ export function TaskForm({ task }: { task: Task }) {
             });
     }
 
+    async function onSubmit(data: TaskFormValues) {
+        try {
+            await new Promise((resolve, rejects) => {
+                setTimeout(() => {
+                    resolve(1);
+                    // rejects("An error occured!");
+                }, 1000);
+            });
+        } catch (error: any) {
+            console.error(error);
+        }
+    }
+
     useEffect(() => {
         const controller = new AbortController();
 
@@ -83,7 +95,7 @@ export function TaskForm({ task }: { task: Task }) {
 
     return (
         <Form {...form}>
-            <form className="grid grid-cols-4 gap-x-4">
+            <form className="grid grid-cols-4 gap-x-4" onSubmit={form.handleSubmit(onSubmit)}>
                 <div className="col-span-3 space-y-8">
                     <div className="grid grid-cols-4 gap-x-4">
                         <div className="col-span-2">
@@ -110,7 +122,7 @@ export function TaskForm({ task }: { task: Task }) {
                                     <Popover>
                                         <PopoverTrigger asChild>
                                             <FormControl>
-                                                <Button variant="outline" role="combobox" className={cn("justify-between", !field.value && "text-muted-foreground")}>
+                                                <Button variant="outline" role="combobox" className={cn("justify-between bg-muted/50", !field.value && "text-muted-foreground")}>
                                                     <span className="text-left leading-4">
                                                         {field.value
                                                             ? members.filter((member) => field.value === member.id).map((item) => `${item.name} ${item.lastName}`)
@@ -154,7 +166,7 @@ export function TaskForm({ task }: { task: Task }) {
                                     <Popover>
                                         <PopoverTrigger asChild>
                                             <FormControl>
-                                                <Button variant={"outline"} className={cn("pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
+                                                <Button variant={"outline"} className={cn("pl-3 text-left font-normal bg-muted/50", !field.value && "text-muted-foreground")}>
                                                     {field.value ? format(new Date(field.value), "PPP") : <span>Pick a date</span>}
                                                     <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                                 </Button>
@@ -224,7 +236,7 @@ export function TaskForm({ task }: { task: Task }) {
                             <FormItem>
                                 <FormLabel>Description</FormLabel>
                                 <FormControl>
-                                    <Textarea placeholder="Tell us a little bit about yourself" className="resize-none" rows={5} {...field} />
+                                    <Textarea placeholder="Describe your needs" className="resize-none" rows={5} {...field} />
                                 </FormControl>
                                 <FormDescription>Describe the task function</FormDescription>
                                 <FormMessage />
@@ -233,14 +245,16 @@ export function TaskForm({ task }: { task: Task }) {
                     />
                     <SubmitButton
                         label="Update Task"
-                        onSubmit={async () => {
-                            await new Promise((resolve, rejects) => {
-                                setTimeout(() => {
-                                    resolve(1);
-                                    // rejects("An error occured!");
-                                }, 1000);
-                            });
-                        }}
+                        type="submit"
+                        state={form.formState.isSubmitting ? "loading" : "initial"}
+                        // onSubmit={async () => {
+                        //     await new Promise((resolve, rejects) => {
+                        //         setTimeout(() => {
+                        //             resolve(1);
+                        //             // rejects("An error occured!");
+                        //         }, 1000);
+                        //     });
+                        // }}
                         onError={(error: any) => {
                             toast({
                                 variant: "destructive",

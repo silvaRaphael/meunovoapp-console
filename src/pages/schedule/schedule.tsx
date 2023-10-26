@@ -83,7 +83,7 @@ export function Schedule() {
                 datesSet={(date) => setDate(new Date(date.start.getFullYear(), date.start.getMonth() + 1))}
                 dateClick={(date) => setDateSelected(date.date)}
                 eventContent={(content) => (
-                    <Button variant="secondary" className="w-full">
+                    <Button variant="secondary" size="sm" className="w-full">
                         <span className="truncate">{content.event.title}</span>
                     </Button>
                 )}
