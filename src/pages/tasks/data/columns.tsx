@@ -62,6 +62,9 @@ export const taskColumns: ColumnDef<Task>[] = [
                     username={row.original.member?.username}
                     name={row.original.member?.name}
                     lastName={row.original.member?.lastName}
+                    email={row.original.member?.email}
+                    jobTitle={row.original.member?.jobTitle.name}
+                    since={row.original.member?.since}
                 />
             );
         },

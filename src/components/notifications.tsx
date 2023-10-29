@@ -19,7 +19,7 @@ export function Notifications() {
             <DropdownMenuContent className="w-60" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">Welcome, {format(new Date(), "HH:mm")} now</p>
+                        <p className="text-sm font-medium leading-none">Welcome, {format(new Date(), "p")} now</p>
                         <p className="text-xs leading-none text-muted-foreground">
                             {!notificationsLength ? "You don't have any notifications" : `You have ${notificationsLength} notifications`}
                         </p>

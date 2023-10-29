@@ -77,7 +77,7 @@ export const sideMenu: SideBarMenuRole[] = [
                     },
                     {
                         label: "To Do's",
-                        path: "/to-do",
+                        path: "/to-dos",
                         icon: <ListTodo className="mr-1" size={14} />,
                     },
                     {
@@ -171,7 +171,7 @@ export const sideMenu: SideBarMenuRole[] = [
                     },
                     {
                         label: "To Do's",
-                        path: "/to-do",
+                        path: "/to-dos",
                         icon: <ListTodo className="mr-1" size={14} />,
                     },
                     {

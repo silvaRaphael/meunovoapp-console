@@ -231,7 +231,16 @@ export function TeamForm({ team }: { team: Team }) {
                                                     .filter((item) => form.getValues().members.includes(item.id))
                                                     .map((item: Member, i) => (
                                                         <div className="flex justify-between items-center group">
-                                                            <MemberInfo key={i} avatar={item?.avatar} username={item?.username} name={item?.name} lastName={item?.lastName} />
+                                                            <MemberInfo
+                                                                key={i}
+                                                                avatar={item?.avatar}
+                                                                username={item?.username}
+                                                                name={item?.name}
+                                                                lastName={item?.lastName}
+                                                                email={item?.email}
+                                                                jobTitle={item?.jobTitle.name}
+                                                                since={item?.since}
+                                                            />
                                                             <Actions.Remove
                                                                 className="w-6 h-6 invisible group-hover:visible"
                                                                 onClick={() => {

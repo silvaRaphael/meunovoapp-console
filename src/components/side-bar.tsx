@@ -3,6 +3,7 @@ import { sideMenu } from "../config/site";
 import { Hash, LogOutIcon } from "lucide-react";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { user } from "../config/user";
+import { cn } from "../lib/utils";
 
 export const sideBarWidth = 200;
 export const sideBarWidthCollapsed = 48;
@@ -18,7 +19,7 @@ export function SideBar({ pathname, isOpen }: { pathname: string; isOpen: boolea
         >
             <div className="flex flex-col h-full border-r">
                 <nav
-                    className="flex flex-col overflow-y-auto vertical-scrollbar"
+                    className="flex flex-col pb-5 overflow-y-auto vertical-scrollbar"
                     style={{
                         height: "calc(100vh - 48px - 40px)",
                     }}
@@ -27,17 +28,22 @@ export function SideBar({ pathname, isOpen }: { pathname: string; isOpen: boolea
                         .find((item) => item.role.includes(user.role))
                         ?.menu.map((item, i) => (
                             <div className="flex flex-col justify-start pb-2" key={i}>
-                                <div className="text-xs font-semibold px-4 py-3">{isOpen ? item.title : <DotsHorizontalIcon width={14} />}</div>
-                                <div className="px-4 space-y-2">
+                                <div className="text-xs font-semibold px-4 py-3">
+                                    {isOpen ? item.title : item.title && <DotsHorizontalIcon width={14} className="-ms-[2px] -mt-1 mb-1" />}
+                                </div>
+                                <div className={cn(isOpen ? "px-4 space-y-2" : "px-1 space-y-4")}>
                                     {item.menu.map((item, i) => (
                                         <Link
                                             key={i}
                                             to={item.path}
-                                            className={`flex items-center text-sm h-5 font-medium transition-colors hover:text-primary ${
-                                                pathname !== item.path ? "text-muted-foreground" : ""
-                                            }`}
+                                            className={cn(
+                                                `flex items-center text-sm h-5 font-medium transition-colors hover:text-primary ${
+                                                    pathname !== item.path ? "text-muted-foreground" : ""
+                                                }`,
+                                                !isOpen ? "px-3" : "",
+                                            )}
                                         >
-                                            {<div className={`${!isOpen && "scale-110"}`}>{item?.icon}</div> ?? <Hash className="mr-1" size={14} />}
+                                            {<div className={`${!isOpen && "scale-150"}`}>{item?.icon}</div> ?? <Hash className="mr-1" size={14} />}
                                             {isOpen && item.label}
                                         </Link>
                                     ))}

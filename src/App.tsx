@@ -13,6 +13,7 @@ import { ProjectDetails } from "./pages/projects/details/details";
 import { TaskDetails } from "./pages/tasks/details/details";
 import { Schedule } from "./pages/schedule/schedule";
 import { Notes } from "./pages/notes/notes";
+import { Profile } from "./pages/profile/profile";
 
 export function App() {
     return (
@@ -43,6 +44,7 @@ export function App() {
                     <Route path="/notes">
                         <Route path="" element={<Notes />} />
                     </Route>
+                    <Route path="/profile" element={<Profile />} />
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             </BrowserRouter>

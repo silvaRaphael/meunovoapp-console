@@ -13,7 +13,17 @@ export const memberColumns: ColumnDef<Member>[] = [
         accessorKey: "name",
         header: ({ column }) => <DataTableColumnHeader column={column} title="Member" noDislocate />,
         cell: ({ row }) => {
-            return <MemberInfo avatar={row.original?.avatar} username={row.original?.username} name={row.original?.name} lastName={row.original?.lastName} />;
+            return (
+                <MemberInfo
+                    avatar={row.original?.avatar}
+                    username={row.original?.username}
+                    name={row.original?.name}
+                    lastName={row.original?.lastName}
+                    email={row.original?.email}
+                    jobTitle={row.original?.jobTitle.name}
+                    since={row.original?.since}
+                />
+            );
         },
     },
     {

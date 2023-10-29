@@ -99,7 +99,16 @@ export function Teams() {
                         <>
                             {membersList.map((member: Member, i) => (
                                 <div key={i} className="flex justify-between items-center">
-                                    <MemberInfo key={i} avatar={member?.avatar} username={member?.username} name={member?.name} lastName={member?.lastName} />
+                                    <MemberInfo
+                                        key={i}
+                                        avatar={member?.avatar}
+                                        username={member?.username}
+                                        name={member?.name}
+                                        lastName={member?.lastName}
+                                        email={member?.email}
+                                        jobTitle={member?.jobTitle.name}
+                                        since={member?.since}
+                                    />
                                     <Actions.Edit to={`/members/@${member.username}`} />
                                 </div>
                             ))}

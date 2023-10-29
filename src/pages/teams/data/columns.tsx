@@ -26,6 +26,9 @@ export const teamColumns: ColumnDef<Team>[] = [
                     username={row.original.manager?.username}
                     name={row.original.manager?.name}
                     lastName={row.original.manager?.lastName}
+                    email={row.original.manager?.email}
+                    jobTitle={row.original.manager?.jobTitle.name}
+                    since={row.original.manager?.since}
                 />
             );
         },
