@@ -13,6 +13,7 @@ import { MemberInfo } from "../../components/member-info";
 import { Actions } from "../../components/actions";
 import { Team } from "./data/team";
 import { teamColumns } from "./data/columns";
+import { Mod } from "../../mod/handle-request";
 
 interface TeamRow extends Team {
     deleteAction?: (props: Team) => any;
@@ -75,24 +76,19 @@ export function Teams() {
                     <SubmitButton
                         label="Delete"
                         onSubmit={async () => {
-                            await new Promise((resolve, rejects) => {
-                                setTimeout(() => {
-                                    resolve(1);
-                                    // rejects("An error occured!");
-                                }, 1000);
+                            const { onDone, onError } = await new Mod().delete("https://jsonplaceholder.typicode.com/users");
+                            onDone(() => {
+                                toast({
+                                    variant: "success",
+                                    title: "Team removed successfully!",
+                                });
                             });
-                        }}
-                        onError={(error: any) => {
-                            toast({
-                                variant: "destructive",
-                                title: error || "An error occured!",
-                            });
-                        }}
-                        onSuccess={() => {
-                            toast({
-                                title: "Team removed successfully!",
-                            });
-                            setOpenDelete(false);
+                            onError(() =>
+                                toast({
+                                    variant: "destructive",
+                                    title: "An error occured!",
+                                }),
+                            );
                         }}
                     />
                 }

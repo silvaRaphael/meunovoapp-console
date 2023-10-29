@@ -13,13 +13,14 @@ import format from "date-fns/format";
 import { CalendarIcon, CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { Calendar } from "../../../components/ui/calendar";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "../../../components/ui/command";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Member } from "../../members/data/member";
 import { SubmitButton } from "../../../components/submit-button";
 import { toast } from "../../../components/ui/toast/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../../components/ui/select";
 import { statuses } from "../../projects/data/status";
 import { priorities } from "../../projects/data/priority";
+import { Mod } from "../../../mod/handle-request";
 
 const taskFormSchema = z.object({
     title: z
@@ -70,19 +71,6 @@ export function TaskForm({ task }: { task: Task }) {
             });
     }
 
-    async function onSubmit(data: TaskFormValues) {
-        try {
-            await new Promise((resolve, rejects) => {
-                setTimeout(() => {
-                    resolve(1);
-                    // rejects("An error occured!");
-                }, 1000);
-            });
-        } catch (error: any) {
-            console.error(error);
-        }
-    }
-
     useEffect(() => {
         const controller = new AbortController();
 
@@ -92,6 +80,22 @@ export function TaskForm({ task }: { task: Task }) {
             controller.abort();
         };
     }, []);
+
+    async function onSubmit(data: TaskFormValues) {
+        const { onDone, onError } = await new Mod(data).post("https://jsonplaceholder.typicode.com/users");
+        onDone(() =>
+            toast({
+                variant: "success",
+                title: "Task updated successfully!",
+            }),
+        );
+        onError(() =>
+            toast({
+                variant: "destructive",
+                title: "An error occured!",
+            }),
+        );
+    }
 
     return (
         <Form {...form}>
@@ -243,30 +247,7 @@ export function TaskForm({ task }: { task: Task }) {
                             </FormItem>
                         )}
                     />
-                    <SubmitButton
-                        label="Update Task"
-                        type="submit"
-                        state={form.formState.isSubmitting ? "loading" : "initial"}
-                        // onSubmit={async () => {
-                        //     await new Promise((resolve, rejects) => {
-                        //         setTimeout(() => {
-                        //             resolve(1);
-                        //             // rejects("An error occured!");
-                        //         }, 1000);
-                        //     });
-                        // }}
-                        onError={(error: any) => {
-                            toast({
-                                variant: "destructive",
-                                title: error || "An error occured!",
-                            });
-                        }}
-                        onSuccess={() => {
-                            toast({
-                                title: "Task updated successfully!",
-                            });
-                        }}
-                    />
+                    <SubmitButton label="Update Task" type="submit" state={form.formState.isSubmitting ? "loading" : "initial"} />
                 </div>
             </form>
         </Form>

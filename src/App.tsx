@@ -12,6 +12,7 @@ import { TeamDetails } from "./pages/teams/details/details";
 import { ProjectDetails } from "./pages/projects/details/details";
 import { TaskDetails } from "./pages/tasks/details/details";
 import { Schedule } from "./pages/schedule/schedule";
+import { Notes } from "./pages/notes/notes";
 
 export function App() {
     return (
@@ -38,6 +39,9 @@ export function App() {
                     </Route>
                     <Route path="/schedule">
                         <Route path="" element={<Schedule />} />
+                    </Route>
+                    <Route path="/notes">
+                        <Route path="" element={<Notes />} />
                     </Route>
                     <Route path="*" element={<NotFound />} />
                 </Routes>

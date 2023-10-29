@@ -13,6 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui
 import { MemberTeams } from "./teams";
 import { MemberProjects } from "./projects";
 import { MemberTasks } from "./tasks";
+import { Mod } from "../../../mod/handle-request";
 
 export function MemberDetails() {
     const { username } = useParams();
@@ -52,27 +53,20 @@ export function MemberDetails() {
                             <SubmitButton
                                 label="Delete"
                                 onSubmit={async () => {
-                                    await new Promise((resolve, rejects) => {
-                                        setTimeout(() => {
-                                            resolve(1);
-                                            // rejects("An error occured!");
-                                        }, 1000);
+                                    const { onDone, onError } = await new Mod().delete("https://jsonplaceholder.typicode.com/users");
+                                    onDone(() => {
+                                        toast({
+                                            variant: "success",
+                                            title: "Member removed successfully!",
+                                        });
+                                        navigate("/members");
                                     });
-                                }}
-                                onError={(error: any) => {
-                                    toast({
-                                        variant: "destructive",
-                                        title: error || "An error occured!",
-                                    });
-                                }}
-                                onSuccess={() => {
-                                    navigate("/members", {
-                                        state: {
-                                            toast: {
-                                                title: "Member removed successfully!",
-                                            },
-                                        },
-                                    });
+                                    onError(() =>
+                                        toast({
+                                            variant: "destructive",
+                                            title: "An error occured!",
+                                        }),
+                                    );
                                 }}
                             />
                         }

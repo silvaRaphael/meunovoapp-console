@@ -19,6 +19,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../../../components/ui/avat
 import { SubmitButton } from "../../../components/submit-button";
 import { toast } from "../../../components/ui/toast/use-toast";
 import { JobTitle } from "../../../config/job-titles";
+import { Mod } from "../../../mod/handle-request";
 
 const memberFormSchema = z.object({
     username: z
@@ -100,9 +101,25 @@ export function MemberForm({ member }: { member: Member }) {
         };
     }, []);
 
+    async function onSubmit(data: MemberFormValues) {
+        const { onDone, onError } = await new Mod(data).post("https://jsonplaceholder.typicode.com/users");
+        onDone(() =>
+            toast({
+                variant: "success",
+                title: "Member updated successfully!",
+            }),
+        );
+        onError(() =>
+            toast({
+                variant: "destructive",
+                title: "An error occured!",
+            }),
+        );
+    }
+
     return (
         <Form {...form}>
-            <form className="grid grid-cols-4 gap-x-4">
+            <form className="grid grid-cols-4 gap-x-4" onSubmit={form.handleSubmit(onSubmit)}>
                 <div className="col-span-3 space-y-8">
                     <div className="grid grid-cols-3 gap-x-4">
                         <FormField
@@ -237,28 +254,7 @@ export function MemberForm({ member }: { member: Member }) {
                             </FormItem>
                         )}
                     />
-                    <SubmitButton
-                        label="Update Member"
-                        onSubmit={async () => {
-                            await new Promise((resolve, rejects) => {
-                                setTimeout(() => {
-                                    resolve(1);
-                                    // rejects("An error occured!");
-                                }, 1000);
-                            });
-                        }}
-                        onError={(error: any) => {
-                            toast({
-                                variant: "destructive",
-                                title: error || "An error occured!",
-                            });
-                        }}
-                        onSuccess={() => {
-                            toast({
-                                title: "Member updated successfully!",
-                            });
-                        }}
-                    />
+                    <SubmitButton label="Update Member" type="submit" state={form.formState.isSubmitting ? "loading" : "initial"} />
                 </div>
                 <Card className="w-full h-min">
                     <CardHeader>

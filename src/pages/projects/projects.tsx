@@ -12,6 +12,7 @@ import { Actions } from "../../components/actions";
 import { Project } from "./data/project";
 import { projectColumns } from "./data/columns";
 import { Team } from "../teams/data/team";
+import { Mod } from "../../mod/handle-request";
 
 export interface ProjectRow extends Project {
     deleteAction?: (props: Project) => any;
@@ -74,24 +75,19 @@ export function Projects() {
                     <SubmitButton
                         label="Delete"
                         onSubmit={async () => {
-                            await new Promise((resolve, rejects) => {
-                                setTimeout(() => {
-                                    resolve(1);
-                                    // rejects("An error occured!");
-                                }, 1000);
+                            const { onDone, onError } = await new Mod().delete("https://jsonplaceholder.typicode.com/users");
+                            onDone(() => {
+                                toast({
+                                    variant: "success",
+                                    title: "Project removed successfully!",
+                                });
                             });
-                        }}
-                        onError={(error: any) => {
-                            toast({
-                                variant: "destructive",
-                                title: error || "An error occured!",
-                            });
-                        }}
-                        onSuccess={() => {
-                            toast({
-                                title: "Project removed successfully!",
-                            });
-                            setOpenDelete(false);
+                            onError(() =>
+                                toast({
+                                    variant: "destructive",
+                                    title: "An error occured!",
+                                }),
+                            );
                         }}
                     />
                 }

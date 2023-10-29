@@ -9,6 +9,7 @@ import { ConfirmationAlert } from "../../../components/confirmation-alert";
 import { SubmitButton } from "../../../components/submit-button";
 import { toast } from "../../../components/ui/toast/use-toast";
 import { Task } from "../data/task";
+import { Mod } from "../../../mod/handle-request";
 
 export function TaskDetails() {
     const { id } = useParams();
@@ -48,27 +49,20 @@ export function TaskDetails() {
                             <SubmitButton
                                 label="Delete"
                                 onSubmit={async () => {
-                                    await new Promise((resolve, rejects) => {
-                                        setTimeout(() => {
-                                            resolve(1);
-                                            // rejects("An error occured!");
-                                        }, 1000);
+                                    const { onDone, onError } = await new Mod().delete("https://jsonplaceholder.typicode.com/users");
+                                    onDone(() => {
+                                        toast({
+                                            variant: "success",
+                                            title: "Task removed successfully!",
+                                        });
+                                        navigate("/tasks");
                                     });
-                                }}
-                                onError={(error: any) => {
-                                    toast({
-                                        variant: "destructive",
-                                        title: error || "An error occured!",
-                                    });
-                                }}
-                                onSuccess={() => {
-                                    navigate("/tasks", {
-                                        state: {
-                                            toast: {
-                                                title: "Task removed successfully!",
-                                            },
-                                        },
-                                    });
+                                    onError(() =>
+                                        toast({
+                                            variant: "destructive",
+                                            title: "An error occured!",
+                                        }),
+                                    );
                                 }}
                             />
                         }

@@ -11,6 +11,7 @@ import { toast } from "../../../components/ui/toast/use-toast";
 import { Project } from "../data/project";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
 import { ProjectTasks } from "./tasks";
+import { Mod } from "../../../mod/handle-request";
 
 export function ProjectDetails() {
     const { id } = useParams();
@@ -50,27 +51,20 @@ export function ProjectDetails() {
                             <SubmitButton
                                 label="Delete"
                                 onSubmit={async () => {
-                                    await new Promise((resolve, rejects) => {
-                                        setTimeout(() => {
-                                            resolve(1);
-                                            // rejects("An error occured!");
-                                        }, 1000);
+                                    const { onDone, onError } = await new Mod().delete("https://jsonplaceholder.typicode.com/users");
+                                    onDone(() => {
+                                        toast({
+                                            variant: "success",
+                                            title: "Project removed successfully!",
+                                        });
+                                        navigate("/projects");
                                     });
-                                }}
-                                onError={(error: any) => {
-                                    toast({
-                                        variant: "destructive",
-                                        title: error || "An error occured!",
-                                    });
-                                }}
-                                onSuccess={() => {
-                                    navigate("/projects", {
-                                        state: {
-                                            toast: {
-                                                title: "Project removed successfully!",
-                                            },
-                                        },
-                                    });
+                                    onError(() =>
+                                        toast({
+                                            variant: "destructive",
+                                            title: "An error occured!",
+                                        }),
+                                    );
                                 }}
                             />
                         }

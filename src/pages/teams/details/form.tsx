@@ -18,6 +18,7 @@ import { SubmitButton } from "../../../components/submit-button";
 import { toast } from "../../../components/ui/toast/use-toast";
 import { MemberInfo } from "../../../components/member-info";
 import { Actions } from "../../../components/actions";
+import { Mod } from "../../../mod/handle-request";
 
 const teamFormSchema = z.object({
     name: z
@@ -78,9 +79,25 @@ export function TeamForm({ team }: { team: Team }) {
         };
     }, []);
 
+    async function onSubmit(data: TeamFormValues) {
+        const { onDone, onError } = await new Mod(data).post("https://jsonplaceholder.typicode.com/users");
+        onDone(() =>
+            toast({
+                variant: "success",
+                title: "Team updated successfully!",
+            }),
+        );
+        onError(() =>
+            toast({
+                variant: "destructive",
+                title: "An error occured!",
+            }),
+        );
+    }
+
     return (
         <Form {...form}>
-            <form className="grid grid-cols-4 gap-x-4">
+            <form className="grid grid-cols-4 gap-x-4" onSubmit={form.handleSubmit(onSubmit)}>
                 <div className="col-span-3 space-y-8">
                     <div className="grid grid-cols-3 gap-x-4">
                         <div className="col-span-2">
@@ -157,28 +174,7 @@ export function TeamForm({ team }: { team: Team }) {
                             </FormItem>
                         )}
                     />
-                    <SubmitButton
-                        label="Update Team"
-                        onSubmit={async () => {
-                            await new Promise((resolve, rejects) => {
-                                setTimeout(() => {
-                                    resolve(1);
-                                    // rejects("An error occured!");
-                                }, 1000);
-                            });
-                        }}
-                        onError={(error: any) => {
-                            toast({
-                                variant: "destructive",
-                                title: error || "An error occured!",
-                            });
-                        }}
-                        onSuccess={() => {
-                            toast({
-                                title: "Team updated successfully!",
-                            });
-                        }}
-                    />
+                    <SubmitButton label="Update Team" type="submit" state={form.formState.isSubmitting ? "loading" : "initial"} />
                 </div>
                 <div className="col-span-1">
                     <FormField

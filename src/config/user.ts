@@ -1,6 +1,7 @@
 import { Role } from "./roles";
 
 export interface User {
+    id: string;
     username: string;
     name: string;
     lastName: string;
@@ -11,6 +12,7 @@ export interface User {
 }
 
 export const user: User = {
+    id: "f435a726-cc85-4fa9-b62b-bdcf48befdf1",
     username: "rsilva",
     name: "raphael",
     lastName: "silva",

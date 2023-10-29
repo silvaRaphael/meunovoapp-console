@@ -11,6 +11,7 @@ import { toast } from "../../../components/ui/toast/use-toast";
 import { Team } from "../data/team";
 import { TeamProjects } from "./projects";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
+import { Mod } from "../../../mod/handle-request";
 
 export function TeamDetails() {
     const { slug } = useParams();
@@ -50,27 +51,20 @@ export function TeamDetails() {
                             <SubmitButton
                                 label="Delete"
                                 onSubmit={async () => {
-                                    await new Promise((resolve, rejects) => {
-                                        setTimeout(() => {
-                                            resolve(1);
-                                            // rejects("An error occured!");
-                                        }, 1000);
+                                    const { onDone, onError } = await new Mod().delete("https://jsonplaceholder.typicode.com/users");
+                                    onDone(() => {
+                                        toast({
+                                            variant: "success",
+                                            title: "Team removed successfully!",
+                                        });
+                                        navigate("/teams");
                                     });
-                                }}
-                                onError={(error: any) => {
-                                    toast({
-                                        variant: "destructive",
-                                        title: error || "An error occured!",
-                                    });
-                                }}
-                                onSuccess={() => {
-                                    navigate("/teams", {
-                                        state: {
-                                            toast: {
-                                                title: "Team removed successfully!",
-                                            },
-                                        },
-                                    });
+                                    onError(() =>
+                                        toast({
+                                            variant: "destructive",
+                                            title: "An error occured!",
+                                        }),
+                                    );
                                 }}
                             />
                         }
