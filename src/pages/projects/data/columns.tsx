@@ -76,7 +76,7 @@ export const projectColumns: ColumnDef<Project>[] = [
             return (
                 <div className="flex items-center space-x-1">
                     {icons[status]}
-                    <span>{status}</span>
+                    <span className="whitespace-nowrap">{status}</span>
                 </div>
             );
         },
@@ -94,7 +94,7 @@ export const projectColumns: ColumnDef<Project>[] = [
             return (
                 <div className="flex items-center space-x-1">
                     {icons[priority]}
-                    <span>{priorities[priority]}</span>
+                    <span className="whitespace-nowrap">{priorities[priority]}</span>
                 </div>
             );
         },
