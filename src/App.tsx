@@ -14,6 +14,7 @@ import { TaskDetails } from "./pages/tasks/details/details";
 import { Schedule } from "./pages/schedule/schedule";
 import { Notes } from "./pages/notes/notes";
 import { Profile } from "./pages/profile/profile";
+import { Preferences } from "./pages/preferences/preferences";
 
 export function App() {
     return (
@@ -45,6 +46,7 @@ export function App() {
                         <Route path="" element={<Notes />} />
                     </Route>
                     <Route path="/profile" element={<Profile />} />
+                    <Route path="/preferences" element={<Preferences />} />
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             </BrowserRouter>

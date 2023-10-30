@@ -1,11 +1,8 @@
 import { SectionHeader } from "../../components/section-header";
 import { Separator } from "../../components/ui/separator";
-import { Button } from "../../components/ui/button";
 import { Page } from "../../components/page";
-import { ConfirmationAlert } from "../../components/confirmation-alert";
-import { SubmitButton } from "../../components/submit-button";
 import { user } from "../../config/user";
-import { ProfileFormVert } from "./form-vert";
+import { ProfileForm } from "./form";
 
 export function Profile() {
     return (
@@ -16,7 +13,7 @@ export function Profile() {
                     <p className="text-sm text-muted-foreground">Some of this informations are public for other users</p>
                 </div>
                 <Separator />
-                <ProfileFormVert user={user} />
+                <ProfileForm user={user} />
             </div>
         </Page>
     );
