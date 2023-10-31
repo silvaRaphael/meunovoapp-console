@@ -1,6 +1,7 @@
 import { Book, Calendar, ClipboardList, HelpCircle, Landmark, LayoutDashboard, ListTodo, Settings, Settings2, User, Users, Video } from "lucide-react";
 import { Role } from "./roles";
 import { user } from "./user";
+import { Plan } from "../pages/pricing/data/plan";
 
 export interface MenuItem {
     path: string;
@@ -207,3 +208,5 @@ for (const item of sideMenu) {
         menuItems.push(...subItem.menu);
     }
 }
+
+export const activePlan: Pick<Plan, "id"> = { id: "abc" };
