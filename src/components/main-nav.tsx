@@ -47,7 +47,7 @@ export function MainNav({ pathname }: { pathname: string }) {
                 <Link
                     key={i}
                     to={item.path}
-                    className={`flex items-center text-sm font-medium h-9 transition-colors hover:text-primary group ${pathname !== item.path ? "text-muted-foreground" : ""}`}
+                    className={`flex items-center text-sm font-medium h-11 transition-colors hover:text-primary group ${pathname !== item.path ? "text-muted-foreground" : ""}`}
                 >
                     <span className="flex items-center">
                         {item?.icon ?? <Hash className="mr-1" size={14} />}

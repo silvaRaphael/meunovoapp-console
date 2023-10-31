@@ -15,6 +15,7 @@ import { Schedule } from "./pages/schedule/schedule";
 import { Notes } from "./pages/notes/notes";
 import { Profile } from "./pages/profile/profile";
 import { Preferences } from "./pages/preferences/preferences";
+import { Pricing } from "./pages/pricing/pricing";
 
 export function App() {
     return (
@@ -47,6 +48,7 @@ export function App() {
                     </Route>
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/preferences" element={<Preferences />} />
+                    <Route path="/pricing" element={<Pricing />} />
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             </BrowserRouter>

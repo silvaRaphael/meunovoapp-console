@@ -10,7 +10,7 @@ interface Props {
 }
 
 export function Page({ pathname, header, children }: Props) {
-    const [isOpen, setIsOpen] = useState<boolean>(() => localStorage.getItem("side-bar-is-open") === "true");
+    const [isOpen, setIsOpen] = useState<boolean>(localStorage.getItem("side-bar-is-open") === "true");
 
     function toggleSideBar() {
         localStorage.setItem("side-bar-is-open", String(!isOpen));
