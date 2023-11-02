@@ -31,16 +31,17 @@ export function SideBar({ pathname, isOpen }: { pathname: string; isOpen: boolea
                                 <div className="text-xs font-semibold px-4 py-3">
                                     {isOpen ? item.title : item.title && <DotsHorizontalIcon width={14} className="-ms-[2px] -mt-1 mb-1" />}
                                 </div>
-                                <div className={cn(isOpen ? "px-4 space-y-2" : "px-1 space-y-4")}>
+                                <div className={cn(isOpen ? "px-4 space-y-2" : "px-0 space-y-2")}>
                                     {item.menu.map((item, i) => (
                                         <Link
                                             key={i}
                                             to={item.path}
                                             className={cn(
-                                                `flex items-center text-sm h-5 font-medium transition-colors hover:text-primary ${
+                                                `flex items-center text-sm h-6 font-medium transition-colors hover:text-primary border-l-2 border-l-transparent  ${
                                                     pathname !== item.path ? "text-muted-foreground" : ""
                                                 }`,
-                                                !isOpen ? "px-3" : "",
+                                                !isOpen ? "justify-center" : "",
+                                                !isOpen && pathname === item.path ? "border-l-white" : "",
                                             )}
                                         >
                                             {<div className={`${!isOpen && "scale-125"}`}>{item?.icon}</div> ?? <Hash className="mr-1" size={14} />}
