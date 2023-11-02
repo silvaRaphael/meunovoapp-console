@@ -43,7 +43,7 @@ export function SideBar({ pathname, isOpen }: { pathname: string; isOpen: boolea
                                                 !isOpen ? "px-3" : "",
                                             )}
                                         >
-                                            {<div className={`${!isOpen && "scale-150"}`}>{item?.icon}</div> ?? <Hash className="mr-1" size={14} />}
+                                            {<div className={`${!isOpen && "scale-125"}`}>{item?.icon}</div> ?? <Hash className="mr-1" size={14} />}
                                             {isOpen && item.label}
                                         </Link>
                                     ))}
