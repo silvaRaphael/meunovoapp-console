@@ -3,16 +3,15 @@ import { Page } from "../../components/page";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../../components/ui/card";
 import { planIncludes, plans } from "./data/data";
 import { Button } from "../../components/ui/button";
-import { Slider } from "../../components/ui/slider";
 import { activePlan } from "../../config/site";
 import { Badge } from "../../components/ui/badge";
 import { Separator } from "../../components/ui/separator";
-import { CheckCircle2, XCircle } from "lucide-react";
+import { CheckCircle2, X } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table";
 
 export function Pricing() {
     return (
-        <Page pathname="/pricing" header={<SectionHeader title="Pricing" pathname="/pricing"></SectionHeader>}>
+        <Page pathname="/pricing" header={<SectionHeader title="Pricing" pathname="/pricing" />}>
             <div className="space-y-6 pb-40">
                 <div className="grid grid-cols-3 gap-4">
                     {plans.map((item) => (
@@ -21,7 +20,14 @@ export function Pricing() {
                                 <CardHeader>
                                     <CardTitle className="text-3xl flex justify-between items-center">
                                         {item.title}
-                                        {activePlan.id === item.id && <Badge className="ms-2 h-min pointer-events-none">Current</Badge>}
+                                        <div className="flex space-x-2 ms-2">
+                                            {item.recommended && (
+                                                <Badge variant="outline" className="h-min pointer-events-none">
+                                                    Recommended
+                                                </Badge>
+                                            )}
+                                            {activePlan.id === item.id && <Badge className="h-min pointer-events-none">Current</Badge>}
+                                        </div>
                                     </CardTitle>
                                 </CardHeader>
                                 <Separator />
@@ -39,20 +45,11 @@ export function Pricing() {
                                             {item}
                                         </div>
                                     ))}
-                                    {!!item.extras.length &&
-                                        item.extras.map((extra) => (
-                                            <div className="pt-4">
-                                                <Slider min={0} max={100} step={extra.ammount} defaultValue={[extra.ammount]} />
-                                                <p className="text-sm font-bold text-muted-foreground mt-2">
-                                                    {extra.ammount} extra {extra.title}
-                                                </p>
-                                            </div>
-                                        ))}
                                 </CardContent>
                             </div>
                             <CardFooter>
                                 <Button className="w-full" disabled={activePlan.id === item.id}>
-                                    Upgrade
+                                    {!!item.extras.length ? "Customize" : "Upgrade"}
                                 </Button>
                             </CardFooter>
                         </Card>
@@ -75,15 +72,26 @@ export function Pricing() {
                             {planIncludes.map((item, i) => (
                                 <TableRow key={i} className="text-sm font-medium h-12">
                                     <TableCell>{item.title}</TableCell>
-                                    {plans.map((plan, i) => (
-                                        <TableCell key={i}>
-                                            {plan.includes.find((planInclude) => planInclude.id === item.id) ? (
-                                                <CheckCircle2 size={16} className="mx-auto" />
-                                            ) : (
-                                                <XCircle size={16} className="mx-auto text-muted" />
-                                            )}
-                                        </TableCell>
-                                    ))}
+                                    {plans.map((plan, i) => {
+                                        const includesPlan = plan.includes.find((planInclude) => planInclude.id === item.id);
+                                        return (
+                                            <TableCell key={i} className="text-center">
+                                                {includesPlan ? (
+                                                    typeof includesPlan.value === "boolean" ? (
+                                                        includesPlan.value ? (
+                                                            <CheckCircle2 size={16} className="mx-auto" />
+                                                        ) : (
+                                                            <X size={16} className="mx-auto" />
+                                                        )
+                                                    ) : (
+                                                        <p>{includesPlan.value}</p>
+                                                    )
+                                                ) : (
+                                                    <X size={16} className="mx-auto" />
+                                                )}
+                                            </TableCell>
+                                        );
+                                    })}
                                 </TableRow>
                             ))}
                         </TableBody>

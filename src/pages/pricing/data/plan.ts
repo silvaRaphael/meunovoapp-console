@@ -1,6 +1,7 @@
 export interface PlanInclude {
     id: string;
     title: string;
+    type?: boolean | string | number;
 }
 
 export interface PlanItem {
@@ -26,6 +27,7 @@ export interface Plan {
     daysFree: number;
     extras: Extra[];
     items: string[];
-    includes: Pick<PlanInclude, "id">[];
+    includes: (Pick<PlanInclude, "id"> & { value: string | number | boolean })[];
+    recommended?: boolean;
     createdAt: Date;
 }

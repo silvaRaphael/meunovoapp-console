@@ -1,4 +1,4 @@
-import { Book, Calendar, ClipboardList, HelpCircle, Landmark, LayoutDashboard, ListTodo, Settings, Settings2, User, Users, Video } from "lucide-react";
+import { Book, Calendar, ClipboardList, HelpCircle, Landmark, LayoutDashboard, ListTodo, MessagesSquare, Settings, Settings2, User, Users, Video } from "lucide-react";
 import { Role } from "./roles";
 import { user } from "./user";
 import { Plan } from "../pages/pricing/data/plan";
@@ -65,6 +65,11 @@ export const sideMenu: SideBarMenuRole[] = [
                         label: "Meetings",
                         path: "/meetings",
                         icon: <Video className="mr-1" size={14} />,
+                    },
+                    {
+                        label: "Chat",
+                        path: "/chat",
+                        icon: <MessagesSquare className="mr-1" size={14} />,
                     },
                 ],
             },
@@ -160,6 +165,11 @@ export const sideMenu: SideBarMenuRole[] = [
                         path: "/meetings",
                         icon: <Video className="mr-1" size={14} />,
                     },
+                    {
+                        label: "Chat",
+                        path: "/chat",
+                        icon: <MessagesSquare className="mr-1" size={14} />,
+                    },
                 ],
             },
             {
@@ -209,4 +219,4 @@ for (const item of sideMenu) {
     }
 }
 
-export const activePlan: Pick<Plan, "id"> = { id: "abc" };
+export const activePlan: Pick<Plan, "id"> = { id: "xyz" };
