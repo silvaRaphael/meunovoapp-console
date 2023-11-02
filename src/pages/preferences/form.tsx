@@ -7,13 +7,12 @@ import { SubmitButton } from "../../components/submit-button";
 import { toast } from "../../components/ui/toast/use-toast";
 import { Mod } from "../../mod/handle-request";
 import { User } from "../../config/user";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select";
 import { Separator } from "../../components/ui/separator";
 import { Switch } from "../../components/ui/switch";
 import { Label } from "../../components/ui/label";
 import { useTheme } from "../../components/theme-provider";
 import { RadioGroup, RadioGroupItem } from "../../components/ui/radio-group";
-import { Laptop, Laptop2, MoonIcon, SunIcon } from "lucide-react";
+import { Laptop, MoonIcon, SunIcon } from "lucide-react";
 
 const preferencesFormSchema = z.object({
     emailNotification: z.boolean(),
