@@ -21,8 +21,8 @@ export const user: User = {
     gender: "masculine",
     avatar: "https://ui.shadcn.com/avatars/02.png",
     bio: "",
-    // role: "owner",
+    role: "owner",
     // role: "admin",
     // role: "manager",
-    role: "member",
+    // role: "member",
 };

@@ -8,14 +8,17 @@ import { Badge } from "../../components/ui/badge";
 import { Separator } from "../../components/ui/separator";
 import { CheckCircle2, X } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table";
+import { useNavigate } from "react-router-dom";
 
 export function Pricing() {
+    const navigate = useNavigate();
+
     return (
         <Page pathname="/pricing" header={<SectionHeader title="Pricing" pathname="/pricing" />}>
             <div className="space-y-6 pb-40">
                 <div className="grid grid-cols-3 gap-4">
-                    {plans.map((item) => (
-                        <Card className="flex flex-col justify-between">
+                    {plans.map((item, i) => (
+                        <Card key={i} className="flex flex-col justify-between">
                             <div>
                                 <CardHeader>
                                     <CardTitle className="text-3xl flex justify-between items-center">
@@ -39,8 +42,8 @@ export function Pricing() {
                                     </h1>
                                     <span className="inline-block text-md font-normal leading-5 text-muted-foreground">{item.description}</span>
                                     <Separator />
-                                    {item.items.map((item) => (
-                                        <div className="flex items-center">
+                                    {item.items.map((item, i) => (
+                                        <div key={i} className="flex items-center">
                                             <CheckCircle2 size={16} className="me-2" />
                                             {item}
                                         </div>
@@ -48,7 +51,14 @@ export function Pricing() {
                                 </CardContent>
                             </div>
                             <CardFooter>
-                                <Button className="w-full" disabled={activePlan.id === item.id}>
+                                <Button
+                                    className="w-full"
+                                    disabled={activePlan.id === item.id}
+                                    onClick={() => {
+                                        if (!item.extras.length) sessionStorage.setItem("planCheckout", JSON.stringify(item));
+                                        navigate(!!item.extras.length ? `/pricing/customize/${item.id}` : "/pricing/checkout");
+                                    }}
+                                >
                                     {!!item.extras.length ? "Customize" : "Upgrade"}
                                 </Button>
                             </CardFooter>

@@ -28,7 +28,7 @@ export const planItems: PlanItem[] = [
 export const plans: Plan[] = [
     {
         id: "123",
-        title: "Minimal",
+        title: "Basic",
         description: `Recommended for starters`,
         price: 15,
         members: 10,
@@ -95,7 +95,7 @@ export const plans: Plan[] = [
     },
     {
         id: "abc",
-        title: "Full",
+        title: "Pro",
         description: "Recommended for companies",
         price: 100,
         members: 100,

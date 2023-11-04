@@ -16,6 +16,8 @@ import { Notes } from "./pages/notes/notes";
 import { Profile } from "./pages/profile/profile";
 import { Preferences } from "./pages/preferences/preferences";
 import { Pricing } from "./pages/pricing/pricing";
+import { PlanCheckout } from "./pages/pricing/details/checkout";
+import { PlanCustomize } from "./pages/pricing/details/customize/customize";
 
 export function App() {
     return (
@@ -48,7 +50,11 @@ export function App() {
                     </Route>
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/preferences" element={<Preferences />} />
-                    <Route path="/pricing" element={<Pricing />} />
+                    <Route path="/pricing">
+                        <Route path="" element={<Pricing />} />
+                        <Route path="customize/:id" element={<PlanCustomize />} />
+                        <Route path="checkout" element={<PlanCheckout />} />
+                    </Route>
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             </BrowserRouter>
