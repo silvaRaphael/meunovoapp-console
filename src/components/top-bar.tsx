@@ -18,7 +18,7 @@ export function TopBar({ pathname, toggleSideBar, isOpen }: { pathname: string; 
                     }}
                 >
                     <Link to="/" className="flex items-center text-sm font-medium">
-                        <Container className="me-1" size={18} />
+                        <Container className="me-2" size={18} />
                         QUAT
                     </Link>
                     <Button variant="ghost" size="sm" className="p-2" onClick={toggleSideBar}>
