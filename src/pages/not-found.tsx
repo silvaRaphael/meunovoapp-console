@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { Button } from "../components/ui/button";
 
 export function NotFound() {
+    document.title = `Quat - 404`;
+
     return (
         <div className="flex justify-center items-center h-screen">
             <div className="space-y-4 text-center">

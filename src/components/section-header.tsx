@@ -6,6 +6,8 @@ import { ChevronLeft } from "lucide-react";
 export function SectionHeader({ title, pathname, tree, children }: { title: string; pathname: string; tree?: { label: string; pathname?: string }[]; children?: ReactNode }) {
     const navigate = useNavigate();
 
+    document.title = !tree?.length ? `Quat - ${title}` : `Quat - ${tree?.at(-1)?.label}`;
+
     return (
         <div className="border-b">
             <div className="flex h-12 items-center px-4">
