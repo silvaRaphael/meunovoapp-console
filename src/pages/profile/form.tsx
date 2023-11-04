@@ -11,6 +11,7 @@ import { Mod } from "../../mod/handle-request";
 import { User } from "../../config/user";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select";
 import { Separator } from "../../components/ui/separator";
+import { UpperFirst } from "../../lib/helper";
 
 const profileFormSchema = z.object({
     username: z
@@ -54,6 +55,8 @@ const profileFormSchema = z.object({
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
+let usernameTimeout: any;
+
 export function ProfileForm({ user }: { user: User }) {
     const form = useForm<ProfileFormValues>({
         resolver: zodResolver(profileFormSchema),
@@ -68,6 +71,21 @@ export function ProfileForm({ user }: { user: User }) {
         },
         mode: "onChange",
     });
+
+    async function checkUsernameAvailability(e: React.ChangeEvent<HTMLInputElement>) {
+        const username = e.target.value;
+
+        const { onDone, onError } = await new Mod({ username }).get("https://jsonplaceholder.typicode.com/users");
+        onDone(() => {
+            if (username.trim() === "existent") form.setError("username", { message: "Username not available" });
+        });
+        onError(() =>
+            toast({
+                variant: "destructive",
+                title: "It was not possible to check username availability!",
+            }),
+        );
+    }
 
     async function onSubmit(data: ProfileFormValues) {
         const { onDone, onError } = await new Mod(data).post("https://jsonplaceholder.typicode.com/users");
@@ -133,7 +151,19 @@ export function ProfileForm({ user }: { user: User }) {
                             render={({ field }) => (
                                 <FormItem className="flex flex-col">
                                     <FormControl>
-                                        <Input placeholder="Your username" {...field} />
+                                        <Input
+                                            placeholder="Your username"
+                                            onChange={(e) => {
+                                                if (e.target.value.includes(" ")) e.target.value = e.target.value.replaceAll(" ", "");
+                                                field.onChange(e);
+                                                clearTimeout(usernameTimeout);
+                                                usernameTimeout = setTimeout(() => checkUsernameAvailability(e), 500);
+                                            }}
+                                            name={field.name}
+                                            value={field.value}
+                                            onBlur={field.onBlur}
+                                            ref={field.ref}
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -174,7 +204,7 @@ export function ProfileForm({ user }: { user: User }) {
                                             <SelectContent>
                                                 {["feminine", "masculine"].map((gender, i) => (
                                                     <SelectItem key={i} value={`${gender}`}>
-                                                        {gender}
+                                                        {UpperFirst(gender)}
                                                     </SelectItem>
                                                 ))}
                                             </SelectContent>
@@ -194,6 +224,7 @@ export function ProfileForm({ user }: { user: User }) {
                                         <Input
                                             placeholder="Pick a photo"
                                             type="file"
+                                            lang="en"
                                             className="file:text-neutral-800 dark:file:text-neutral-100 file:border-r file:border-neutral-200 file:h-full file:me-2"
                                             {...field}
                                         />
