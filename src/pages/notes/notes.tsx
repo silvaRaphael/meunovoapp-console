@@ -58,7 +58,7 @@ export function Notes() {
                     {[
                         notes.map((item, i) => (
                             <Card key={i} className="flex flex-col justify-between select-none hover:bg-accent hover:text-accent-foreground group">
-                                <div className="cursor-pointer" onClick={() => setNote(item)}>
+                                <div className="cursor-pointer h-full" onClick={() => setNote(item)}>
                                     <CardHeader>
                                         <CardTitle className="text-3xl text-start">{item.title?.length > 30 ? `${item.title?.slice(0, 30)}...` : item.title}</CardTitle>
                                     </CardHeader>
