@@ -9,7 +9,7 @@ export interface PlanItem {
     title: string;
 }
 
-export interface Extra {
+export interface PlanExtra {
     title: string;
     ammount: number;
     price: number;
@@ -25,7 +25,7 @@ export interface Plan {
     teams: number;
     projects: number;
     daysFree: number;
-    extras: Extra[];
+    extras: PlanExtra[];
     items: string[];
     includes: (Pick<PlanInclude, "id"> & { value: string | number | boolean })[];
     recommended?: boolean;

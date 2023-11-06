@@ -53,7 +53,13 @@ export function PlanForm({ plan }: { plan: Plan }) {
     async function onSubmit(data: PlanFormValues) {
         const { onDone, onError } = await new HandleRequest(data).post("https://jsonplaceholder.typicode.com/users");
         onDone(() => {
-            sessionStorage.setItem("planCheckout", JSON.stringify(data));
+            sessionStorage.setItem(
+                "planCheckout",
+                JSON.stringify({
+                    ...plan,
+                    data,
+                }),
+            );
             navigate("/pricing/checkout");
         });
         onError(() =>
