@@ -7,7 +7,7 @@ import { Input } from "../../components/ui/input";
 import { Textarea } from "../../components/ui/textarea";
 import { SubmitButton } from "../../components/submit-button";
 import { toast } from "../../components/ui/toast/use-toast";
-import { Mod } from "../../mod/handle-request";
+import { HandleRequest } from "../../lib/handle-request";
 import { User } from "../../config/user";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select";
 import { Separator } from "../../components/ui/separator";
@@ -75,7 +75,7 @@ export function ProfileForm({ user }: { user: User }) {
     async function checkUsernameAvailability(e: React.ChangeEvent<HTMLInputElement>) {
         const username = e.target.value;
 
-        const { onDone, onError } = await new Mod({ username }).get("https://jsonplaceholder.typicode.com/users");
+        const { onDone, onError } = await new HandleRequest({ username }).get("https://jsonplaceholder.typicode.com/users");
         onDone(() => {
             if (username.trim() === "existent") form.setError("username", { message: "Username not available" });
         });
@@ -88,7 +88,7 @@ export function ProfileForm({ user }: { user: User }) {
     }
 
     async function onSubmit(data: ProfileFormValues) {
-        const { onDone, onError } = await new Mod(data).post("https://jsonplaceholder.typicode.com/users");
+        const { onDone, onError } = await new HandleRequest(data).post("https://jsonplaceholder.typicode.com/users");
         onDone(() =>
             toast({
                 variant: "success",

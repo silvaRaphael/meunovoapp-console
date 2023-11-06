@@ -20,7 +20,7 @@ import { toast } from "../../../components/ui/toast/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../../components/ui/select";
 import { statuses } from "../../projects/data/status";
 import { priorities } from "../../projects/data/priority";
-import { Mod } from "../../../mod/handle-request";
+import { HandleRequest } from "../../../lib/handle-request";
 
 const taskFormSchema = z.object({
     title: z
@@ -82,7 +82,7 @@ export function TaskForm({ task }: { task: Task }) {
     }, []);
 
     async function onSubmit(data: TaskFormValues) {
-        const { onDone, onError } = await new Mod(data).post("https://jsonplaceholder.typicode.com/users");
+        const { onDone, onError } = await new HandleRequest(data).post("https://jsonplaceholder.typicode.com/users");
         onDone(() =>
             toast({
                 variant: "success",

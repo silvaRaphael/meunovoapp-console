@@ -9,7 +9,7 @@ import { toast } from "../../components/ui/toast/use-toast";
 import { ConfirmationAlert } from "../../components/confirmation-alert";
 import { Task } from "./data/task";
 import { taskColumns } from "./data/columns";
-import { Mod } from "../../mod/handle-request";
+import { HandleRequest } from "../../lib/handle-request";
 
 export interface TaskRow extends Task {
     deleteAction?: (props: Task) => any;
@@ -65,7 +65,7 @@ export function Tasks() {
                     <SubmitButton
                         label="Delete"
                         onSubmit={async () => {
-                            const { onDone, onError } = await new Mod().delete("https://jsonplaceholder.typicode.com/users");
+                            const { onDone, onError } = await new HandleRequest().delete("https://jsonplaceholder.typicode.com/users");
                             onDone(() => {
                                 toast({
                                     variant: "success",

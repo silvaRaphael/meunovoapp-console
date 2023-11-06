@@ -9,7 +9,7 @@ import { ConfirmationAlert } from "../../../components/confirmation-alert";
 import { SubmitButton } from "../../../components/submit-button";
 import { toast } from "../../../components/ui/toast/use-toast";
 import { Task } from "../data/task";
-import { Mod } from "../../../mod/handle-request";
+import { HandleRequest } from "../../../lib/handle-request";
 
 export function TaskDetails() {
     const { id } = useParams();
@@ -49,7 +49,7 @@ export function TaskDetails() {
                             <SubmitButton
                                 label="Delete"
                                 onSubmit={async () => {
-                                    const { onDone, onError } = await new Mod().delete("https://jsonplaceholder.typicode.com/users");
+                                    const { onDone, onError } = await new HandleRequest().delete("https://jsonplaceholder.typicode.com/users");
                                     onDone(() => {
                                         toast({
                                             variant: "success",

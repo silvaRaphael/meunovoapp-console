@@ -19,7 +19,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../../../components/ui/avat
 import { SubmitButton } from "../../../components/submit-button";
 import { toast } from "../../../components/ui/toast/use-toast";
 import { JobTitle } from "../../../config/job-titles";
-import { Mod } from "../../../mod/handle-request";
+import { HandleRequest } from "../../../lib/handle-request";
 
 const memberFormSchema = z.object({
     username: z
@@ -102,7 +102,7 @@ export function MemberForm({ member }: { member: Member }) {
     }, []);
 
     async function onSubmit(data: MemberFormValues) {
-        const { onDone, onError } = await new Mod(data).post("https://jsonplaceholder.typicode.com/users");
+        const { onDone, onError } = await new HandleRequest(data).post("https://jsonplaceholder.typicode.com/users");
         onDone(() =>
             toast({
                 variant: "success",

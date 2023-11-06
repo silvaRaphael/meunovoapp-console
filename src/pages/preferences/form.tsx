@@ -5,7 +5,7 @@ import * as z from "zod";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from "../../components/ui/form";
 import { SubmitButton } from "../../components/submit-button";
 import { toast } from "../../components/ui/toast/use-toast";
-import { Mod } from "../../mod/handle-request";
+import { HandleRequest } from "../../lib/handle-request";
 import { User } from "../../config/user";
 import { Separator } from "../../components/ui/separator";
 import { Switch } from "../../components/ui/switch";
@@ -36,7 +36,7 @@ export function PreferencesForm({ user }: { user: User }) {
     });
 
     async function onSubmit(data: PreferencesFormValues) {
-        const { onDone, onError } = await new Mod(data).post("https://jsonplaceholder.typicode.com/users");
+        const { onDone, onError } = await new HandleRequest(data).post("https://jsonplaceholder.typicode.com/users");
         onDone(() => {
             toast({
                 variant: "success",

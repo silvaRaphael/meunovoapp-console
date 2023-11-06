@@ -20,7 +20,7 @@ import { SubmitButton } from "../../../components/submit-button";
 import { toast } from "../../../components/ui/toast/use-toast";
 import { Actions } from "../../../components/actions";
 import { Team } from "../../teams/data/team";
-import { Mod } from "../../../mod/handle-request";
+import { HandleRequest } from "../../../lib/handle-request";
 
 const projectFormSchema = z.object({
     title: z
@@ -96,7 +96,7 @@ export function ProjectForm({ project }: { project: Project }) {
     }, []);
 
     async function onSubmit(data: ProjectFormValues) {
-        const { onDone, onError } = await new Mod(data).post("https://jsonplaceholder.typicode.com/users");
+        const { onDone, onError } = await new HandleRequest(data).post("https://jsonplaceholder.typicode.com/users");
         onDone(() =>
             toast({
                 variant: "success",

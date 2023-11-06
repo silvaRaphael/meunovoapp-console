@@ -8,7 +8,7 @@ import { Separator } from "../../../../components/ui/separator";
 import { Plan } from "../../data/plan";
 import { UpperFirst } from "../../../../lib/helper";
 import { Slider } from "../../../../components/ui/slider";
-import { Mod } from "../../../../mod/handle-request";
+import { HandleRequest } from "../../../../lib/handle-request";
 import { toast } from "../../../../components/ui/toast/use-toast";
 import { useNavigate } from "react-router-dom";
 
@@ -51,7 +51,7 @@ export function PlanForm({ plan }: { plan: Plan }) {
     });
 
     async function onSubmit(data: PlanFormValues) {
-        const { onDone, onError } = await new Mod(data).post("https://jsonplaceholder.typicode.com/users");
+        const { onDone, onError } = await new HandleRequest(data).post("https://jsonplaceholder.typicode.com/users");
         onDone(() => {
             sessionStorage.setItem("planCheckout", JSON.stringify(data));
             navigate("/pricing/checkout");

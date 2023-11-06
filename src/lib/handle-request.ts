@@ -2,7 +2,7 @@ export interface RequestOptionsI {
     token?: string;
 }
 
-export class Mod {
+export class HandleRequest {
     private response: Response = new Response();
     private error?: any;
     private data?: {};

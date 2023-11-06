@@ -12,7 +12,7 @@ import { Actions } from "../../components/actions";
 import { Project } from "./data/project";
 import { projectColumns } from "./data/columns";
 import { Team } from "../teams/data/team";
-import { Mod } from "../../mod/handle-request";
+import { HandleRequest } from "../../lib/handle-request";
 
 export interface ProjectRow extends Project {
     deleteAction?: (props: Project) => any;
@@ -75,7 +75,7 @@ export function Projects() {
                     <SubmitButton
                         label="Delete"
                         onSubmit={async () => {
-                            const { onDone, onError } = await new Mod().delete("https://jsonplaceholder.typicode.com/users");
+                            const { onDone, onError } = await new HandleRequest().delete("https://jsonplaceholder.typicode.com/users");
                             onDone(() => {
                                 toast({
                                     variant: "success",

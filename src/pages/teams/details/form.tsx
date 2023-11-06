@@ -18,7 +18,7 @@ import { SubmitButton } from "../../../components/submit-button";
 import { toast } from "../../../components/ui/toast/use-toast";
 import { MemberInfo } from "../../../components/member-info";
 import { Actions } from "../../../components/actions";
-import { Mod } from "../../../mod/handle-request";
+import { HandleRequest } from "../../../lib/handle-request";
 
 const teamFormSchema = z.object({
     name: z
@@ -80,7 +80,7 @@ export function TeamForm({ team }: { team: Team }) {
     }, []);
 
     async function onSubmit(data: TeamFormValues) {
-        const { onDone, onError } = await new Mod(data).post("https://jsonplaceholder.typicode.com/users");
+        const { onDone, onError } = await new HandleRequest(data).post("https://jsonplaceholder.typicode.com/users");
         onDone(() =>
             toast({
                 variant: "success",
