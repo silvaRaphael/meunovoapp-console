@@ -27,7 +27,7 @@ export function SectionHeader({ title, pathname, tree, children }: { title: stri
                     <div className={"flex space-x-1"}>
                         {tree?.map((item, i, arr) =>
                             item.pathname ? (
-                                <Link key={i} to={item.pathname} className={i < arr.length - 1 ? "text-muted-foreground" : ""}>
+                                <Link key={i} to={item.pathname}>
                                     / {item.label}
                                 </Link>
                             ) : (

@@ -32,7 +32,10 @@ export function PlanCustomize() {
     if (!plan) return <></>;
 
     return (
-        <Page pathname="/pricing" header={<SectionHeader title="Pricing" pathname="/pricing" tree={!!plan ? [{ label: `Customize Plan - ${plan.title}` }] : []}></SectionHeader>}>
+        <Page
+            pathname="/pricing"
+            header={<SectionHeader title="Pricing" pathname="/pricing" tree={!!plan ? [{ label: "Customize Plan" }, { label: plan.title }] : []}></SectionHeader>}
+        >
             <div className="space-y-6 pb-40">
                 <div>
                     <h3 className="text-lg font-medium">Extras</h3>
