@@ -41,7 +41,7 @@ export function SideBar({ pathname, isOpen }: { pathname: string; isOpen: boolea
                                                     pathname !== item.path ? "text-muted-foreground" : ""
                                                 }`,
                                                 !isOpen ? "justify-center" : "",
-                                                !isOpen && pathname === item.path ? "border-l-white" : "",
+                                                !isOpen && pathname === item.path ? "border-l-neutral-800 dark:border-l-neutral-200" : "",
                                             )}
                                         >
                                             {<div className={`${!isOpen && "scale-125"}`}>{item?.icon}</div> ?? <Hash className="mr-1" size={14} />}
