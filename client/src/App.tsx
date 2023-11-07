@@ -16,7 +16,7 @@ import { Notes } from "./pages/notes/notes";
 import { Profile } from "./pages/profile/profile";
 import { Preferences } from "./pages/preferences/preferences";
 import { Pricing } from "./pages/pricing/pricing";
-import { PlanCheckout } from "./pages/pricing/details/checkout";
+import { PlanCheckout } from "./pages/pricing/details/checkout/checkout";
 import { PlanCustomize } from "./pages/pricing/details/customize/customize";
 
 export function App() {

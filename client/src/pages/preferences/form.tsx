@@ -101,7 +101,7 @@ export function PreferencesForm({ user }: { user: User }) {
                 <div className="grid grid-cols-12">
                     <div className="col-span-3">
                         <h3 className="font-semibold leading-4">Theme</h3>
-                        <p className="text-sm text-muted-foreground">Change you theme preferences</p>
+                        <p className="text-sm text-muted-foreground">Change your theme preferences</p>
                     </div>
                     <div className="col-span-6 space-y-4">
                         <FormField
