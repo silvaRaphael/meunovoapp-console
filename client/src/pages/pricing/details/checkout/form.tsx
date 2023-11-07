@@ -9,16 +9,24 @@ import { HandleRequest } from "../../../../lib/handle-request";
 import { Separator } from "../../../../components/ui/separator";
 import { Label } from "../../../../components/ui/label";
 import { RadioGroup, RadioGroupItem } from "../../../../components/ui/radio-group";
-import { Calendar, CalendarDays } from "lucide-react";
+import { Calendar, CalendarDays, CreditCard, File } from "lucide-react";
 import { Plan } from "../../data/plan";
 import { Badge } from "../../../../components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../../../../components/language-provider";
+import { ReactNode } from "react";
+import { Input } from "../../../../components/ui/input";
 
 const checkoutFormSchema = z.object({
     emailNotification: z.boolean(),
     mobileNotification: z.boolean(),
     billingMode: z.enum(["yearly", "monthly"]),
+    paymentMethod: z.any(),
+    cardName: z.string().optional(),
+    cardNumber: z.string().optional(),
+    cardYear: z.string().optional(),
+    cardMonth: z.string().optional(),
+    cardCVV: z.string().optional(),
 });
 
 type CheckoutFormValues = z.infer<typeof checkoutFormSchema>;
@@ -33,6 +41,7 @@ export function CheckoutForm({ plan, total }: { plan: Plan; total: number }) {
             emailNotification: true,
             mobileNotification: false,
             billingMode: "monthly",
+            paymentMethod: "card",
         },
         mode: "onChange",
     });
@@ -43,9 +52,14 @@ export function CheckoutForm({ plan, total }: { plan: Plan; total: number }) {
             toast({
                 variant: "success",
                 title: "Your plan was updated successfully!",
-                description: "You will receive an email soon.",
+                // description: "You will receive an email soon.",
+                description: (
+                    <pre>
+                        <code>{JSON.stringify(data, null, 2)}</code>
+                    </pre>
+                ),
             });
-            navigate("/pricing");
+            // navigate("/pricing");
         });
         onError(() =>
             toast({
@@ -134,6 +148,142 @@ export function CheckoutForm({ plan, total }: { plan: Plan; total: number }) {
                     </div>
                 </div>
                 <Separator />
+
+                <div className="grid grid-cols-12">
+                    <div className="col-span-2">
+                        <h3 className="font-semibold leading-4">
+                            {writeLang([
+                                ["en", "Payment"],
+                                ["pt", "Pagamento"],
+                            ])}
+                        </h3>
+                    </div>
+                    <div className="col-span-9 space-y-4">
+                        <FormField
+                            control={form.control}
+                            name="paymentMethod"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-col">
+                                    <FormControl>
+                                        <RadioGroup ref={field.ref} name={field.name} onChange={field.onChange} defaultValue={field.value} className="grid grid-cols-3 gap-4">
+                                            <PaymentMethodCard
+                                                name="card"
+                                                icon={<CreditCard size={24} className="me-2" />}
+                                                label={writeLang([
+                                                    ["en", "Card"],
+                                                    ["pt", "Cartão"],
+                                                ])}
+                                            />
+                                            <PaymentMethodCard name="paypal" icon={<CreditCard size={24} className="me-2" />} label={<>Paypal</>} />
+                                            {language.locale === "pt-BR" && <PaymentMethodCard name="boleto" icon={<File size={24} className="me-2" />} label={<>Boleto</>} />}
+                                        </RadioGroup>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        {form.getValues("paymentMethod") === "card" && (
+                            <div className="space-y-4">
+                                <Separator />
+                                <FormField
+                                    control={form.control}
+                                    name="cardName"
+                                    render={({ field }) => (
+                                        <FormItem className="flex flex-col">
+                                            <FormControl>
+                                                <Input
+                                                    placeholder={
+                                                        writeLang([
+                                                            ["en", "Card name"],
+                                                            ["pt", "Nome no cartão"],
+                                                        ]) as string
+                                                    }
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="cardNumber"
+                                    render={({ field }) => (
+                                        <FormItem className="flex flex-col">
+                                            <FormControl>
+                                                <Input
+                                                    placeholder={
+                                                        writeLang([
+                                                            ["en", "Card number"],
+                                                            ["pt", "Número do cartão"],
+                                                        ]) as string
+                                                    }
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <div className="grid grid-cols-3 gap-4">
+                                    <FormField
+                                        control={form.control}
+                                        name="cardYear"
+                                        render={({ field }) => (
+                                            <FormItem className="flex flex-col">
+                                                <FormControl>
+                                                    <Input
+                                                        placeholder={
+                                                            writeLang([
+                                                                ["en", "Year"],
+                                                                ["pt", "Ano"],
+                                                            ]) as string
+                                                        }
+                                                        {...field}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="cardMonth"
+                                        render={({ field }) => (
+                                            <FormItem className="flex flex-col">
+                                                <FormControl>
+                                                    <Input
+                                                        placeholder={
+                                                            writeLang([
+                                                                ["en", "Month"],
+                                                                ["pt", "Mês"],
+                                                            ]) as string
+                                                        }
+                                                        {...field}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="cardCVV"
+                                        render={({ field }) => (
+                                            <FormItem className="flex flex-col">
+                                                <FormControl>
+                                                    <Input placeholder="CVV" {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+                <Separator />
                 <SubmitButton
                     label={
                         writeLang([
@@ -148,3 +298,18 @@ export function CheckoutForm({ plan, total }: { plan: Plan; total: number }) {
         </Form>
     );
 }
+
+const PaymentMethodCard = ({ name, icon, label }: { name: string; icon: ReactNode; label: ReactNode }) => (
+    <div className="flex flex-col w-full">
+        <RadioGroupItem value={name} id={name} className="peer sr-only" />
+        <Label
+            htmlFor={name}
+            className="flex flex-col justify-center h-full rounded-md border-2 border-muted bg-popover p-4 space-y-3 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+        >
+            <div className="flex items-center justify-start text-lg">
+                {icon}
+                {label}
+            </div>
+        </Label>
+    </div>
+);
