@@ -1,10 +1,12 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { enUS } from "date-fns/locale";
+import { ReactNode, createContext, useContext, useEffect, useState } from "react";
 
 export type Language = {
     label: string;
     lang: string;
     locale: string;
     currency: string;
+    dateLocale: Locale;
 };
 
 type LanguageProviderProps = {
@@ -16,7 +18,8 @@ type LanguageProviderProps = {
 type LanguageProviderState = {
     language: Language;
     setLanguage: (language: Language) => void;
-    writeLang: (texts: { lang: string; text: string }[]) => string;
+    // writeLang: (texts: { lang: string; text: string | ReactNode }[]) => string | ReactNode;
+    writeLang: (texts: [string, string][]) => string | ReactNode;
 };
 
 const initialState: LanguageProviderState = {
@@ -25,6 +28,7 @@ const initialState: LanguageProviderState = {
         lang: "en",
         locale: "en-US",
         currency: "USD",
+        dateLocale: enUS,
     },
     setLanguage: () => null,
     writeLang: () => "",
@@ -39,6 +43,7 @@ export function LanguageProvider({
         lang: "en",
         locale: "en-US",
         currency: "USD",
+        dateLocale: enUS,
     },
     storageKey = "quat-language",
     ...props
@@ -56,7 +61,8 @@ export function LanguageProvider({
             localStorage.setItem(storageKey, JSON.stringify(language));
             setLanguage(language);
         },
-        writeLang: (texts: { lang: string; text: string }[]) => texts.find((item) => item.lang === language.lang)?.text ?? texts[0].text,
+        // writeLang: (texts: { lang: string; text: string | ReactNode }[]) => texts.find((item) => item.lang === language.lang)?.text ?? texts[0].text,
+        writeLang: (texts: [string, string][]) => (texts.find((item) => item[0] === language.lang) as Array<string>)[1] ?? texts[0][1],
     };
 
     return (

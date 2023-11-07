@@ -62,12 +62,12 @@ export function CheckoutForm({ plan, total }: { plan: Plan; total: number }) {
                     <div className="col-span-2">
                         <h3 className="font-semibold leading-4">
                             {writeLang([
-                                { lang: "en", text: "Billing" },
-                                { lang: "pt", text: "Cobrança" },
+                                ["en", "Billing"],
+                                ["pt", "Cobrança"],
                             ])}
                         </h3>
                     </div>
-                    <div className="col-span-8 space-y-4">
+                    <div className="col-span-9 space-y-4">
                         <FormField
                             control={form.control}
                             name="billingMode"
@@ -84,15 +84,15 @@ export function CheckoutForm({ plan, total }: { plan: Plan; total: number }) {
                                                     <div className="flex items-center justify-start opacity-70 text-xs">
                                                         <CalendarDays size={14} className="me-2" />
                                                         {writeLang([
-                                                            { lang: "en", text: "Pay monthly" },
-                                                            { lang: "pt", text: "Pagar mensal" },
+                                                            ["en", "Pay monthly"],
+                                                            ["pt", "Pagar mensal"],
                                                         ])}
                                                     </div>
                                                     <div className="flex justify-between items-center">
                                                         {total.toLocaleString(language.locale, { currency: language.currency, style: "currency" })}/
                                                         {writeLang([
-                                                            { lang: "en", text: "month" },
-                                                            { lang: "pt", text: "mês" },
+                                                            ["en", "month"],
+                                                            ["pt", "mês"],
                                                         ])}
                                                     </div>
                                                 </Label>
@@ -106,20 +106,20 @@ export function CheckoutForm({ plan, total }: { plan: Plan; total: number }) {
                                                     <div className="flex items-center justify-start opacity-70 text-xs">
                                                         <Calendar size={14} className="me-2" />
                                                         {writeLang([
-                                                            { lang: "en", text: "Pay yearly" },
-                                                            { lang: "pt", text: "Pagar anual" },
+                                                            ["en", "Pay yearly"],
+                                                            ["pt", "Pagar anual"],
                                                         ])}
                                                     </div>
                                                     <div className="flex justify-between items-center">
                                                         {(total * 0.9).toLocaleString(language.locale, { currency: language.currency, style: "currency" })}/
                                                         {writeLang([
-                                                            { lang: "en", text: "month" },
-                                                            { lang: "pt", text: "mês" },
+                                                            ["en", "month"],
+                                                            ["pt", "mês"],
                                                         ])}
                                                         <Badge variant="success" className="flex flex-shrink-0 pointer-events-none text-center ms-2">
                                                             {writeLang([
-                                                                { lang: "en", text: "Save 10%" },
-                                                                { lang: "pt", text: "Economize 10%" },
+                                                                ["en", "Save 10%"],
+                                                                ["pt", "Economize 10%"],
                                                             ])}
                                                         </Badge>
                                                     </div>
@@ -135,10 +135,12 @@ export function CheckoutForm({ plan, total }: { plan: Plan; total: number }) {
                 </div>
                 <Separator />
                 <SubmitButton
-                    label={writeLang([
-                        { lang: "en", text: "Confirm" },
-                        { lang: "pt", text: "Confirmar" },
-                    ])}
+                    label={
+                        writeLang([
+                            ["en", "Confirm"],
+                            ["pt", "Confirmar"],
+                        ]) as string
+                    }
                     type="submit"
                     state={form.formState.isSubmitting ? "loading" : "initial"}
                 />

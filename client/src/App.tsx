@@ -19,6 +19,7 @@ import { Pricing } from "./pages/pricing/pricing";
 import { PlanCheckout } from "./pages/pricing/details/checkout/checkout";
 import { PlanCustomize } from "./pages/pricing/details/customize/customize";
 import { LanguageProvider } from "./components/language-provider";
+import { enUS } from "date-fns/locale";
 
 export function App() {
     return (
@@ -29,6 +30,7 @@ export function App() {
                     lang: "en",
                     locale: "en-US",
                     currency: "USD",
+                    dateLocale: enUS,
                 }}
                 storageKey="quat-language"
             >

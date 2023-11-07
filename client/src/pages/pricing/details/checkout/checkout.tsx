@@ -8,8 +8,11 @@ import { Table, TableBody, TableCell, TableRow } from "../../../../components/ui
 import { UpperFirst } from "../../../../lib/helper";
 import { addMonths, format } from "date-fns";
 import { CheckoutForm } from "./form";
+import { useLanguage } from "../../../../components/language-provider";
+import { languages } from "../../../../config/languages";
 
 export function PlanCheckout() {
+    const { language, writeLang } = useLanguage();
     const plan = JSON.parse(sessionStorage.getItem("planCheckout") ?? "");
     const tree: {
         label: string;
@@ -23,8 +26,18 @@ export function PlanCheckout() {
         <Page pathname="/pricing" header={<SectionHeader title="Pricing" pathname="/pricing" tree={tree}></SectionHeader>}>
             <div className="space-y-6 pb-40">
                 <div>
-                    <h3 className="text-lg font-medium">Checkout</h3>
-                    <p className="text-sm text-muted-foreground">Finishing your checkout</p>
+                    <h3 className="text-lg font-medium">
+                        {writeLang([
+                            ["en", "Checkout"],
+                            ["pt", "Finalizar"],
+                        ])}
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                        {writeLang([
+                            ["en", "Finishing your checkout"],
+                            ["pt", "Finalizando seu pedido"],
+                        ])}
+                    </p>
                 </div>
                 <Separator />
                 <div className="grid grid-cols-3 gap-4">
@@ -37,7 +50,12 @@ export function PlanCheckout() {
                     <div className="">
                         <Card className="bg-accent">
                             <CardHeader>
-                                <CardTitle className="text-lg">Finish order - {plan.title} plan</CardTitle>
+                                <CardTitle className="text-lg">
+                                    {writeLang([
+                                        ["en", `Finish order - ${plan.title} plan`],
+                                        ["pt", `Finalizar pedido - Plano ${plan.title}`],
+                                    ])}
+                                </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="space-y-2">
@@ -48,8 +66,14 @@ export function PlanCheckout() {
                                                 {item.value[0] - item.modulePrice && (
                                                     <>
                                                         <CheckCircle2 size={16} className="me-2" />
-                                                        {item.value[0] - item.modulePrice} extra {item.title} for $
-                                                        {((item.value[0] - item.modulePrice) / item.ammount) * item.price}
+                                                        {writeLang([
+                                                            ["en", `${item.value[0] - item.modulePrice} extra ${item.title} for `],
+                                                            ["pt", `${item.value[0] - item.modulePrice} ${item.title} extra por `],
+                                                        ])}
+                                                        {(((item.value[0] - item.modulePrice) / item.ammount) * item.price).toLocaleString(language.locale, {
+                                                            currency: language.currency,
+                                                            style: "currency",
+                                                        })}
                                                     </>
                                                 )}
                                             </div>
@@ -60,22 +84,34 @@ export function PlanCheckout() {
                                         {plan.data.extras.map((item: PlanExtra & { modulePrice: number; value: number[] }, i: number) => (
                                             <TableRow key={i} className="text-xs h-8 dark:border-b-neutral-900">
                                                 <TableCell>{UpperFirst(item.title)}</TableCell>
-                                                <TableCell>{item.value[0]}</TableCell>
+                                                <TableCell className="text-end">{item.value[0]}</TableCell>
                                             </TableRow>
                                         ))}
                                         <TableRow className="text-sm font-medium h-12">
                                             <TableCell className="font-bold">Total</TableCell>
-                                            <TableCell className="font-bold">
-                                                $
-                                                {plan.data.extras.reduce((acc: any, crr: any) => ((crr.value[0] - crr.modulePrice) / crr.ammount) * crr.price + acc, 0) +
-                                                    plan.price}
+                                            <TableCell className="font-bold text-end">
+                                                {(
+                                                    plan.data.extras.reduce((acc: any, crr: any) => ((crr.value[0] - crr.modulePrice) / crr.ammount) * crr.price + acc, 0) +
+                                                    plan.price
+                                                ).toLocaleString(language.locale, {
+                                                    currency: language.currency,
+                                                    style: "currency",
+                                                })}
                                             </TableCell>
                                         </TableRow>
                                     </TableBody>
                                 </Table>
                             </CardContent>
                             <CardFooter>
-                                <p className="text-sm">Next invoice: {format(addMonths(new Date(), 1), "PPP")}</p>
+                                <p className="text-sm">
+                                    {writeLang([
+                                        ["en", "Next invoice: "],
+                                        ["pt", "Próxima cobrança: "],
+                                    ])}
+                                    {format(addMonths(new Date(), 1), "PPP", {
+                                        locale: languages.find((item) => item.lang === language.lang)?.dateLocale,
+                                    })}
+                                </p>
                             </CardFooter>
                         </Card>
                     </div>
