@@ -18,46 +18,57 @@ import { Preferences } from "./pages/preferences/preferences";
 import { Pricing } from "./pages/pricing/pricing";
 import { PlanCheckout } from "./pages/pricing/details/checkout/checkout";
 import { PlanCustomize } from "./pages/pricing/details/customize/customize";
+import { LanguageProvider } from "./components/language-provider";
 
 export function App() {
     return (
-        <ThemeProvider defaultTheme="system" storageKey="modular-ui-theme">
-            <Toaster />
-            <BrowserRouter>
-                <Routes>
-                    <Route path="/" element={<Dashboard />} />
-                    <Route path="/members">
-                        <Route path="" element={<Members />} />
-                        <Route path=":username" element={<MemberDetails />} />
-                    </Route>
-                    <Route path="/teams">
-                        <Route path="" element={<Teams />} />
-                        <Route path=":slug" element={<TeamDetails />} />
-                    </Route>
-                    <Route path="/projects">
-                        <Route path="" element={<Projects />} />
-                        <Route path=":id" element={<ProjectDetails />} />
-                    </Route>
-                    <Route path="/tasks">
-                        <Route path="" element={<Tasks />} />
-                        <Route path=":id" element={<TaskDetails />} />
-                    </Route>
-                    <Route path="/schedule">
-                        <Route path="" element={<Schedule />} />
-                    </Route>
-                    <Route path="/notes">
-                        <Route path="" element={<Notes />} />
-                    </Route>
-                    <Route path="/profile" element={<Profile />} />
-                    <Route path="/preferences" element={<Preferences />} />
-                    <Route path="/pricing">
-                        <Route path="" element={<Pricing />} />
-                        <Route path="customize/:id" element={<PlanCustomize />} />
-                        <Route path="checkout" element={<PlanCheckout />} />
-                    </Route>
-                    <Route path="*" element={<NotFound />} />
-                </Routes>
-            </BrowserRouter>
+        <ThemeProvider defaultTheme="system" storageKey="quat-ui-theme">
+            <LanguageProvider
+                defaultLanguage={{
+                    label: "English",
+                    lang: "en",
+                    locale: "en-US",
+                    currency: "USD",
+                }}
+                storageKey="quat-language"
+            >
+                <Toaster />
+                <BrowserRouter>
+                    <Routes>
+                        <Route path="/" element={<Dashboard />} />
+                        <Route path="/members">
+                            <Route path="" element={<Members />} />
+                            <Route path=":username" element={<MemberDetails />} />
+                        </Route>
+                        <Route path="/teams">
+                            <Route path="" element={<Teams />} />
+                            <Route path=":slug" element={<TeamDetails />} />
+                        </Route>
+                        <Route path="/projects">
+                            <Route path="" element={<Projects />} />
+                            <Route path=":id" element={<ProjectDetails />} />
+                        </Route>
+                        <Route path="/tasks">
+                            <Route path="" element={<Tasks />} />
+                            <Route path=":id" element={<TaskDetails />} />
+                        </Route>
+                        <Route path="/schedule">
+                            <Route path="" element={<Schedule />} />
+                        </Route>
+                        <Route path="/notes">
+                            <Route path="" element={<Notes />} />
+                        </Route>
+                        <Route path="/profile" element={<Profile />} />
+                        <Route path="/preferences" element={<Preferences />} />
+                        <Route path="/pricing">
+                            <Route path="" element={<Pricing />} />
+                            <Route path="customize/:id" element={<PlanCustomize />} />
+                            <Route path="checkout" element={<PlanCheckout />} />
+                        </Route>
+                        <Route path="*" element={<NotFound />} />
+                    </Routes>
+                </BrowserRouter>
+            </LanguageProvider>
         </ThemeProvider>
     );
 }

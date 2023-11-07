@@ -13,6 +13,7 @@ import { Calendar, CalendarDays } from "lucide-react";
 import { Plan } from "../../data/plan";
 import { Badge } from "../../../../components/ui/badge";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "../../../../components/language-provider";
 
 const checkoutFormSchema = z.object({
     emailNotification: z.boolean(),
@@ -23,6 +24,7 @@ const checkoutFormSchema = z.object({
 type CheckoutFormValues = z.infer<typeof checkoutFormSchema>;
 
 export function CheckoutForm({ plan, total }: { plan: Plan; total: number }) {
+    const { language, writeLang } = useLanguage();
     const navigate = useNavigate();
 
     const form = useForm<CheckoutFormValues>({
@@ -58,7 +60,12 @@ export function CheckoutForm({ plan, total }: { plan: Plan; total: number }) {
             <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
                 <div className="grid grid-cols-12">
                     <div className="col-span-2">
-                        <h3 className="font-semibold leading-4">Billing</h3>
+                        <h3 className="font-semibold leading-4">
+                            {writeLang([
+                                { lang: "en", text: "Billing" },
+                                { lang: "pt", text: "Cobrança" },
+                            ])}
+                        </h3>
                     </div>
                     <div className="col-span-8 space-y-4">
                         <FormField
@@ -76,11 +83,17 @@ export function CheckoutForm({ plan, total }: { plan: Plan; total: number }) {
                                                 >
                                                     <div className="flex items-center justify-start opacity-70 text-xs">
                                                         <CalendarDays size={14} className="me-2" />
-                                                        Pay monthly
+                                                        {writeLang([
+                                                            { lang: "en", text: "Pay monthly" },
+                                                            { lang: "pt", text: "Pagar mensal" },
+                                                        ])}
                                                     </div>
-                                                    <div className="flex justify-between items-end">
-                                                        ${total}/month
-                                                        {/* <Badge className="bg-green-100 text-green-600 pointer-events-none">Save 20%</Badge> */}
+                                                    <div className="flex justify-between items-center">
+                                                        {total.toLocaleString(language.locale, { currency: language.currency, style: "currency" })}/
+                                                        {writeLang([
+                                                            { lang: "en", text: "month" },
+                                                            { lang: "pt", text: "mês" },
+                                                        ])}
                                                     </div>
                                                 </Label>
                                             </div>
@@ -92,12 +105,22 @@ export function CheckoutForm({ plan, total }: { plan: Plan; total: number }) {
                                                 >
                                                     <div className="flex items-center justify-start opacity-70 text-xs">
                                                         <Calendar size={14} className="me-2" />
-                                                        Pay yearly
+                                                        {writeLang([
+                                                            { lang: "en", text: "Pay yearly" },
+                                                            { lang: "pt", text: "Pagar anual" },
+                                                        ])}
                                                     </div>
-                                                    <div className="flex justify-between items-end">
-                                                        ${total * 0.9}/month
-                                                        <Badge variant="success" className="pointer-events-none">
-                                                            Save 10%
+                                                    <div className="flex justify-between items-center">
+                                                        {(total * 0.9).toLocaleString(language.locale, { currency: language.currency, style: "currency" })}/
+                                                        {writeLang([
+                                                            { lang: "en", text: "month" },
+                                                            { lang: "pt", text: "mês" },
+                                                        ])}
+                                                        <Badge variant="success" className="flex flex-shrink-0 pointer-events-none text-center ms-2">
+                                                            {writeLang([
+                                                                { lang: "en", text: "Save 10%" },
+                                                                { lang: "pt", text: "Economize 10%" },
+                                                            ])}
                                                         </Badge>
                                                     </div>
                                                 </Label>
@@ -111,7 +134,14 @@ export function CheckoutForm({ plan, total }: { plan: Plan; total: number }) {
                     </div>
                 </div>
                 <Separator />
-                <SubmitButton label="Confirm" type="submit" state={form.formState.isSubmitting ? "loading" : "initial"} />
+                <SubmitButton
+                    label={writeLang([
+                        { lang: "en", text: "Confirm" },
+                        { lang: "pt", text: "Confirmar" },
+                    ])}
+                    type="submit"
+                    state={form.formState.isSubmitting ? "loading" : "initial"}
+                />
             </form>
         </Form>
     );

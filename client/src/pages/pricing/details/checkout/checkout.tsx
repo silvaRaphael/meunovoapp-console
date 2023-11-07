@@ -24,7 +24,7 @@ export function PlanCheckout() {
             <div className="space-y-6 pb-40">
                 <div>
                     <h3 className="text-lg font-medium">Checkout</h3>
-                    <p className="text-sm text-muted-foreground">You can add extras to your plan</p>
+                    <p className="text-sm text-muted-foreground">Finishing your checkout</p>
                 </div>
                 <Separator />
                 <div className="grid grid-cols-3 gap-4">
@@ -58,9 +58,9 @@ export function PlanCheckout() {
                                 <Table>
                                     <TableBody>
                                         {plan.data.extras.map((item: PlanExtra & { modulePrice: number; value: number[] }, i: number) => (
-                                            <TableRow className="text-xs h-8 dark:border-b-neutral-900">
-                                                <TableCell key={i}>{UpperFirst(item.title)}</TableCell>
-                                                <TableCell key={i}>{item.value[0]}</TableCell>
+                                            <TableRow key={i} className="text-xs h-8 dark:border-b-neutral-900">
+                                                <TableCell>{UpperFirst(item.title)}</TableCell>
+                                                <TableCell>{item.value[0]}</TableCell>
                                             </TableRow>
                                         ))}
                                         <TableRow className="text-sm font-medium h-12">

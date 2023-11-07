@@ -6,6 +6,7 @@ import { ThemeToggle } from "./theme-toggle";
 import { Notifications } from "./notifications";
 import { Button } from "./ui/button";
 import { MainNav } from "./main-nav";
+import { LanguageToggle } from "./language-toggle";
 
 export function TopBar({ pathname, toggleSideBar, isOpen }: { pathname: string; toggleSideBar: any; isOpen: boolean }) {
     return (
@@ -29,6 +30,7 @@ export function TopBar({ pathname, toggleSideBar, isOpen }: { pathname: string; 
                 <div className="flex items-center justify-end space-x-2 ps-2 pe-4 border-l h-full">
                     <div className="flex items-center space-x-1">
                         <Notifications />
+                        <LanguageToggle />
                         <ThemeToggle />
                     </div>
                     <UserNav />
