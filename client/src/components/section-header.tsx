@@ -2,8 +2,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { ReactNode } from "react";
 import { Button } from "./ui/button";
 import { ChevronLeft } from "lucide-react";
+import { useLanguage } from "./language-provider";
 
 export function SectionHeader({ title, pathname, tree, children }: { title: string; pathname: string; tree?: { label: string; pathname?: string }[]; children?: ReactNode }) {
+    const { writeLang } = useLanguage();
     const navigate = useNavigate();
 
     document.title = !tree?.length ? `Quat - ${title}` : `Quat - ${tree?.at(-1)?.label}`;
@@ -16,7 +18,10 @@ export function SectionHeader({ title, pathname, tree, children }: { title: stri
                         <>
                             <Button variant="ghost" size="sm" onClick={() => navigate(-1)}>
                                 <ChevronLeft size={14} className="me-1" />
-                                Go back
+                                {writeLang([
+                                    ["en", "Go back"],
+                                    ["pt", "Voltar"],
+                                ])}
                             </Button>
                             <div className="h-6 border-l"></div>
                         </>

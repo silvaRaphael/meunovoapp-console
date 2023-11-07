@@ -1,4 +1,5 @@
 import * as React from "react";
+import InputMask from "react-input-mask";
 
 import { cn } from "../../lib/utils";
 
@@ -19,4 +20,16 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(({ className, type,
 });
 Input.displayName = "Input";
 
-export { Input };
+const MaskedInput = ({ mask, className, ref, ...props }: { mask: string | (string | RegExp)[]; className?: string; ref?: any } & InputProps) => {
+    return (
+        <InputMask mask={mask} {...props}>
+            {
+                ((inputProps: any): React.ReactNode => {
+                    return <Input {...inputProps} className={className} ref={ref} />;
+                }) as unknown as React.ReactNode
+            }
+        </InputMask>
+    );
+};
+
+export { Input, MaskedInput };

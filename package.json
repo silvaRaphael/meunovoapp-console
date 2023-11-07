@@ -7,5 +7,11 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "react-input-mask": "^2.0.4"
+  },
+  "devDependencies": {
+    "@types/react-input-mask": "^3.0.4"
+  }
 }

@@ -15,7 +15,7 @@ import { Badge } from "../../../../components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../../../../components/language-provider";
 import { ReactNode } from "react";
-import { Input } from "../../../../components/ui/input";
+import { Input, MaskedInput } from "../../../../components/ui/input";
 
 const checkoutFormSchema = z.object({
     emailNotification: z.boolean(),
@@ -52,14 +52,14 @@ export function CheckoutForm({ plan, total }: { plan: Plan; total: number }) {
             toast({
                 variant: "success",
                 title: "Your plan was updated successfully!",
-                // description: "You will receive an email soon.",
-                description: (
-                    <pre>
-                        <code>{JSON.stringify(data, null, 2)}</code>
-                    </pre>
-                ),
+                description: "You will receive an email soon.",
+                // description: (
+                //     <pre>
+                //         <code>{JSON.stringify(data, null, 2)}</code>
+                //     </pre>
+                // ),
             });
-            // navigate("/pricing");
+            navigate("/pricing");
         });
         onError(() =>
             toast({
@@ -211,7 +211,8 @@ export function CheckoutForm({ plan, total }: { plan: Plan; total: number }) {
                                     render={({ field }) => (
                                         <FormItem className="flex flex-col">
                                             <FormControl>
-                                                <Input
+                                                <MaskedInput
+                                                    mask="9999 9999 9999 9999"
                                                     placeholder={
                                                         writeLang([
                                                             ["en", "Card number"],
@@ -232,7 +233,8 @@ export function CheckoutForm({ plan, total }: { plan: Plan; total: number }) {
                                         render={({ field }) => (
                                             <FormItem className="flex flex-col">
                                                 <FormControl>
-                                                    <Input
+                                                    <MaskedInput
+                                                        mask="9999"
                                                         placeholder={
                                                             writeLang([
                                                                 ["en", "Year"],
@@ -252,7 +254,8 @@ export function CheckoutForm({ plan, total }: { plan: Plan; total: number }) {
                                         render={({ field }) => (
                                             <FormItem className="flex flex-col">
                                                 <FormControl>
-                                                    <Input
+                                                    <MaskedInput
+                                                        mask="99"
                                                         placeholder={
                                                             writeLang([
                                                                 ["en", "Month"],
@@ -272,7 +275,7 @@ export function CheckoutForm({ plan, total }: { plan: Plan; total: number }) {
                                         render={({ field }) => (
                                             <FormItem className="flex flex-col">
                                                 <FormControl>
-                                                    <Input placeholder="CVV" {...field} />
+                                                    <MaskedInput mask="999" placeholder="CVV" {...field} />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>

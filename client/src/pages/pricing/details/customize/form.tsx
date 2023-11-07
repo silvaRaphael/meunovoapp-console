@@ -11,6 +11,7 @@ import { Slider } from "../../../../components/ui/slider";
 import { HandleRequest } from "../../../../lib/handle-request";
 import { toast } from "../../../../components/ui/toast/use-toast";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "../../../../components/language-provider";
 
 const planFormSchema = z.object({
     extras: z.array(
@@ -28,6 +29,7 @@ const planFormSchema = z.object({
 type PlanFormValues = z.infer<typeof planFormSchema>;
 
 export function PlanForm({ plan }: { plan: Plan }) {
+    const { language, writeLang } = useLanguage();
     const navigate = useNavigate();
 
     const form = useForm<PlanFormValues>({
@@ -79,7 +81,15 @@ export function PlanForm({ plan }: { plan: Plan }) {
                             <div className="col-span-3">
                                 <h3 className="font-semibold leading-4">{UpperFirst(item.title)}</h3>
                                 <p className="text-sm text-muted-foreground">
-                                    You can add more {item.title} for ${item.price}
+                                    {writeLang([
+                                        ["en", <>You can add more {item.title} for </>],
+                                        ["pt", <>Você pode adiocionar mais {item.title} por </>],
+                                    ])}
+                                    {item.price.toLocaleString(language.locale, {
+                                        currency: language.currency,
+                                        style: "currency",
+                                        maximumFractionDigits: 0,
+                                    })}
                                 </p>
                             </div>
                             <div className="col-span-6 space-y-4">
@@ -111,7 +121,16 @@ export function PlanForm({ plan }: { plan: Plan }) {
                         <Separator />
                     </div>
                 ))}
-                <SubmitButton label="Continue" type="submit" state={form.formState.isSubmitting ? "loading" : "initial"} />
+                <SubmitButton
+                    label={
+                        writeLang([
+                            ["en", "Continue"],
+                            ["pt", "Continuar"],
+                        ]) as string
+                    }
+                    type="submit"
+                    state={form.formState.isSubmitting ? "loading" : "initial"}
+                />
             </form>
         </Form>
     );

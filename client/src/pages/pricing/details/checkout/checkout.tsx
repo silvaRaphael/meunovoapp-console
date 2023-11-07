@@ -17,13 +17,43 @@ export function PlanCheckout() {
     const tree: {
         label: string;
         pathname?: string | undefined;
-    }[] = !!plan ? [{ label: "Checkout" }] : [];
-    if (plan?.extras.length) tree.unshift({ label: `Customize Plan - ${plan.title}`, pathname: `/pricing/customize/${plan.id}` });
+    }[] = !!plan
+        ? [
+              {
+                  label: writeLang([
+                      ["en", "Checkout"],
+                      ["pt", "Finalizar"],
+                  ]) as string,
+              },
+          ]
+        : [];
+    if (plan?.extras.length)
+        tree.unshift({
+            label: writeLang([
+                ["en", `Customize Plan - ${plan.title}`],
+                ["pt", `Customizar Plano - ${plan.title}`],
+            ]) as string,
+            pathname: `/pricing/customize/${plan.id}`,
+        });
 
     console.log(plan);
 
     return (
-        <Page pathname="/pricing" header={<SectionHeader title="Pricing" pathname="/pricing" tree={tree}></SectionHeader>}>
+        <Page
+            pathname="/pricing"
+            header={
+                <SectionHeader
+                    title={
+                        writeLang([
+                            ["en", "Pricing"],
+                            ["pt", "Plano"],
+                        ]) as string
+                    }
+                    pathname="/pricing"
+                    tree={tree}
+                ></SectionHeader>
+            }
+        >
             <div className="space-y-6 pb-40">
                 <div>
                     <h3 className="text-lg font-medium">
