@@ -19,18 +19,15 @@ import { Pricing } from "./pages/pricing/pricing";
 import { PlanCheckout } from "./pages/pricing/details/checkout/checkout";
 import { PlanCustomize } from "./pages/pricing/details/customize/customize";
 import { LanguageProvider } from "./components/language-provider";
-import { enUS } from "date-fns/locale";
 
 export function App() {
     return (
         <ThemeProvider defaultTheme="system" storageKey="quat-ui-theme">
             <LanguageProvider
                 defaultLanguage={{
-                    label: "English",
                     lang: "en",
                     locale: "en-US",
                     currency: "USD",
-                    dateLocale: enUS,
                 }}
                 storageKey="quat-language"
             >

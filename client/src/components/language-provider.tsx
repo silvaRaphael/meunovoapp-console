@@ -1,4 +1,3 @@
-import { enUS } from "date-fns/locale";
 import { ReactNode, createContext, useContext, useEffect, useState } from "react";
 
 export type Language = {
@@ -7,28 +6,26 @@ export type Language = {
     locale: string;
     currency: string;
     dateLocale: Locale;
+    flag: string;
 };
 
 type LanguageProviderProps = {
     children: React.ReactNode;
-    defaultLanguage?: Language;
+    defaultLanguage?: Pick<Language, "lang" | "locale" | "currency">;
     storageKey?: string;
 };
 
 type LanguageProviderState = {
-    language: Language;
-    setLanguage: (language: Language) => void;
-    // writeLang: (texts: { lang: string; text: string | ReactNode }[]) => string | ReactNode;
+    language: Pick<Language, "lang" | "locale" | "currency">;
+    setLanguage: (language: Pick<Language, "lang" | "locale" | "currency">) => void;
     writeLang: (texts: [string, string][]) => string | ReactNode;
 };
 
 const initialState: LanguageProviderState = {
     language: {
-        label: "English",
         lang: "en",
         locale: "en-US",
         currency: "USD",
-        dateLocale: enUS,
     },
     setLanguage: () => null,
     writeLang: () => "",
@@ -39,16 +36,14 @@ const LanguageProviderContext = createContext<LanguageProviderState>(initialStat
 export function LanguageProvider({
     children,
     defaultLanguage = {
-        label: "English",
         lang: "en",
         locale: "en-US",
         currency: "USD",
-        dateLocale: enUS,
     },
     storageKey = "quat-language",
     ...props
 }: LanguageProviderProps) {
-    const [language, setLanguage] = useState<Language>(() => JSON.parse(localStorage.getItem(storageKey) as string) || defaultLanguage);
+    const [language, setLanguage] = useState<Pick<Language, "lang" | "locale" | "currency">>(() => JSON.parse(localStorage.getItem(storageKey) as string) || defaultLanguage);
 
     useEffect(() => {
         const root = window.document.documentElement;
@@ -57,12 +52,17 @@ export function LanguageProvider({
 
     const value = {
         language,
-        setLanguage: (language: Language) => {
+        setLanguage: (language: Pick<Language, "lang" | "locale" | "currency">) => {
             localStorage.setItem(storageKey, JSON.stringify(language));
             setLanguage(language);
         },
-        // writeLang: (texts: { lang: string; text: string | ReactNode }[]) => texts.find((item) => item.lang === language.lang)?.text ?? texts[0].text,
-        writeLang: (texts: [string, string][]) => (texts.find((item) => item[0] === language.lang) as Array<string>)[1] ?? texts[0][1],
+        writeLang: (texts: [string, string][]) => {
+            const text = texts.find((item) => item[0] === language.lang) as Array<string>;
+
+            if (!text) return texts[0][1];
+
+            return text[1];
+        },
     };
 
     return (

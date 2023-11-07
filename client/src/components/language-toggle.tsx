@@ -19,6 +19,7 @@ export function LanguageToggle() {
             <DropdownMenuContent align="end">
                 {languages.map((item, i) => (
                     <DropdownMenuItem key={i} onClick={() => setLanguage(item)} className="cursor-pointer">
+                        <img src={item.flag} className="w-4 me-2" alt="" />
                         {item.label}
                     </DropdownMenuItem>
                 ))}

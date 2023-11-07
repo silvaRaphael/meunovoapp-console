@@ -1,5 +1,5 @@
 import { Language } from "../components/language-provider";
-import { enUS, ptBR } from "date-fns/locale";
+import { enUS, es, ptBR } from "date-fns/locale";
 
 export const languages: Language[] = [
     {
@@ -8,6 +8,7 @@ export const languages: Language[] = [
         locale: "en-US",
         currency: "USD",
         dateLocale: enUS,
+        flag: "https://flagsapi.com/US/flat/64.png",
     },
     {
         label: "Português",
@@ -15,5 +16,14 @@ export const languages: Language[] = [
         locale: "pt-BR",
         currency: "BRL",
         dateLocale: ptBR,
+        flag: "https://flagsapi.com/BR/flat/64.png",
+    },
+    {
+        label: "Español",
+        lang: "es",
+        locale: "es-ES",
+        currency: "EUR",
+        dateLocale: es,
+        flag: "https://flagsapi.com/ES/flat/64.png",
     },
 ];
