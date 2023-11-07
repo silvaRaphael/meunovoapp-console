@@ -12,9 +12,7 @@ export function Dashboard() {
                 </SectionHeader>
             }
         >
-            <div className="flex justify-center items-center h-[500px]">
-                D A S H B O A R D
-            </div>
+            <div className="flex justify-center items-center h-[500px]">D A S H B O A R D</div>
         </Page>
     );
 }
