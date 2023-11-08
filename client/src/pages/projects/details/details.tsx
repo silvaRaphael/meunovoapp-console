@@ -56,9 +56,26 @@ export function ProjectDetails() {
                     tree={!!project ? [{ label: project.title }] : []}
                 >
                     <ConfirmationAlert
-                        triggerButton={<Button>Remove</Button>}
-                        title="Are you sure you want to delete this project?"
-                        description="This action cannot be undone. This will permanently delete this data."
+                        triggerButton={
+                            <Button>
+                                {writeLang([
+                                    ["en", "Remove"],
+                                    ["pt", "Remover"],
+                                ])}
+                            </Button>
+                        }
+                        title={
+                            writeLang([
+                                ["en", "Are you sure you want to delete this project?"],
+                                ["pt", "Você tem certeza que deseja excluir este projeto?"],
+                            ]) as string
+                        }
+                        description={
+                            writeLang([
+                                ["en", "This action cannot be undone. This will permanently delete this data."],
+                                ["pt", "Esta ação não pode ser desfeita. Isto excluirá permanentemente estes dados."],
+                            ]) as string
+                        }
                         confirmButton={
                             <SubmitButton
                                 label="Delete"
