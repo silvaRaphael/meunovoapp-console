@@ -1,5 +1,8 @@
+import { Language } from "../components/language-provider";
+
 export interface RequestOptionsI {
     token?: string;
+    language?: Language;
 }
 
 export class HandleRequest {
@@ -18,6 +21,7 @@ export class HandleRequest {
                 headers: new Headers({
                     Authorization: "Bearear " + option?.token,
                     "Content-Type": "application/json",
+                    "Content-Language": option?.language?.locale ?? "",
                 }),
             });
 
@@ -43,6 +47,7 @@ export class HandleRequest {
                 headers: new Headers({
                     Authorization: "Bearear " + option?.token,
                     "Content-Type": "application/json",
+                    "Content-Language": option?.language?.locale ?? "",
                 }),
                 body: JSON.stringify(this.data),
             });
@@ -69,6 +74,7 @@ export class HandleRequest {
                 headers: new Headers({
                     Authorization: "Bearear " + option?.token,
                     "Content-Type": "application/json",
+                    "Content-Language": option?.language?.locale ?? "",
                 }),
                 body: JSON.stringify(this.data),
             });
@@ -93,6 +99,7 @@ export class HandleRequest {
                 headers: new Headers({
                     Authorization: "Bearear " + option?.token,
                     "Content-Type": "application/json",
+                    "Content-Language": option?.language?.locale ?? "",
                 }),
             });
 
