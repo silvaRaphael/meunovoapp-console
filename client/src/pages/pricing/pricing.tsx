@@ -112,7 +112,7 @@ export function Pricing() {
                     <h3 className="text-center text-3xl font-medium mb-6">
                         {writeLang([
                             ["en", "Compare Plans & Features"],
-                            ["pt", "Compare Planos e Funcionalidades"],
+                            ["pt", "Comparar Planos e Funcionalidades"],
                         ])}
                     </h3>
                     <Table>

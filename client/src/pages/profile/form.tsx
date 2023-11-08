@@ -109,7 +109,7 @@ export function ProfileForm({ user }: { user: User }) {
                 <div className="grid grid-cols-12">
                     <div className="col-span-3">
                         <h3 className="font-semibold leading-4">Name</h3>
-                        <p className="text-sm text-muted-foreground">Change you name</p>
+                        <p className="text-sm text-muted-foreground">Change your name</p>
                     </div>
                     <div className="col-span-6 space-y-4">
                         <FormField
@@ -142,7 +142,7 @@ export function ProfileForm({ user }: { user: User }) {
                 <div className="grid grid-cols-12">
                     <div className="col-span-3">
                         <h3 className="font-semibold leading-4">Username</h3>
-                        <p className="text-sm text-muted-foreground">Change you username</p>
+                        <p className="text-sm text-muted-foreground">Change your username</p>
                     </div>
                     <div className="col-span-6 space-y-4">
                         <FormField
@@ -175,7 +175,7 @@ export function ProfileForm({ user }: { user: User }) {
                 <div className="grid grid-cols-12">
                     <div className="col-span-3">
                         <h3 className="font-semibold leading-4">Info</h3>
-                        <p className="text-sm text-muted-foreground">Change you informations</p>
+                        <p className="text-sm text-muted-foreground">Change your informations</p>
                     </div>
                     <div className="col-span-6 space-y-4">
                         <FormField

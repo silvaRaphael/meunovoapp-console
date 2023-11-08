@@ -12,8 +12,11 @@ import { Project } from "../data/project";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
 import { ProjectTasks } from "./tasks";
 import { HandleRequest } from "../../../lib/handle-request";
+import { useLanguage } from "../../../components/language-provider";
 
 export function ProjectDetails() {
+    const { writeLang } = useLanguage();
+
     const { id } = useParams();
     const navigate = useNavigate();
     const [project, setProject] = useState<Project>();
@@ -42,7 +45,16 @@ export function ProjectDetails() {
         <Page
             pathname="/projects"
             header={
-                <SectionHeader title="Projects" pathname="/projects" tree={!!project ? [{ label: project.title }] : []}>
+                <SectionHeader
+                    title={
+                        writeLang([
+                            ["en", "Projects"],
+                            ["pt", "Projetos"],
+                        ]) as string
+                    }
+                    pathname="/projects"
+                    tree={!!project ? [{ label: project.title }] : []}
+                >
                     <ConfirmationAlert
                         triggerButton={<Button>Remove</Button>}
                         title="Are you sure you want to delete this project?"
