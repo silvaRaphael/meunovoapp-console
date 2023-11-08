@@ -16,7 +16,20 @@ export function Pricing() {
     const navigate = useNavigate();
 
     return (
-        <Page pathname="/pricing" header={<SectionHeader title="Pricing" pathname="/pricing" />}>
+        <Page
+            pathname="/pricing"
+            header={
+                <SectionHeader
+                    title={
+                        writeLang([
+                            ["en", "Pricing"],
+                            ["pt", "Planos"],
+                        ]) as string
+                    }
+                    pathname="/pricing"
+                />
+            }
+        >
             <div className="space-y-6 pb-40">
                 <div className="grid grid-cols-3 gap-4">
                     {plans.map((item, i) => (
