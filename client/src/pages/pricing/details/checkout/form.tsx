@@ -17,10 +17,11 @@ import { Badge } from "../../../../components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../../../../components/language-provider";
 import { ReactNode } from "react";
-import { Input, MaskedInput } from "../../../../components/ui/input";
+import { Input } from "../../../../components/ui/input";
 import { UpperFirst } from "../../../../lib/helper";
 import { addMonths, format } from "date-fns";
 import { languages } from "../../../../config/languages";
+import { MaskedInput } from "../../../../components/masked-input";
 
 const checkoutFormSchema = z.object({
     emailNotification: z.boolean(),
@@ -138,7 +139,11 @@ export function CheckoutForm({ plan, total }: { plan: any; total: number }) {
                                                                 ])}
                                                             </div>
                                                             <div className="flex justify-between items-center">
-                                                                {(total * 0.9).toLocaleString(language.locale, { currency: language.currency, style: "currency" })}/
+                                                                {(total * (1 - plan.yearlyPercentageOff / 100)).toLocaleString(language.locale, {
+                                                                    currency: language.currency,
+                                                                    style: "currency",
+                                                                })}
+                                                                /
                                                                 {writeLang([
                                                                     ["en", "month"],
                                                                     ["pt", "mês"],
@@ -365,18 +370,29 @@ export function CheckoutForm({ plan, total }: { plan: any; total: number }) {
                     </div>
                     <Table>
                         <TableBody>
-                            {plan.data?.extras.map((item: PlanExtra & { modulePrice: number; value: number[] }, i: number) => (
-                                <TableRow key={i} className="text-xs h-8 dark:border-b-neutral-900">
-                                    <TableCell>{UpperFirst(item.title)}</TableCell>
-                                    <TableCell className="text-end">{item.value[0]}</TableCell>
-                                </TableRow>
-                            ))}
+                            {!plan?.data?.extras
+                                ? Object.entries(plan)
+                                      .filter((item: [string, any]) => ["members", "projects", "teams"].includes(item[0]))
+                                      .map((item: [string, any], i: number) => (
+                                          <TableRow key={i} className="text-xs h-8 dark:border-b-neutral-900">
+                                              <TableCell>{UpperFirst(item[0])}</TableCell>
+                                              <TableCell className="text-end">{item[1]}</TableCell>
+                                          </TableRow>
+                                      ))
+                                : plan.data?.extras.map((item: PlanExtra & { modulePrice: number; value: number[] }, i: number) => (
+                                      <TableRow key={i} className="text-xs h-8 dark:border-b-neutral-900">
+                                          <TableCell>{UpperFirst(item.title)}</TableCell>
+                                          <TableCell className="text-end">{item.value[0]}</TableCell>
+                                      </TableRow>
+                                  ))}
                             <TableRow className="text-sm font-medium h-12">
                                 <TableCell className="font-bold">Total</TableCell>
                                 <TableCell className="font-bold text-end">
-                                    {(!plan.data?.extras
-                                        ? plan.price
-                                        : plan.data?.extras.reduce((acc: any, crr: any) => ((crr.value[0] - crr.modulePrice) / crr.ammount) * crr.price + acc, 0) + plan.price
+                                    {(
+                                        (!plan.data?.extras
+                                            ? plan.price
+                                            : plan.data?.extras.reduce((acc: any, crr: any) => ((crr.value[0] - crr.modulePrice) / crr.ammount) * crr.price + acc, 0) +
+                                              plan.price) * (form.getValues("billingMode") === "monthly" ? 1 : 1 - plan.yearlyPercentageOff / 100)
                                     ).toLocaleString(language.locale, {
                                         currency: language.currency,
                                         style: "currency",

@@ -25,6 +25,7 @@ export interface Plan {
     teams: number;
     projects: number;
     daysFree: number;
+    yearlyPercentageOff: number;
     extras: PlanExtra[];
     items: string[];
     includes: (Pick<PlanInclude, "id"> & { value: string | number | boolean })[];

@@ -35,6 +35,7 @@ export const plans: Plan[] = [
         teams: 5,
         projects: 20,
         daysFree: 14,
+        yearlyPercentageOff: 10,
         extras: [],
         items: ["10 members", "5 teams", "20 projects", "All features access", "14 days free"],
         includes: [
@@ -57,6 +58,7 @@ export const plans: Plan[] = [
         teams: 10,
         projects: 50,
         daysFree: 14,
+        yearlyPercentageOff: 10,
         extras: [
             {
                 title: "members",
@@ -103,6 +105,7 @@ export const plans: Plan[] = [
         projects: 150,
         extras: [],
         daysFree: 14,
+        yearlyPercentageOff: 10,
         items: ["100 members", "25 teams", "150 projects", "all features access", "14 days free"],
         includes: [
             { id: "1", value: true },

@@ -6,6 +6,7 @@ import { useLanguage } from "../../../../components/language-provider";
 
 export function PlanCheckout() {
     const { writeLang } = useLanguage();
+
     const plan = JSON.parse(sessionStorage.getItem("planCheckout") ?? "");
     const tree: {
         label: string;
