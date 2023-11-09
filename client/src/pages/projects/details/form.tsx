@@ -15,7 +15,6 @@ import { Calendar } from "../../../components/ui/calendar";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "../../../components/ui/command";
 import { useEffect, useState } from "react";
 import { Member } from "../../members/data/member";
-import { Card, CardContent, CardHeader } from "../../../components/ui/card";
 import { SubmitButton } from "../../../components/submit-button";
 import { toast } from "../../../components/ui/toast/use-toast";
 import { Actions } from "../../../components/actions";
@@ -339,70 +338,74 @@ export function ProjectForm({ project }: { project: Project }) {
                             control={form.control}
                             name="teams"
                             render={({ field }) => (
-                                <Card className="w-full">
-                                    <CardHeader>
-                                        <FormItem className="flex flex-col">
-                                            <Popover>
-                                                <PopoverTrigger asChild>
-                                                    <FormControl>
-                                                        <Button
-                                                            variant="outline"
-                                                            role="combobox"
-                                                            className={cn("justify-between bg-muted/50", !field.value && "text-muted-foreground")}
-                                                        >
-                                                            <span className="text-left leading-4">
-                                                                {writeLang([
-                                                                    ["en", "Select teams..."],
-                                                                    ["pt", "Selecione times..."],
-                                                                ])}
-                                                            </span>
-                                                            <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                                        </Button>
-                                                    </FormControl>
-                                                </PopoverTrigger>
-                                                <PopoverContent className="p-0">
-                                                    <Command>
-                                                        <CommandInput
-                                                            placeholder={
-                                                                writeLang([
-                                                                    ["en", "Search teams..."],
-                                                                    ["pt", "Procurar times..."],
-                                                                ]) as string
-                                                            }
-                                                        />
-                                                        <CommandEmpty>
+                                <div className="space-y-4">
+                                    <FormItem className="flex flex-col">
+                                        <FormDescription>
+                                            {writeLang([
+                                                ["en", "Teams"],
+                                                ["pt", "Times"],
+                                            ])}
+                                        </FormDescription>
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <FormControl>
+                                                    <Button
+                                                        variant="outline"
+                                                        role="combobox"
+                                                        className={cn("justify-between bg-muted/50", !field.value && "text-muted-foreground")}
+                                                    >
+                                                        <span className="text-left leading-4">
                                                             {writeLang([
-                                                                ["en", "No teams found."],
-                                                                ["pt", "Nenhum time encontrado."],
+                                                                ["en", "Select teams..."],
+                                                                ["pt", "Selecione os times..."],
                                                             ])}
-                                                        </CommandEmpty>
-                                                        <CommandGroup>
-                                                            {teams.map((team, i) => (
-                                                                <CommandItem
-                                                                    value={team.name}
-                                                                    key={i}
-                                                                    onSelect={() => {
-                                                                        let selectedMembers = form.getValues().teams;
-                                                                        if (selectedMembers.includes(team.id)) {
-                                                                            selectedMembers = selectedMembers.filter((item) => item !== team.id);
-                                                                        } else {
-                                                                            selectedMembers.push(team.id);
-                                                                        }
-                                                                        form.setValue("teams", selectedMembers);
-                                                                    }}
-                                                                >
-                                                                    <CheckIcon className={cn("mr-2 h-4 w-4", field.value.includes(team.id) ? "opacity-100" : "opacity-0")} />
-                                                                    {team.name}
-                                                                </CommandItem>
-                                                            ))}
-                                                        </CommandGroup>
-                                                    </Command>
-                                                </PopoverContent>
-                                            </Popover>
-                                            <FormMessage />
-                                        </FormItem>
-                                    </CardHeader>
-                                    <CardContent className="space-y-2">
+                                                        </span>
+                                                        <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                                    </Button>
+                                                </FormControl>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="p-0">
+                                                <Command>
+                                                    <CommandInput
+                                                        placeholder={
+                                                            writeLang([
+                                                                ["en", "Search teams..."],
+                                                                ["pt", "Procurar times..."],
+                                                            ]) as string
+                                                        }
+                                                    />
+                                                    <CommandEmpty>
+                                                        {writeLang([
+                                                            ["en", "No teams found."],
+                                                            ["pt", "Nenhum time encontrado."],
+                                                        ])}
+                                                    </CommandEmpty>
+                                                    <CommandGroup>
+                                                        {teams.map((team, i) => (
+                                                            <CommandItem
+                                                                value={team.name}
+                                                                key={i}
+                                                                onSelect={() => {
+                                                                    let selectedMembers = form.getValues().teams;
+                                                                    if (selectedMembers.includes(team.id)) {
+                                                                        selectedMembers = selectedMembers.filter((item) => item !== team.id);
+                                                                    } else {
+                                                                        selectedMembers.push(team.id);
+                                                                    }
+                                                                    form.setValue("teams", selectedMembers);
+                                                                }}
+                                                            >
+                                                                <CheckIcon className={cn("mr-2 h-4 w-4", field.value.includes(team.id) ? "opacity-100" : "opacity-0")} />
+                                                                {team.name}
+                                                            </CommandItem>
+                                                        ))}
+                                                    </CommandGroup>
+                                                </Command>
+                                            </PopoverContent>
+                                        </Popover>
+                                        <FormMessage />
+                                    </FormItem>
+                                    <div className="space-y-2">
                                         <div className="max-h-[50vh] overflow-y-auto vertical-scrollbar space-y-2 pe-2">
                                             {!!form.getValues().teams && (
                                                 <>
@@ -432,8 +435,8 @@ export function ProjectForm({ project }: { project: Project }) {
                                                 </>
                                             )}
                                         </div>
-                                    </CardContent>
-                                </Card>
+                                    </div>
+                                </div>
                             )}
                         />
                     </div>
