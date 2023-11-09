@@ -10,12 +10,15 @@ import { ConfirmationAlert } from "../../components/confirmation-alert";
 import { Member } from "./data/member";
 import { memberColumns } from "./data/columns";
 import { HandleRequest } from "../../lib/handle-request";
+import { useLanguage } from "../../components/language-provider";
 
 interface MemberRow extends Member {
     deleteAction?: (props: Member) => any;
 }
 
 export function Members() {
+    const { writeLang } = useLanguage();
+
     const [members, setMembers] = useState<MemberRow[]>([]);
     const [openDelete, setOpenDelete] = useState<boolean>(false);
 

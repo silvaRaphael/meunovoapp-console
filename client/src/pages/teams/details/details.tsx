@@ -12,8 +12,11 @@ import { Team } from "../data/team";
 import { TeamProjects } from "./projects";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
 import { HandleRequest } from "../../../lib/handle-request";
+import { useLanguage } from "../../../components/language-provider";
 
 export function TeamDetails() {
+    const { writeLang } = useLanguage();
+
     const { slug } = useParams();
     const navigate = useNavigate();
     const [team, setTeam] = useState<Team>();

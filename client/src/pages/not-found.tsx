@@ -1,15 +1,28 @@
 import { Link } from "react-router-dom";
 import { Button } from "../components/ui/button";
+import { useLanguage } from "../components/language-provider";
 
 export function NotFound() {
-    document.title = `Quat - 404`;
+    const { writeLang } = useLanguage();
+
+    document.title = `404 - Quat`;
 
     return (
         <div className="flex justify-center items-center h-screen">
             <div className="space-y-4 text-center">
-                <h1 className="text-2xl font-medium">Page not found</h1>
+                <h1 className="text-2xl font-medium">
+                    {writeLang([
+                        ["en", "Page not found"],
+                        ["pt", "Página não encontrada"],
+                    ])}
+                </h1>
                 <Button asChild>
-                    <Link to="/">Back to home</Link>
+                    <Link to="/">
+                        {writeLang([
+                            ["en", "Back to home"],
+                            ["pt", "Voltar ao início"],
+                        ])}
+                    </Link>
                 </Button>
             </div>
         </div>

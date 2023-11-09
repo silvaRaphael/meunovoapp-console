@@ -10,8 +10,11 @@ import { SubmitButton } from "../../../components/submit-button";
 import { toast } from "../../../components/ui/toast/use-toast";
 import { Task } from "../data/task";
 import { HandleRequest } from "../../../lib/handle-request";
+import { useLanguage } from "../../../components/language-provider";
 
 export function TaskDetails() {
+    const { writeLang } = useLanguage();
+
     const { id } = useParams();
     const navigate = useNavigate();
     const [task, setTask] = useState<Task>();

@@ -6,10 +6,13 @@ import { ConfirmationAlert } from "../../../components/confirmation-alert";
 import { taskColumns } from "../../tasks/data/columns";
 import { Task } from "../../tasks/data/task";
 import { Project } from "../data/project";
+import { useLanguage } from "../../../components/language-provider";
 
 export interface TaskRow extends Task {}
 
 export function ProjectTasks({ project }: { project: Project }) {
+    const { writeLang } = useLanguage();
+
     const [tasks, setTasks] = useState<TaskRow[]>([]);
     const [openDelete, setOpenDelete] = useState<boolean>(false);
 

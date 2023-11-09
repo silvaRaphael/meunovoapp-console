@@ -14,6 +14,7 @@ import { Actions } from "../../components/actions";
 import { Team } from "./data/team";
 import { teamColumns } from "./data/columns";
 import { HandleRequest } from "../../lib/handle-request";
+import { useLanguage } from "../../components/language-provider";
 
 interface TeamRow extends Team {
     deleteAction?: (props: Team) => any;
@@ -21,6 +22,8 @@ interface TeamRow extends Team {
 }
 
 export function Teams() {
+    const { writeLang } = useLanguage();
+
     const [teams, setTeams] = useState<TeamRow[]>([]);
     const [openDelete, setOpenDelete] = useState<boolean>(false);
     const [teamName, setTeamName] = useState<string>("");

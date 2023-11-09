@@ -9,12 +9,15 @@ import { Task } from "../../tasks/data/task";
 import { Team } from "../../teams/data/team";
 import { taskColumns } from "../../tasks/data/columns";
 import { Member } from "../data/member";
+import { useLanguage } from "../../../components/language-provider";
 
 export interface TaskRow extends Task {
     seeTeams?: (props: Task) => any;
 }
 
 export function MemberTasks({ member }: { member: Member }) {
+    const { writeLang } = useLanguage();
+
     const [tasks, setTasks] = useState<TaskRow[]>([]);
     const [openDelete, setOpenDelete] = useState<boolean>(false);
     const [taskName, setTaskName] = useState<string>("");

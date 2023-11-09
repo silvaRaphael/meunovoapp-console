@@ -9,12 +9,15 @@ import { Actions } from "../../../components/actions";
 import { toast } from "../../../components/ui/toast/use-toast";
 import { SubmitButton } from "../../../components/submit-button";
 import { teamColumns } from "../../teams/data/columns";
+import { useLanguage } from "../../../components/language-provider";
 
 interface TeamRow extends Team {
     seeMembers?: (props: Team) => any;
 }
 
 export function MemberTeams({ member }: { member: Member }) {
+    const { writeLang } = useLanguage();
+
     const [teams, setTeams] = useState<TeamRow[]>([]);
     const [openDelete, setOpenDelete] = useState<boolean>(false);
     const [teamName, setTeamName] = useState<string>("");

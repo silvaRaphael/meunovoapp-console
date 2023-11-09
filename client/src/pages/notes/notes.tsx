@@ -13,8 +13,11 @@ import { NoteForm } from "./details/form";
 import { CreateNoteForm } from "./create/form";
 import { Actions } from "../../components/actions";
 import { CustomSheet } from "../../components/custom-sheet";
+import { useLanguage } from "../../components/language-provider";
 
 export function Notes() {
+    const { writeLang } = useLanguage();
+
     const [notes, setNotes] = useState<Note[]>([]);
     const [note, setNote] = useState<Note | null>(null);
     const [openDelete, setOpenDelete] = useState<Note | null>(null);

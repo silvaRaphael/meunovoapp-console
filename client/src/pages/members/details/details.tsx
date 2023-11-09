@@ -14,8 +14,11 @@ import { MemberTeams } from "./teams";
 import { MemberProjects } from "./projects";
 import { MemberTasks } from "./tasks";
 import { HandleRequest } from "../../../lib/handle-request";
+import { useLanguage } from "../../../components/language-provider";
 
 export function MemberDetails() {
+    const { writeLang } = useLanguage();
+
     const { username } = useParams();
     const navigate = useNavigate();
     const [member, setMember] = useState<Member>();

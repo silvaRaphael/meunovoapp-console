@@ -5,7 +5,7 @@ import { SectionHeader } from "../../components/section-header";
 import { Button } from "../../components/ui/button";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import timeGridPlugin from "@fullcalendar/timegrid";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import interactionPlugin from "@fullcalendar/interaction";
 import { Project } from "../projects/data/project";
 import { ContentAlert } from "../../components/content-alert";

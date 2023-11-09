@@ -8,7 +8,7 @@ export function SectionHeader({ title, pathname, tree, children }: { title: stri
     const { writeLang } = useLanguage();
     const navigate = useNavigate();
 
-    document.title = !tree?.length ? `Quat - ${title}` : `Quat - ${tree?.at(-1)?.label}`;
+    document.title = !tree?.length ? `${title} - Quat` : `${tree?.at(-1)?.label} - Quat`;
 
     return (
         <div className="border-b">

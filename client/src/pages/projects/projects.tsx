@@ -13,6 +13,7 @@ import { Project } from "./data/project";
 import { projectColumns } from "./data/columns";
 import { Team } from "../teams/data/team";
 import { HandleRequest } from "../../lib/handle-request";
+import { useLanguage } from "../../components/language-provider";
 
 export interface ProjectRow extends Project {
     deleteAction?: (props: Project) => any;
@@ -20,6 +21,8 @@ export interface ProjectRow extends Project {
 }
 
 export function Projects() {
+    const { writeLang } = useLanguage();
+
     const [projects, setProjects] = useState<ProjectRow[]>([]);
     const [openDelete, setOpenDelete] = useState<boolean>(false);
     const [projectName, setProjectName] = useState<string>("");

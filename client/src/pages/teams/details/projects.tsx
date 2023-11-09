@@ -8,12 +8,15 @@ import { Actions } from "../../../components/actions";
 import { Project } from "../../projects/data/project";
 import { Team } from "../../teams/data/team";
 import { projectColumns } from "../../projects/data/columns";
+import { useLanguage } from "../../../components/language-provider";
 
 export interface ProjectRow extends Project {
     seeTeams?: (props: Project) => any;
 }
 
 export function TeamProjects({ team }: { team: Team }) {
+    const { writeLang } = useLanguage();
+
     const [projects, setProjects] = useState<ProjectRow[]>([]);
     const [openDelete, setOpenDelete] = useState<boolean>(false);
     const [projectName, setProjectName] = useState<string>("");

@@ -10,12 +10,15 @@ import { ConfirmationAlert } from "../../components/confirmation-alert";
 import { Task } from "./data/task";
 import { taskColumns } from "./data/columns";
 import { HandleRequest } from "../../lib/handle-request";
+import { useLanguage } from "../../components/language-provider";
 
 export interface TaskRow extends Task {
     deleteAction?: (props: Task) => any;
 }
 
 export function Tasks() {
+    const { writeLang } = useLanguage();
+
     const [tasks, setTasks] = useState<TaskRow[]>([]);
     const [openDelete, setOpenDelete] = useState<boolean>(false);
 
