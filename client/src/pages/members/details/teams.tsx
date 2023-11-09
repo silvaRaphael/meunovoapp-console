@@ -10,6 +10,7 @@ import { toast } from "../../../components/ui/toast/use-toast";
 import { SubmitButton } from "../../../components/submit-button";
 import { teamColumns } from "../../teams/data/columns";
 import { useLanguage } from "../../../components/language-provider";
+import { buttonVariants } from "../../../components/ui/button";
 
 interface TeamRow extends Team {
     seeMembers?: (props: Team) => any;
@@ -67,7 +68,12 @@ export function MemberTeams({ member }: { member: Member }) {
                 }
                 confirmButton={
                     <SubmitButton
-                        label="Delete"
+                        label={
+                            writeLang([
+                                ["en", "Delete"],
+                                ["pt", "Excluir"],
+                            ]) as string
+                        }
                         className={buttonVariants({ variant: "destructive" })}
                         onSubmit={async () => {
                             await new Promise((resolve, rejects) => {

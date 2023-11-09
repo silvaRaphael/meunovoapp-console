@@ -71,7 +71,12 @@ export function Tasks() {
                 }
                 confirmButton={
                     <SubmitButton
-                        label="Delete"
+                        label={
+                            writeLang([
+                                ["en", "Delete"],
+                                ["pt", "Excluir"],
+                            ]) as string
+                        }
                         className={buttonVariants({ variant: "destructive" })}
                         onSubmit={async () => {
                             const { onDone, onError } = await new HandleRequest().delete("https://jsonplaceholder.typicode.com/users");

@@ -10,6 +10,7 @@ import { Team } from "../../teams/data/team";
 import { taskColumns } from "../../tasks/data/columns";
 import { Member } from "../data/member";
 import { useLanguage } from "../../../components/language-provider";
+import { buttonVariants } from "../../../components/ui/button";
 
 export interface TaskRow extends Task {
     seeTeams?: (props: Task) => any;
@@ -67,7 +68,12 @@ export function MemberTasks({ member }: { member: Member }) {
                 }
                 confirmButton={
                     <SubmitButton
-                        label="Delete"
+                        label={
+                            writeLang([
+                                ["en", "Delete"],
+                                ["pt", "Excluir"],
+                            ]) as string
+                        }
                         className={buttonVariants({ variant: "destructive" })}
                         onSubmit={async () => {
                             await new Promise((resolve, rejects) => {

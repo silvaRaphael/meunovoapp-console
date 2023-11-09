@@ -57,7 +57,12 @@ export function ProjectTasks({ project }: { project: Project }) {
                 }
                 confirmButton={
                     <SubmitButton
-                        label="Delete"
+                        label={
+                            writeLang([
+                                ["en", "Delete"],
+                                ["pt", "Excluir"],
+                            ]) as string
+                        }
                         className={buttonVariants({ variant: "destructive" })}
                         onSubmit={async () => {
                             await new Promise((resolve, rejects) => {

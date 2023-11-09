@@ -14,6 +14,7 @@ import { CreateNoteForm } from "./create/form";
 import { Actions } from "../../components/actions";
 import { CustomSheet } from "../../components/custom-sheet";
 import { useLanguage } from "../../components/language-provider";
+import { buttonVariants } from "../../components/ui/button";
 
 export function Notes() {
     const { writeLang } = useLanguage();
@@ -96,7 +97,12 @@ export function Notes() {
                     }
                     confirmButton={
                         <SubmitButton
-                            label="Delete"
+                            label={
+                                writeLang([
+                                    ["en", "Delete"],
+                                    ["pt", "Excluir"],
+                                ]) as string
+                            }
                             className={buttonVariants({ variant: "destructive" })}
                             onSubmit={async () => {
                                 const { onDone, onError } = await new HandleRequest().delete("https://jsonplaceholder.typicode.com/users");
