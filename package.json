@@ -7,12 +7,5 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@radix-ui/react-tooltip": "^1.0.7",
-    "react-input-mask": "^2.0.4"
-  },
-  "devDependencies": {
-    "@types/react-input-mask": "^3.0.4"
-  }
+  "license": "ISC"
 }
