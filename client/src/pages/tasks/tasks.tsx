@@ -3,7 +3,7 @@ import { DataTable } from "../../components/ui/data-table/data-table";
 import { SectionHeader } from "../../components/section-header";
 import { Search } from "../../components/search";
 import { Page } from "../../components/page";
-import { Button } from "../../components/ui/button";
+import { Button, buttonVariants } from "../../components/ui/button";
 import { SubmitButton } from "../../components/submit-button";
 import { toast } from "../../components/ui/toast/use-toast";
 import { ConfirmationAlert } from "../../components/confirmation-alert";
@@ -72,6 +72,7 @@ export function Tasks() {
                 confirmButton={
                     <SubmitButton
                         label="Delete"
+                        className={buttonVariants({ variant: "destructive" })}
                         onSubmit={async () => {
                             const { onDone, onError } = await new HandleRequest().delete("https://jsonplaceholder.typicode.com/users");
                             onDone(() => {

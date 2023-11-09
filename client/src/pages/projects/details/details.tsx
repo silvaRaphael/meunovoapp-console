@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { SectionHeader } from "../../../components/section-header";
 import { Separator } from "../../../components/ui/separator";
 import { ProjectForm } from "./form";
-import { Button } from "../../../components/ui/button";
+import { Button, buttonVariants } from "../../../components/ui/button";
 import { Page } from "../../../components/page";
 import { ConfirmationAlert } from "../../../components/confirmation-alert";
 import { SubmitButton } from "../../../components/submit-button";
@@ -79,6 +79,7 @@ export function ProjectDetails() {
                         confirmButton={
                             <SubmitButton
                                 label="Delete"
+                                className={buttonVariants({ variant: "destructive" })}
                                 onSubmit={async () => {
                                     const { onDone, onError } = await new HandleRequest().delete("https://jsonplaceholder.typicode.com/users");
                                     onDone(() => {

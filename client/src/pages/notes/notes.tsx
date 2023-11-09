@@ -97,6 +97,7 @@ export function Notes() {
                     confirmButton={
                         <SubmitButton
                             label="Delete"
+                            className={buttonVariants({ variant: "destructive" })}
                             onSubmit={async () => {
                                 const { onDone, onError } = await new HandleRequest().delete("https://jsonplaceholder.typicode.com/users");
                                 onDone(() => {

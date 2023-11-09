@@ -9,6 +9,7 @@ import { Project } from "../../projects/data/project";
 import { Team } from "../../teams/data/team";
 import { projectColumns } from "../../projects/data/columns";
 import { useLanguage } from "../../../components/language-provider";
+import { buttonVariants } from "../../../components/ui/button";
 
 export interface ProjectRow extends Project {
     seeTeams?: (props: Project) => any;
@@ -67,6 +68,7 @@ export function TeamProjects({ team }: { team: Team }) {
                 confirmButton={
                     <SubmitButton
                         label="Delete"
+                        className={buttonVariants({ variant: "destructive" })}
                         onSubmit={async () => {
                             await new Promise((resolve, rejects) => {
                                 setTimeout(() => {

@@ -68,6 +68,7 @@ export function MemberTasks({ member }: { member: Member }) {
                 confirmButton={
                     <SubmitButton
                         label="Delete"
+                        className={buttonVariants({ variant: "destructive" })}
                         onSubmit={async () => {
                             await new Promise((resolve, rejects) => {
                                 setTimeout(() => {

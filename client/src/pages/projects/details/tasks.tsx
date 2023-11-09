@@ -7,6 +7,7 @@ import { taskColumns } from "../../tasks/data/columns";
 import { Task } from "../../tasks/data/task";
 import { Project } from "../data/project";
 import { useLanguage } from "../../../components/language-provider";
+import { buttonVariants } from "../../../components/ui/button";
 
 export interface TaskRow extends Task {}
 
@@ -57,6 +58,7 @@ export function ProjectTasks({ project }: { project: Project }) {
                 confirmButton={
                     <SubmitButton
                         label="Delete"
+                        className={buttonVariants({ variant: "destructive" })}
                         onSubmit={async () => {
                             await new Promise((resolve, rejects) => {
                                 setTimeout(() => {
