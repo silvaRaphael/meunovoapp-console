@@ -47,8 +47,6 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         });
     }
 
-    console.log(defaultClassNames.day);
-
     return (
         <DayPicker
             showOutsideDays={showOutsideDays}

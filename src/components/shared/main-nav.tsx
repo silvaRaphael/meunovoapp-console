@@ -22,15 +22,12 @@ export function MainNav({ pathname }: { pathname: string }) {
     }
 
     function initActiveMenuItems(pathname: string) {
-        console.log(`${language.lang}-menu`);
         let activeMenuStoraged = localStorage.getItem(`${language.lang}-menu`);
-        console.log(activeMenuStoraged);
         let _activeMenu: string[] = ["/"];
 
         if (activeMenuStoraged) _activeMenu = JSON.parse(activeMenuStoraged);
 
         let newActiveMenu = [..._activeMenu];
-        console.log(newActiveMenu);
         if (!_activeMenu.find((item) => item === pathname)) newActiveMenu.push(pathname);
 
         localStorage.setItem(`${language.lang}-menu`, JSON.stringify(newActiveMenu));
@@ -63,8 +60,6 @@ export function MainNav({ pathname }: { pathname: string }) {
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pathname, language]);
-
-    console.log(`${language.lang}-menu`, activeMenu);
 
     return (
         <nav ref={ref} className="flex items-center flex-grow ps-4 pe-2 space-x-2 overflow-x-auto horizontal-scrollbar">

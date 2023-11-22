@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Hash, LogOutIcon } from "lucide-react";
 
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
@@ -7,19 +7,16 @@ import { SideMenu } from "config/site";
 import { user } from "config/user";
 import { cn } from "lib/utils";
 import { useLanguage } from "./language-provider";
+import { useAuth } from "./auth-provider";
 
 export const sideBarWidth = 200;
 export const sideBarWidthCollapsed = 48;
 
 export function SideBar({ pathname, isOpen }: { pathname: string; isOpen: boolean }) {
     const { writeLang } = useLanguage();
-    const navigate = useNavigate();
+    const { removeAuth } = useAuth();
 
     const menu = SideMenu({ writeLang }).find((item) => item.role.includes(user.role))?.menu ?? [];
-
-    function handleLogout() {
-        navigate("/login");
-    }
 
     return (
         <div
@@ -64,7 +61,7 @@ export function SideBar({ pathname, isOpen }: { pathname: string; isOpen: boolea
                         </div>
                     ))}
                 </nav>
-                <div className="flex items-center text-xs font-medium px-4 border-t h-10 text-muted-foreground hover:text-primary cursor-pointer" onClick={handleLogout}>
+                <div className="flex items-center text-xs font-medium px-4 border-t h-10 text-muted-foreground hover:text-primary cursor-pointer" onClick={removeAuth}>
                     <LogOutIcon className="me-1" size={12} />
                     {isOpen &&
                         writeLang([

@@ -30,8 +30,6 @@ export function PlanCheckout() {
             pathname: `/pricing/customize/${plan.id}`,
         });
 
-    console.log(plan);
-
     return (
         <Page
             pathname="/pricing"
