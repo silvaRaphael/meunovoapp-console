@@ -16,7 +16,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader } from "../../../components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "../../../components/ui/avatar";
-import { SubmitButton } from "../../../components/submit-button";
+import { SubmitButton } from "../../../components/shared/submit-button";
 import { toast } from "../../../components/ui/toast/use-toast";
 import { JobTitle } from "../../../config/job-titles";
 import { HandleRequest } from "../../../lib/handle-request";

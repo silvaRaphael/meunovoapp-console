@@ -5,7 +5,7 @@ import * as z from "zod";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "../../../../components/ui/form";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../../../../components/ui/card";
 import { Table, TableBody, TableCell, TableRow } from "../../../../components/ui/table";
-import { SubmitButton } from "../../../../components/submit-button";
+import { SubmitButton } from "../../../../components/shared/submit-button";
 import { toast } from "../../../../components/ui/toast/use-toast";
 import { HandleRequest } from "../../../../lib/handle-request";
 import { Separator } from "../../../../components/ui/separator";
@@ -15,13 +15,13 @@ import { Calendar, CalendarDays, CheckCircle2, CreditCard, File } from "lucide-r
 import { PlanExtra } from "../../data/plan";
 import { Badge } from "../../../../components/ui/badge";
 import { useNavigate } from "react-router-dom";
-import { useLanguage } from "../../../../components/language-provider";
+import { useLanguage } from "../../../../components/shared/language-provider";
 import { ReactNode } from "react";
 import { Input } from "../../../../components/ui/input";
 import { UpperFirst } from "../../../../lib/helper";
 import { addMonths, format } from "date-fns";
 import { languages } from "../../../../config/languages";
-import { MaskedInput } from "../../../../components/masked-input";
+import { MaskedInput } from "../../../../components/shared/masked-input";
 
 const checkoutFormSchema = z.object({
     emailNotification: z.boolean(),

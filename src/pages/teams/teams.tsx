@@ -1,20 +1,20 @@
 import { useEffect, useState } from "react";
 import { DataTable } from "../../components/ui/data-table/data-table";
-import { SectionHeader } from "../../components/section-header";
-import { Search } from "../../components/search";
-import { Page } from "../../components/page";
+import { SectionHeader } from "../../components/shared/section-header";
+import { Search } from "../../components/shared/search";
+import { Page } from "../../components/shared/page";
 import { Button, buttonVariants } from "../../components/ui/button";
-import { SubmitButton } from "../../components/submit-button";
+import { SubmitButton } from "../../components/shared/submit-button";
 import { toast } from "../../components/ui/toast/use-toast";
-import { ConfirmationAlert } from "../../components/confirmation-alert";
+import { ConfirmationAlert } from "../../components/shared/confirmation-alert";
 import { Member } from "../members/data/member";
-import { ContentAlert } from "../../components/content-alert";
-import { MemberInfo } from "../../components/member-info";
-import { Actions } from "../../components/actions";
+import { ContentAlert } from "../../components/shared/content-alert";
+import { MemberInfo } from "../../components/shared/member-info";
+import { Actions } from "../../components/shared/actions";
 import { Team } from "./data/team";
 import { teamColumns } from "./data/columns";
 import { HandleRequest } from "../../lib/handle-request";
-import { useLanguage } from "../../components/language-provider";
+import { useLanguage } from "../../components/shared/language-provider";
 
 interface TeamRow extends Team {
     deleteAction?: (props: Team) => any;

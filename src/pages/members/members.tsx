@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import { DataTable } from "../../components/ui/data-table/data-table";
-import { SectionHeader } from "../../components/section-header";
-import { Search } from "../../components/search";
-import { Page } from "../../components/page";
+import { SectionHeader } from "../../components/shared/section-header";
+import { Search } from "../../components/shared/search";
+import { Page } from "../../components/shared/page";
 import { Button, buttonVariants } from "../../components/ui/button";
-import { SubmitButton } from "../../components/submit-button";
+import { SubmitButton } from "../../components/shared/submit-button";
 import { toast } from "../../components/ui/toast/use-toast";
-import { ConfirmationAlert } from "../../components/confirmation-alert";
+import { ConfirmationAlert } from "../../components/shared/confirmation-alert";
 import { Member } from "./data/member";
 import { memberColumns } from "./data/columns";
 import { HandleRequest } from "../../lib/handle-request";
-import { useLanguage } from "../../components/language-provider";
+import { useLanguage } from "../../components/shared/language-provider";
 
 interface MemberRow extends Member {
     deleteAction?: (props: Member) => any;

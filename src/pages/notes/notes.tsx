@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
-import { SectionHeader } from "../../components/section-header";
-import { Search } from "../../components/search";
-import { Page } from "../../components/page";
-import { SubmitButton } from "../../components/submit-button";
+import { SectionHeader } from "../../components/shared/section-header";
+import { Search } from "../../components/shared/search";
+import { Page } from "../../components/shared/page";
+import { SubmitButton } from "../../components/shared/submit-button";
 import { toast } from "../../components/ui/toast/use-toast";
-import { ConfirmationAlert } from "../../components/confirmation-alert";
+import { ConfirmationAlert } from "../../components/shared/confirmation-alert";
 import { Note } from "./data/note";
 import { HandleRequest } from "../../lib/handle-request";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../components/ui/card";
 import { format } from "date-fns";
 import { NoteForm } from "./details/form";
 import { CreateNoteForm } from "./create/form";
-import { Actions } from "../../components/actions";
-import { CustomSheet } from "../../components/custom-sheet";
-import { useLanguage } from "../../components/language-provider";
+import { Actions } from "../../components/shared/actions";
+import { CustomSheet } from "../../components/shared/custom-sheet";
+import { useLanguage } from "../../components/shared/language-provider";
 import { buttonVariants } from "../../components/ui/button";
 
 export function Notes() {

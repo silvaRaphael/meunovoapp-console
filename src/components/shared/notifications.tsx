@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
-import { Button } from "./ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import { Button } from "../ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { Bell } from "lucide-react";
-import { Notification, notifications } from "../config/notifications";
+import { Notification, notifications } from "../../config/notifications";
 import { format } from "date-fns";
 
 export function Notifications() {

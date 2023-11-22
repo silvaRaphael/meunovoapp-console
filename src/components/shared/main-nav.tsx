@@ -1,6 +1,6 @@
 import { Hash, X } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { MenuItem, menuItems } from "../config/site";
+import { MenuItem, menuItems } from "../../config/site";
 import { useEffect, useRef, useState } from "react";
 
 export function MainNav({ pathname }: { pathname: string }) {

@@ -6,7 +6,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "../../../co
 import { Input } from "../../../components/ui/input";
 import { Textarea } from "../../../components/ui/textarea";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../../../components/ui/card";
-import { SubmitButton } from "../../../components/submit-button";
+import { SubmitButton } from "../../../components/shared/submit-button";
 import { toast } from "../../../components/ui/toast/use-toast";
 import { HandleRequest } from "../../../lib/handle-request";
 import { Note } from "../data/note";

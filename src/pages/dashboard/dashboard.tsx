@@ -1,6 +1,6 @@
-import { Page } from "../../components/page";
-import { Search } from "../../components/search";
-import { SectionHeader } from "../../components/section-header";
+import { Page } from "../../components/shared/page";
+import { Search } from "../../components/shared/search";
+import { SectionHeader } from "../../components/shared/section-header";
 
 export function Dashboard() {
     return (

@@ -1,8 +1,8 @@
 import { Separator } from "../../../../components/ui/separator";
-import { Page } from "../../../../components/page";
-import { SectionHeader } from "../../../../components/section-header";
+import { Page } from "../../../../components/shared/page";
+import { SectionHeader } from "../../../../components/shared/section-header";
 import { CheckoutForm } from "./form";
-import { useLanguage } from "../../../../components/language-provider";
+import { useLanguage } from "../../../../components/shared/language-provider";
 
 export function PlanCheckout() {
     const { writeLang } = useLanguage();

@@ -1,5 +1,5 @@
-import { SectionHeader } from "../../components/section-header";
-import { Page } from "../../components/page";
+import { SectionHeader } from "../../components/shared/section-header";
+import { Page } from "../../components/shared/page";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../../components/ui/card";
 import { planIncludes, plans } from "./data/data";
 import { Button } from "../../components/ui/button";
@@ -9,7 +9,7 @@ import { Separator } from "../../components/ui/separator";
 import { CheckCircle2, X } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table";
 import { useNavigate } from "react-router-dom";
-import { useLanguage } from "../../components/language-provider";
+import { useLanguage } from "../../components/shared/language-provider";
 
 export function Pricing() {
     const { language, writeLang } = useLanguage();

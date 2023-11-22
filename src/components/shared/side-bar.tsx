@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
-import { sideMenu } from "../config/site";
 import { Hash, LogOutIcon } from "lucide-react";
+
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
-import { user } from "../config/user";
-import { cn } from "../lib/utils";
-import { Badge } from "./ui/badge";
+import { Badge } from "../ui/badge";
+import { sideMenu } from "config/site";
+import { user } from "config/user";
+import { cn } from "lib/utils";
 
 export const sideBarWidth = 200;
 export const sideBarWidthCollapsed = 48;

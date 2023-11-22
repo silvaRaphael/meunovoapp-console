@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import { Page } from "../../components/page";
-import { Search } from "../../components/search";
-import { SectionHeader } from "../../components/section-header";
+import { Page } from "../../components/shared/page";
+import { Search } from "../../components/shared/search";
+import { SectionHeader } from "../../components/shared/section-header";
 import { Button } from "../../components/ui/button";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import interactionPlugin from "@fullcalendar/interaction";
 import { Project } from "../projects/data/project";
-import { ContentAlert } from "../../components/content-alert";
+import { ContentAlert } from "../../components/shared/content-alert";
 import { format } from "date-fns";
 
 export function Schedule() {

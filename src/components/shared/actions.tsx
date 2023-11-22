@@ -1,8 +1,8 @@
 import { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { Pencil, Trash2, X } from "lucide-react";
-import { cn } from "../lib/utils";
+import { cn } from "../../lib/utils";
 
 const ButtonStruct = ({ onClick, to, className, children }: { onClick?: () => void; to?: string; className?: string; children: ReactNode }) => (
     <Button size="icon" variant="ghost" className={cn("cursor-pointer", className)} asChild>

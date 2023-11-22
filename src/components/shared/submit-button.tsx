@@ -1,5 +1,5 @@
-import { Button } from "./ui/button";
-import { Loader2 } from "lucide-react";
+import { Button } from "../ui/button";
+import { Loader } from "lucide-react";
 import { useState } from "react";
 
 export function SubmitButton({
@@ -34,7 +34,7 @@ export function SubmitButton({
 
     return (
         <Button type={type} onClick={type === "button" ? _onSubmit : () => null} disabled={status !== "initial" || state !== "initial"} className={className}>
-            {(status === "loading" || state === "loading") && <Loader2 size={16} className="animate-spin me-1" />}
+            {(status === "loading" || state === "loading") && <Loader size={16} className="animate-spin me-1" />}
             {label}
         </Button>
     );

@@ -5,7 +5,7 @@ import * as z from "zod";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from "../../components/ui/form";
 import { Input } from "../../components/ui/input";
 import { Textarea } from "../../components/ui/textarea";
-import { SubmitButton } from "../../components/submit-button";
+import { SubmitButton } from "../../components/shared/submit-button";
 import { toast } from "../../components/ui/toast/use-toast";
 import { HandleRequest } from "../../lib/handle-request";
 import { User } from "../../config/user";

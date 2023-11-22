@@ -1,8 +1,8 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { Actions } from "../../../components/actions";
+import { Actions } from "../../../components/shared/actions";
 import { DataTableColumnHeader } from "../../../components/ui/data-table/data-table-column-header";
 import { Badge } from "../../../components/ui/badge";
-import { MemberInfo } from "../../../components/member-info";
+import { MemberInfo } from "../../../components/shared/member-info";
 import { Role } from "../../../config/roles";
 import { UpperFirst } from "../../../lib/helper";
 import { Member } from "./member";

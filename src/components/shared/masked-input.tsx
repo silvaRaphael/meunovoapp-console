@@ -1,5 +1,5 @@
 import InputMask from "react-input-mask";
-import { Input } from "./ui/input";
+import { Input } from "../ui/input";
 import React from "react";
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {

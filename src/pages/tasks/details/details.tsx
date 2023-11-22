@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { SectionHeader } from "../../../components/section-header";
+import { SectionHeader } from "../../../components/shared/section-header";
 import { Separator } from "../../../components/ui/separator";
 import { TaskForm } from "./form";
 import { Button, buttonVariants } from "../../../components/ui/button";
-import { Page } from "../../../components/page";
-import { ConfirmationAlert } from "../../../components/confirmation-alert";
-import { SubmitButton } from "../../../components/submit-button";
+import { Page } from "../../../components/shared/page";
+import { ConfirmationAlert } from "../../../components/shared/confirmation-alert";
+import { SubmitButton } from "../../../components/shared/submit-button";
 import { toast } from "../../../components/ui/toast/use-toast";
 import { Task } from "../data/task";
 import { HandleRequest } from "../../../lib/handle-request";
-import { useLanguage } from "../../../components/language-provider";
+import { useLanguage } from "../../../components/shared/language-provider";
 
 export function TaskDetails() {
     const { writeLang } = useLanguage();

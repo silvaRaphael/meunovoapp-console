@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { DataTable } from "../../../components/ui/data-table/data-table";
-import { SubmitButton } from "../../../components/submit-button";
+import { SubmitButton } from "../../../components/shared/submit-button";
 import { toast } from "../../../components/ui/toast/use-toast";
-import { ConfirmationAlert } from "../../../components/confirmation-alert";
-import { ContentAlert } from "../../../components/content-alert";
-import { Actions } from "../../../components/actions";
+import { ConfirmationAlert } from "../../../components/shared/confirmation-alert";
+import { ContentAlert } from "../../../components/shared/content-alert";
+import { Actions } from "../../../components/shared/actions";
 import { Project } from "../../projects/data/project";
 import { Team } from "../../teams/data/team";
 import { projectColumns } from "../../projects/data/columns";
-import { useLanguage } from "../../../components/language-provider";
+import { useLanguage } from "../../../components/shared/language-provider";
 import { buttonVariants } from "../../../components/ui/button";
 
 export interface ProjectRow extends Project {

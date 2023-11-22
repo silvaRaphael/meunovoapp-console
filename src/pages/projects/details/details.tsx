@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { SectionHeader } from "../../../components/section-header";
+import { SectionHeader } from "../../../components/shared/section-header";
 import { Separator } from "../../../components/ui/separator";
 import { ProjectForm } from "./form";
 import { Button, buttonVariants } from "../../../components/ui/button";
-import { Page } from "../../../components/page";
-import { ConfirmationAlert } from "../../../components/confirmation-alert";
-import { SubmitButton } from "../../../components/submit-button";
+import { Page } from "../../../components/shared/page";
+import { ConfirmationAlert } from "../../../components/shared/confirmation-alert";
+import { SubmitButton } from "../../../components/shared/submit-button";
 import { toast } from "../../../components/ui/toast/use-toast";
 import { Project } from "../data/project";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
 import { ProjectTasks } from "./tasks";
 import { HandleRequest } from "../../../lib/handle-request";
-import { useLanguage } from "../../../components/language-provider";
+import { useLanguage } from "../../../components/shared/language-provider";
 
 export function ProjectDetails() {
     const { writeLang } = useLanguage();

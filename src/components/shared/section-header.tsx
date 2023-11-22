@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { ReactNode } from "react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { ChevronLeft } from "lucide-react";
 import { useLanguage } from "./language-provider";
 

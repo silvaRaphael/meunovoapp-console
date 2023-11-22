@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "../components/ui/button";
-import { useLanguage } from "../components/language-provider";
+import { useLanguage } from "../components/shared/language-provider";
 
 export function NotFound() {
     const { writeLang } = useLanguage();

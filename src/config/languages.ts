@@ -1,4 +1,4 @@
-import { Language } from "../components/language-provider";
+import { Language } from "../components/shared/language-provider";
 import { enUS, ptBR } from "date-fns/locale";
 
 export const languages: Language[] = [

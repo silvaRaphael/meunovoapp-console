@@ -15,13 +15,13 @@ import { Calendar } from "../../../components/ui/calendar";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "../../../components/ui/command";
 import { useEffect, useState } from "react";
 import { Member } from "../../members/data/member";
-import { SubmitButton } from "../../../components/submit-button";
+import { SubmitButton } from "../../../components/shared/submit-button";
 import { toast } from "../../../components/ui/toast/use-toast";
-import { Actions } from "../../../components/actions";
+import { Actions } from "../../../components/shared/actions";
 import { Team } from "../../teams/data/team";
 import { HandleRequest } from "../../../lib/handle-request";
 import { Separator } from "../../../components/ui/separator";
-import { useLanguage } from "../../../components/language-provider";
+import { useLanguage } from "../../../components/shared/language-provider";
 import { languages } from "../../../config/languages";
 
 const projectFormSchema = z.object({

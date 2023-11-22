@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { SectionHeader } from "../../../../components/section-header";
+import { SectionHeader } from "../../../../components/shared/section-header";
 import { Separator } from "../../../../components/ui/separator";
-import { Page } from "../../../../components/page";
+import { Page } from "../../../../components/shared/page";
 import { Plan } from "../../data/plan";
 import { plans } from "../../data/data";
 import { PlanForm } from "./form";
-import { useLanguage } from "../../../../components/language-provider";
+import { useLanguage } from "../../../../components/shared/language-provider";
 
 export function PlanCustomize() {
     const { writeLang } = useLanguage();

@@ -1,4 +1,4 @@
-import { Language } from "../components/language-provider";
+import { Language } from "../components/shared/language-provider";
 
 export interface RequestOptionsI {
     token?: string;

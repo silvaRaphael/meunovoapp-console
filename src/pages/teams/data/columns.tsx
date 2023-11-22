@@ -1,11 +1,11 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Avatar } from "../../../components/ui/avatar";
 import { AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import { Actions } from "../../../components/actions";
+import { Actions } from "../../../components/shared/actions";
 import { DataTableColumnHeader } from "../../../components/ui/data-table/data-table-column-header";
 import { Badge } from "../../../components/ui/badge";
 import format from "date-fns/format";
-import { MemberInfo } from "../../../components/member-info";
+import { MemberInfo } from "../../../components/shared/member-info";
 import { Team } from "./team";
 
 export const teamColumns: ColumnDef<Team>[] = [

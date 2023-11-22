@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import { Team } from "../../teams/data/team";
 import { Member } from "../data/member";
 import { DataTable } from "../../../components/ui/data-table/data-table";
-import { ConfirmationAlert } from "../../../components/confirmation-alert";
-import { ContentAlert } from "../../../components/content-alert";
-import { MemberInfo } from "../../../components/member-info";
-import { Actions } from "../../../components/actions";
+import { ConfirmationAlert } from "../../../components/shared/confirmation-alert";
+import { ContentAlert } from "../../../components/shared/content-alert";
+import { MemberInfo } from "../../../components/shared/member-info";
+import { Actions } from "../../../components/shared/actions";
 import { toast } from "../../../components/ui/toast/use-toast";
-import { SubmitButton } from "../../../components/submit-button";
+import { SubmitButton } from "../../../components/shared/submit-button";
 import { teamColumns } from "../../teams/data/columns";
-import { useLanguage } from "../../../components/language-provider";
+import { useLanguage } from "../../../components/shared/language-provider";
 import { buttonVariants } from "../../../components/ui/button";
 
 interface TeamRow extends Team {

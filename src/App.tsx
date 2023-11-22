@@ -6,7 +6,7 @@ import { Dashboard } from "./pages/dashboard/dashboard";
 import { Teams } from "./pages/teams/teams";
 import { Projects } from "./pages/projects/projects";
 import { Tasks } from "./pages/tasks/tasks";
-import { ThemeProvider } from "./components/theme-provider";
+import { ThemeProvider } from "./components/shared/theme-provider";
 import { Toaster } from "./components/ui/toast/toaster";
 import { TeamDetails } from "./pages/teams/details/details";
 import { ProjectDetails } from "./pages/projects/details/details";
@@ -18,7 +18,7 @@ import { Preferences } from "./pages/preferences/preferences";
 import { Pricing } from "./pages/pricing/pricing";
 import { PlanCheckout } from "./pages/pricing/details/checkout/checkout";
 import { PlanCustomize } from "./pages/pricing/details/customize/customize";
-import { LanguageProvider } from "./components/language-provider";
+import { LanguageProvider } from "./components/shared/language-provider";
 
 export function App() {
     return (

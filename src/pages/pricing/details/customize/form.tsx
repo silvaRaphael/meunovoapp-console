@@ -3,7 +3,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
 
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from "../../../../components/ui/form";
-import { SubmitButton } from "../../../../components/submit-button";
+import { SubmitButton } from "../../../../components/shared/submit-button";
 import { Separator } from "../../../../components/ui/separator";
 import { Plan } from "../../data/plan";
 import { UpperFirst } from "../../../../lib/helper";
@@ -11,7 +11,7 @@ import { Slider } from "../../../../components/ui/slider";
 import { HandleRequest } from "../../../../lib/handle-request";
 import { toast } from "../../../../components/ui/toast/use-toast";
 import { useNavigate } from "react-router-dom";
-import { useLanguage } from "../../../../components/language-provider";
+import { useLanguage } from "../../../../components/shared/language-provider";
 
 const planFormSchema = z.object({
     extras: z.array(

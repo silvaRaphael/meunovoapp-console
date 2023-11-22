@@ -1,12 +1,14 @@
-import { ChevronLeft, ChevronRight, Container } from "lucide-react";
-import { UserNav } from "./user-nav";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
+
 import { sideBarWidth } from "./side-bar";
-import { ThemeToggle } from "./theme-toggle";
-import { Notifications } from "./notifications";
-import { Button } from "./ui/button";
 import { MainNav } from "./main-nav";
+import { Notifications } from "./notifications";
 import { LanguageToggle } from "./language-toggle";
+import { ThemeToggle } from "./theme-toggle";
+import { UserNav } from "./user-nav";
+import { Button } from "../ui/button";
+import { Logo } from "./logo";
 
 export function TopBar({ pathname, toggleSideBar, isOpen }: { pathname: string; toggleSideBar: any; isOpen: boolean }) {
     return (
@@ -19,8 +21,7 @@ export function TopBar({ pathname, toggleSideBar, isOpen }: { pathname: string; 
                     }}
                 >
                     <Link to="/" className="flex items-center text-sm font-medium">
-                        <Container className="me-2" size={18} />
-                        QUAT
+                        <Logo scale={0.75} />
                     </Link>
                     <Button variant="ghost" size="sm" className="p-2" onClick={toggleSideBar}>
                         {isOpen ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}

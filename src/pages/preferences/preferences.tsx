@@ -1,6 +1,6 @@
-import { SectionHeader } from "../../components/section-header";
+import { SectionHeader } from "../../components/shared/section-header";
 import { Separator } from "../../components/ui/separator";
-import { Page } from "../../components/page";
+import { Page } from "../../components/shared/page";
 import { user } from "../../config/user";
 import { PreferencesForm } from "./form";
 

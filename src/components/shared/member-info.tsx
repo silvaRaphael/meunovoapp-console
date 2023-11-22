@@ -1,7 +1,7 @@
 import { format } from "date-fns";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Card, CardContent, CardHeader } from "./ui/card";
-import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Card, CardContent, CardHeader } from "../ui/card";
+import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 
 interface Props {
     avatar?: string;

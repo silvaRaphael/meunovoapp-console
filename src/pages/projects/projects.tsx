@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
 import { DataTable } from "../../components/ui/data-table/data-table";
-import { SectionHeader } from "../../components/section-header";
-import { Search } from "../../components/search";
-import { Page } from "../../components/page";
+import { SectionHeader } from "../../components/shared/section-header";
+import { Search } from "../../components/shared/search";
+import { Page } from "../../components/shared/page";
 import { Button, buttonVariants } from "../../components/ui/button";
-import { SubmitButton } from "../../components/submit-button";
+import { SubmitButton } from "../../components/shared/submit-button";
 import { toast } from "../../components/ui/toast/use-toast";
-import { ConfirmationAlert } from "../../components/confirmation-alert";
-import { ContentAlert } from "../../components/content-alert";
-import { Actions } from "../../components/actions";
+import { ConfirmationAlert } from "../../components/shared/confirmation-alert";
+import { ContentAlert } from "../../components/shared/content-alert";
+import { Actions } from "../../components/shared/actions";
 import { Project } from "./data/project";
 import { projectColumns } from "./data/columns";
 import { Team } from "../teams/data/team";
 import { HandleRequest } from "../../lib/handle-request";
-import { useLanguage } from "../../components/language-provider";
+import { useLanguage } from "../../components/shared/language-provider";
 
 export interface ProjectRow extends Project {
     deleteAction?: (props: Project) => any;

@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { Actions } from "../../../components/actions";
+import { Actions } from "../../../components/shared/actions";
 import { DataTableColumnHeader } from "../../../components/ui/data-table/data-table-column-header";
 import { Badge } from "../../../components/ui/badge";
 import format from "date-fns/format";
@@ -10,7 +10,7 @@ import { cn } from "../../../lib/utils";
 import { Task } from "./task";
 import { Project } from "../../projects/data/project";
 import { Link } from "react-router-dom";
-import { MemberInfo } from "../../../components/member-info";
+import { MemberInfo } from "../../../components/shared/member-info";
 
 export const taskColumns: ColumnDef<Task>[] = [
     {

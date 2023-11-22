@@ -3,14 +3,14 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from "../../components/ui/form";
-import { SubmitButton } from "../../components/submit-button";
+import { SubmitButton } from "../../components/shared/submit-button";
 import { toast } from "../../components/ui/toast/use-toast";
 import { HandleRequest } from "../../lib/handle-request";
 import { User } from "../../config/user";
 import { Separator } from "../../components/ui/separator";
 import { Switch } from "../../components/ui/switch";
 import { Label } from "../../components/ui/label";
-import { useTheme } from "../../components/theme-provider";
+import { useTheme } from "../../components/shared/theme-provider";
 import { RadioGroup, RadioGroupItem } from "../../components/ui/radio-group";
 import { Laptop, MoonIcon, SunIcon } from "lucide-react";
 

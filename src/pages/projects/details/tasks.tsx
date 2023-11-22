@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { DataTable } from "../../../components/ui/data-table/data-table";
-import { SubmitButton } from "../../../components/submit-button";
+import { SubmitButton } from "../../../components/shared/submit-button";
 import { toast } from "../../../components/ui/toast/use-toast";
-import { ConfirmationAlert } from "../../../components/confirmation-alert";
+import { ConfirmationAlert } from "../../../components/shared/confirmation-alert";
 import { taskColumns } from "../../tasks/data/columns";
 import { Task } from "../../tasks/data/task";
 import { Project } from "../data/project";
-import { useLanguage } from "../../../components/language-provider";
+import { useLanguage } from "../../../components/shared/language-provider";
 import { buttonVariants } from "../../../components/ui/button";
 
 export interface TaskRow extends Task {}
