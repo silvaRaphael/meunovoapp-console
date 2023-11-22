@@ -50,9 +50,27 @@ export function Tasks() {
 
     return (
         <Page
-            pathname="/tasks"
+            pathname={
+                writeLang([
+                    ["en", "/tasks"],
+                    ["pt", "/tarefas"],
+                ]) as string
+            }
             header={
-                <SectionHeader title={`Tasks (${tasks.length})`} pathname="/tasks">
+                <SectionHeader
+                    title={
+                        writeLang([
+                            ["en", `Tasks (${tasks.length})`],
+                            ["pt", `Tarefas (${tasks.length})`],
+                        ]) as string
+                    }
+                    pathname={
+                        writeLang([
+                            ["en", "/tasks"],
+                            ["pt", "/tarefas"],
+                        ]) as string
+                    }
+                >
                     <Search />
                     <Button>Create</Button>
                 </SectionHeader>

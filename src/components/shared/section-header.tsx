@@ -1,43 +1,40 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ReactNode } from "react";
-import { Button } from "../ui/button";
-import { ChevronLeft } from "lucide-react";
-import { useLanguage } from "./language-provider";
+import { cn } from "lib/utils";
 
-export function SectionHeader({ title, pathname, tree, children }: { title: string; pathname: string; tree?: { label: string; pathname?: string }[]; children?: ReactNode }) {
-    const { writeLang } = useLanguage();
-    const navigate = useNavigate();
-
-    document.title = !tree?.length ? `${title} - Quat` : `${tree?.at(-1)?.label} - Quat`;
+export function SectionHeader({
+    isRoot = false,
+    title,
+    pathname,
+    tree,
+    children,
+}: {
+    isRoot?: boolean;
+    title: string;
+    pathname: string;
+    tree?: { label: string; pathname?: string }[];
+    children?: ReactNode;
+}) {
+    document.title = isRoot ? "Console | MeuNovoApp" : !tree?.length ? `${title} - Console | MeuNovoApp` : `${tree?.at(-1)?.label} - Console | MeuNovoApp`;
 
     return (
-        <div className="border-b">
-            <div className="flex h-12 items-center px-4">
-                <div className="text-sm font-medium flex items-center space-x-2">
-                    {tree?.length && (
-                        <>
-                            <Button variant="ghost" size="sm" onClick={() => navigate(-1)}>
-                                <ChevronLeft size={14} className="me-1" />
-                                {writeLang([
-                                    ["en", "Go back"],
-                                    ["pt", "Voltar"],
-                                ])}
-                            </Button>
-                            <div className="h-6 border-l"></div>
-                        </>
-                    )}
-                    <Link to={pathname} className={tree?.length ? "text-muted-foreground" : ""}>
-                        {title}
-                    </Link>
+        <div className="w-full">
+            <div className="flex h-20 items-center px-4">
+                <div className="flex flex-col">
+                    <div className="text-sm font-medium flex items-center space-x-2">
+                        <Link to={pathname} className={cn("text-2xl font-semibold", tree?.length ? "text-sm text-muted-foreground" : "")}>
+                            {title}
+                        </Link>
+                    </div>
                     <div className={"flex space-x-1"}>
                         {tree?.map((item, i, arr) =>
                             item.pathname ? (
-                                <Link key={i} to={item.pathname} className={i < arr.length - 1 ? "text-muted-foreground" : ""}>
-                                    / {item.label}
+                                <Link key={i} to={item.pathname} className={cn("text-2xl font-semibold", i < arr.length - 1 ? "text-sm text-muted-foreground" : "")}>
+                                    {item.label}
                                 </Link>
                             ) : (
-                                <span key={i} className={i < arr.length - 1 ? "text-muted-foreground" : ""}>
-                                    / {item.label}
+                                <span key={i} className={cn("text-2xl font-semibold", i < arr.length - 1 ? "text-sm text-muted-foreground" : "")}>
+                                    {item.label}
                                 </span>
                             ),
                         )}

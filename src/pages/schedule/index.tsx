@@ -10,8 +10,11 @@ import interactionPlugin from "@fullcalendar/interaction";
 import { Project } from "../projects/data/project";
 import { ContentAlert } from "../../components/shared/content-alert";
 import { format } from "date-fns";
+import { useLanguage } from "components/shared/language-provider";
 
 export function Schedule() {
+    const { writeLang } = useLanguage();
+
     const [date, setDate] = useState<Date>(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
     const [dateSelected, setDateSelected] = useState<Date | null>(null);
     const [projects, setProjects] = useState<Project[]>([]);
@@ -45,9 +48,27 @@ export function Schedule() {
 
     return (
         <Page
-            pathname="/schedule"
+            pathname={
+                writeLang([
+                    ["en", "/schedule"],
+                    ["pt", "/calendario"],
+                ]) as string
+            }
             header={
-                <SectionHeader title={`Schedule`} pathname="/schedule">
+                <SectionHeader
+                    title={
+                        writeLang([
+                            ["en", "Schedule"],
+                            ["pt", "Calendário"],
+                        ]) as string
+                    }
+                    pathname={
+                        writeLang([
+                            ["en", "/schedule"],
+                            ["pt", "/calendario"],
+                        ]) as string
+                    }
+                >
                     <Search />
                 </SectionHeader>
             }

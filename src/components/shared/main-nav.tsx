@@ -1,9 +1,12 @@
 import { Hash, X } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { MenuItem, menuItems } from "../../config/site";
+import { MenuItem, MenuItems } from "../../config/site";
 import { useEffect, useRef, useState } from "react";
+import { useLanguage } from "./language-provider";
 
 export function MainNav({ pathname }: { pathname: string }) {
+    const { language, writeLang } = useLanguage();
+
     const navigate = useNavigate();
     const ref = useRef<HTMLElement>(null);
     const [activeMenu, setActiveMenu] = useState<MenuItem[]>([]);
@@ -11,7 +14,7 @@ export function MainNav({ pathname }: { pathname: string }) {
     function removeActiveMenuItem(item: MenuItem) {
         const _activeMenu = activeMenu.filter((act) => act.path !== item.path);
 
-        localStorage.setItem("activeMenu", JSON.stringify(_activeMenu.map((item) => item.path)));
+        localStorage.setItem(`${language.lang}-menu`, JSON.stringify(_activeMenu.map((item) => item.path)));
 
         if (item.path === pathname) return navigate("/");
 
@@ -19,19 +22,22 @@ export function MainNav({ pathname }: { pathname: string }) {
     }
 
     function initActiveMenuItems(pathname: string) {
-        let activeMenuStoraged = localStorage.getItem("activeMenu");
+        console.log(`${language.lang}-menu`);
+        let activeMenuStoraged = localStorage.getItem(`${language.lang}-menu`);
+        console.log(activeMenuStoraged);
         let _activeMenu: string[] = ["/"];
 
         if (activeMenuStoraged) _activeMenu = JSON.parse(activeMenuStoraged);
 
         let newActiveMenu = [..._activeMenu];
+        console.log(newActiveMenu);
         if (!_activeMenu.find((item) => item === pathname)) newActiveMenu.push(pathname);
 
-        localStorage.setItem("activeMenu", JSON.stringify(newActiveMenu));
+        localStorage.setItem(`${language.lang}-menu`, JSON.stringify(newActiveMenu));
 
         let _newActiveMenu: MenuItem[] = [];
         newActiveMenu.forEach((item) => {
-            const _item = menuItems.find((menu) => item === menu.path);
+            const _item = MenuItems({ writeLang }).find((menu) => item === menu.path);
             if (_item) _newActiveMenu.push(_item);
         });
 
@@ -55,7 +61,10 @@ export function MainNav({ pathname }: { pathname: string }) {
             // eslint-disable-next-line react-hooks/exhaustive-deps
             if (ref.current) ref.current.onwheel = null;
         };
-    }, [pathname]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [pathname, language]);
+
+    console.log(`${language.lang}-menu`, activeMenu);
 
     return (
         <nav ref={ref} className="flex items-center flex-grow ps-4 pe-2 space-x-2 overflow-x-auto horizontal-scrollbar">

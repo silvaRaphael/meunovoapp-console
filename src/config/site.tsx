@@ -1,7 +1,8 @@
-import { Book, Calendar, ClipboardList, HelpCircle, Landmark, LayoutDashboard, ListTodo, MessagesSquare, Settings, Settings2, User, Users, Video } from "lucide-react";
+import { Calendar, ClipboardList, HelpCircle, LayoutDashboard, ListTodo, Mail, Settings2, User, Users } from "lucide-react";
 import { Role } from "./roles";
 import { user } from "./user";
 import { Plan } from "../pages/pricing/data/plan";
+import { ReactNode } from "react";
 
 export interface MenuItem {
     path: string;
@@ -20,203 +21,249 @@ export interface SideBarMenuRole {
     menu: SideBarMenu[];
 }
 
-export const sideMenu: SideBarMenuRole[] = [
-    {
-        role: ["owner", "admin"],
-        menu: [
-            {
-                menu: [
-                    {
-                        label: "Dashboard",
-                        path: "/",
-                        icon: <LayoutDashboard className="mr-1" size={14} />,
-                    },
-                ],
-            },
-            {
-                title: "Workflow",
-                menu: [
-                    {
-                        label: "Members",
-                        path: "/members",
-                        icon: <User className="mr-1" size={14} />,
-                    },
-                    {
-                        label: "Teams",
-                        path: "/teams",
-                        icon: <Users className="mr-1" size={14} />,
-                    },
-                    {
-                        label: "Projects",
-                        path: "/projects",
-                        icon: <ClipboardList className="mr-1" size={14} />,
-                    },
-                    {
-                        label: "Tasks",
-                        path: "/tasks",
-                        icon: <ListTodo className="mr-1" size={14} />,
-                    },
-                    {
-                        label: "Schedule",
-                        path: "/schedule",
-                        icon: <Calendar className="mr-1" size={14} />,
-                    },
-                    {
-                        label: "Meetings",
-                        path: "/meetings",
-                        icon: <Video className="mr-1" size={14} />,
-                    },
-                    {
-                        label: "Chat",
-                        path: "/chat",
-                        icon: <MessagesSquare className="mr-1" size={14} />,
-                    },
-                ],
-            },
-            {
-                title: "Personal",
-                menu: [
-                    {
-                        label: "Notes",
-                        path: "/notes",
-                        icon: <Book className="mr-1" size={14} />,
-                    },
-                    {
-                        label: "To Do's",
-                        path: "/to-dos",
-                        icon: <ListTodo className="mr-1" size={14} />,
-                    },
-                    {
-                        label: "Profile",
-                        path: "/profile",
-                        icon: <User className="mr-1" size={14} />,
-                    },
-                    {
-                        label: "Preferences",
-                        path: "/preferences",
-                        icon: <Settings2 className="mr-1" size={14} />,
-                    },
-                ],
-            },
-            {
-                title: "Account",
-                menu: [
-                    {
-                        label: "Pricing",
-                        path: "/pricing",
-                        icon: <Landmark className="mr-1" size={14} />,
-                    },
-                    {
-                        label: "FAQ",
-                        path: "/faq",
-                        icon: <HelpCircle className="mr-1" size={14} />,
-                    },
-                    {
-                        label: "Settings",
-                        path: "/settings",
-                        icon: <Settings className="mr-1" size={14} />,
-                    },
-                ],
-            },
-        ],
-    },
-    {
-        role: ["manager", "member"],
-        menu: [
-            {
-                menu: [
-                    {
-                        label: "Dashboard",
-                        path: "/",
-                        icon: <LayoutDashboard className="mr-1" size={14} />,
-                    },
-                ],
-            },
-            {
-                title: "Workflow",
-                menu: [
-                    {
-                        label: "Members",
-                        path: "/members",
-                        icon: <User className="mr-1" size={14} />,
-                    },
-                    {
-                        label: "Teams",
-                        path: "/teams",
-                        icon: <Users className="mr-1" size={14} />,
-                    },
-                    {
-                        label: "Projects",
-                        path: "/projects",
-                        icon: <ClipboardList className="mr-1" size={14} />,
-                    },
-                    {
-                        label: "Tasks",
-                        path: "/tasks",
-                        icon: <ListTodo className="mr-1" size={14} />,
-                    },
-                    {
-                        label: "Schedule",
-                        path: "/schedule",
-                        icon: <Calendar className="mr-1" size={14} />,
-                    },
-                    {
-                        label: "Meetings",
-                        path: "/meetings",
-                        icon: <Video className="mr-1" size={14} />,
-                    },
-                    {
-                        label: "Chat",
-                        path: "/chat",
-                        icon: <MessagesSquare className="mr-1" size={14} />,
-                    },
-                ],
-            },
-            {
-                title: "Personal",
-                menu: [
-                    {
-                        label: "Notes",
-                        path: "/notes",
-                        icon: <Book className="mr-1" size={14} />,
-                    },
-                    {
-                        label: "To Do's",
-                        path: "/to-dos",
-                        icon: <ListTodo className="mr-1" size={14} />,
-                    },
-                    {
-                        label: "Profile",
-                        path: "/profile",
-                        icon: <User className="mr-1" size={14} />,
-                    },
-                    {
-                        label: "Preferences",
-                        path: "/preferences",
-                        icon: <Settings2 className="mr-1" size={14} />,
-                    },
-                ],
-            },
-            {
-                title: "Account",
-                menu: [
-                    {
-                        label: "FAQ",
-                        path: "/faq",
-                        icon: <HelpCircle className="mr-1" size={14} />,
-                    },
-                ],
-            },
-        ],
-    },
-];
+export const SideMenu = ({ writeLang }: { writeLang: (texts: [string, React.ReactNode][]) => ReactNode }): SideBarMenuRole[] => {
+    return [
+        {
+            role: ["admin"],
+            menu: [
+                {
+                    menu: [
+                        {
+                            label: "Console",
+                            path: "/",
+                            icon: <LayoutDashboard className="mr-1" size={14} />,
+                        },
+                        {
+                            label: writeLang([
+                                ["en", "Emails"],
+                                ["pt", "E-mails"],
+                            ]) as string,
+                            path: "/emails",
+                            icon: <Mail className="mr-1" size={14} />,
+                        },
+                        {
+                            label: writeLang([
+                                ["en", "Clients"],
+                                ["pt", "Clientes"],
+                            ]) as string,
+                            path: writeLang([
+                                ["en", "/clients"],
+                                ["pt", "/clientes"],
+                            ]) as string,
+                            icon: <Users className="mr-1" size={14} />,
+                        },
+                    ],
+                },
+                {
+                    title: writeLang([
+                        ["en", "Project"],
+                        ["pt", "Projeto"],
+                    ]) as string,
+                    menu: [
+                        {
+                            label: writeLang([
+                                ["en", "Projects"],
+                                ["pt", "Projetos"],
+                            ]) as string,
+                            path: writeLang([
+                                ["en", "/projects"],
+                                ["pt", "/projetos"],
+                            ]) as string,
+                            icon: <ClipboardList className="mr-1" size={14} />,
+                        },
+                        {
+                            label: writeLang([
+                                ["en", "Tasks"],
+                                ["pt", "Tarefas"],
+                            ]) as string,
+                            path: writeLang([
+                                ["en", "/tasks"],
+                                ["pt", "/tarefas"],
+                            ]) as string,
+                            icon: <ListTodo className="mr-1" size={14} />,
+                        },
+                        {
+                            label: writeLang([
+                                ["en", "Schedule"],
+                                ["pt", "Calendário"],
+                            ]) as string,
+                            path: writeLang([
+                                ["en", "/schedule"],
+                                ["pt", "/calendario"],
+                            ]) as string,
+                            icon: <Calendar className="mr-1" size={14} />,
+                        },
+                    ],
+                },
+                {
+                    title: writeLang([
+                        ["en", "Personal"],
+                        ["pt", "Pessoal"],
+                    ]) as string,
+                    menu: [
+                        {
+                            label: writeLang([
+                                ["en", "Profile"],
+                                ["pt", "Perfil"],
+                            ]) as string,
+                            path: writeLang([
+                                ["en", "/profile"],
+                                ["pt", "/perfil"],
+                            ]) as string,
+                            icon: <User className="mr-1" size={14} />,
+                        },
+                        {
+                            label: writeLang([
+                                ["en", "Preferences"],
+                                ["pt", "Preferências"],
+                            ]) as string,
+                            path: writeLang([
+                                ["en", "/preferences"],
+                                ["pt", "/preferencias"],
+                            ]) as string,
+                            icon: <Settings2 className="mr-1" size={14} />,
+                        },
+                    ],
+                },
+                {
+                    title: writeLang([
+                        ["en", "Help"],
+                        ["pt", "Ajuda"],
+                    ]) as string,
+                    menu: [
+                        {
+                            label: writeLang([
+                                ["en", "Support"],
+                                ["pt", "Suporte"],
+                            ]) as string,
+                            path: writeLang([
+                                ["en", "/support"],
+                                ["pt", "/suporte"],
+                            ]) as string,
+                            icon: <HelpCircle className="mr-1" size={14} />,
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            role: ["client"],
+            menu: [
+                {
+                    menu: [
+                        {
+                            label: "Console",
+                            path: "/",
+                            icon: <LayoutDashboard className="mr-1" size={14} />,
+                        },
+                    ],
+                },
+                {
+                    title: writeLang([
+                        ["en", "Project"],
+                        ["pt", "Projeto"],
+                    ]) as string,
+                    menu: [
+                        {
+                            label: writeLang([
+                                ["en", "Projects"],
+                                ["pt", "Projetos"],
+                            ]) as string,
+                            path: writeLang([
+                                ["en", "/projects"],
+                                ["pt", "/projetos"],
+                            ]) as string,
+                            icon: <ClipboardList className="mr-1" size={14} />,
+                        },
+                        {
+                            label: writeLang([
+                                ["en", "Tasks"],
+                                ["pt", "Tarefas"],
+                            ]) as string,
+                            path: writeLang([
+                                ["en", "/tasks"],
+                                ["pt", "/tarefas"],
+                            ]) as string,
+                            icon: <ListTodo className="mr-1" size={14} />,
+                        },
+                        {
+                            label: writeLang([
+                                ["en", "Schedule"],
+                                ["pt", "Calendário"],
+                            ]) as string,
+                            path: writeLang([
+                                ["en", "/schedule"],
+                                ["pt", "/calendario"],
+                            ]) as string,
+                            icon: <Calendar className="mr-1" size={14} />,
+                        },
+                    ],
+                },
+                {
+                    title: writeLang([
+                        ["en", "Personal"],
+                        ["pt", "Pessoal"],
+                    ]) as string,
+                    menu: [
+                        {
+                            label: writeLang([
+                                ["en", "Profile"],
+                                ["pt", "Perfil"],
+                            ]) as string,
+                            path: writeLang([
+                                ["en", "/profile"],
+                                ["pt", "/perfil"],
+                            ]) as string,
+                            icon: <User className="mr-1" size={14} />,
+                        },
+                        {
+                            label: writeLang([
+                                ["en", "Preferences"],
+                                ["pt", "Preferências"],
+                            ]) as string,
+                            path: writeLang([
+                                ["en", "/preferences"],
+                                ["pt", "/preferencias"],
+                            ]) as string,
+                            icon: <Settings2 className="mr-1" size={14} />,
+                        },
+                    ],
+                },
+                {
+                    title: writeLang([
+                        ["en", "Help"],
+                        ["pt", "Ajuda"],
+                    ]) as string,
+                    menu: [
+                        {
+                            label: writeLang([
+                                ["en", "Support"],
+                                ["pt", "Suporte"],
+                            ]) as string,
+                            path: writeLang([
+                                ["en", "/support"],
+                                ["pt", "/suporte"],
+                            ]) as string,
+                            icon: <HelpCircle className="mr-1" size={14} />,
+                        },
+                    ],
+                },
+            ],
+        },
+    ];
+};
 
-export let menuItems: MenuItem[] = [];
-for (const item of sideMenu) {
-    if (!item.role.includes(user.role)) continue;
-    for (const subItem of item.menu) {
-        menuItems.push(...subItem.menu);
+export const MenuItems = ({ writeLang }: { writeLang: (texts: [string, React.ReactNode][]) => ReactNode }): MenuItem[] => {
+    let menuItems: MenuItem[] = [];
+
+    for (const item of SideMenu({ writeLang })) {
+        if (!item.role.includes(user.role)) continue;
+        for (const subItem of item.menu) {
+            menuItems.push(...subItem.menu);
+        }
     }
-}
+
+    return menuItems;
+};
 
 export const activePlan: Pick<Plan, "id"> = { id: "123" };

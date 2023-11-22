@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
-import { Button } from "../components/ui/button";
-import { useLanguage } from "../components/shared/language-provider";
+
+import { Button } from "components/ui/button";
+import { useLanguage } from "components/shared/language-provider";
 
 export function NotFound() {
     const { writeLang } = useLanguage();
 
-    document.title = `404 - Quat`;
+    document.title = `404 - Console | MeuNovoApp`;
 
     return (
         <div className="flex justify-center items-center h-screen">
@@ -19,8 +20,8 @@ export function NotFound() {
                 <Button asChild>
                     <Link to="/">
                         {writeLang([
-                            ["en", "Back to home"],
-                            ["pt", "Voltar ao início"],
+                            ["en", "Back to console"],
+                            ["pt", "Voltar ao console"],
                         ])}
                     </Link>
                 </Button>

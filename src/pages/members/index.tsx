@@ -50,9 +50,22 @@ export function Members() {
 
     return (
         <Page
-            pathname="/members"
+            pathname={
+                writeLang([
+                    ["en", "/clients"],
+                    ["pt", "/clientes"],
+                ]) as string
+            }
             header={
-                <SectionHeader title={`Members (${members.length})`} pathname="/members">
+                <SectionHeader
+                    title={`Members (${members.length})`}
+                    pathname={
+                        writeLang([
+                            ["en", "/clients"],
+                            ["pt", "/clientes"],
+                        ]) as string
+                    }
+                >
                     <Search />
                     <Button>Create</Button>
                 </SectionHeader>

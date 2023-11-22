@@ -1,73 +1,170 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Members } from "./pages/members/members";
-import { NotFound } from "./pages/not-found";
-import { MemberDetails } from "./pages/members/details/details";
-import { Dashboard } from "./pages/dashboard/dashboard";
-import { Teams } from "./pages/teams/teams";
-import { Projects } from "./pages/projects/projects";
-import { Tasks } from "./pages/tasks/tasks";
-import { ThemeProvider } from "./components/shared/theme-provider";
-import { Toaster } from "./components/ui/toast/toaster";
-import { TeamDetails } from "./pages/teams/details/details";
-import { ProjectDetails } from "./pages/projects/details/details";
-import { TaskDetails } from "./pages/tasks/details/details";
-import { Schedule } from "./pages/schedule/schedule";
-import { Notes } from "./pages/notes/notes";
-import { Profile } from "./pages/profile/profile";
-import { Preferences } from "./pages/preferences/preferences";
-import { Pricing } from "./pages/pricing/pricing";
-import { PlanCheckout } from "./pages/pricing/details/checkout/checkout";
-import { PlanCustomize } from "./pages/pricing/details/customize/customize";
-import { LanguageProvider } from "./components/shared/language-provider";
+
+import { NotFound } from "pages/not-found";
+import { Console } from "pages/console";
+import { Members } from "pages/members";
+import { MemberDetails } from "pages/members/details/details";
+import { Projects } from "pages/projects";
+import { Tasks } from "pages/tasks";
+import { ProjectDetails } from "pages/projects/details/details";
+import { TaskDetails } from "pages/tasks/details/details";
+import { Schedule } from "pages/schedule";
+import { Profile } from "pages/profile";
+import { Preferences } from "pages/preferences";
+import { useLanguage } from "components/shared/language-provider";
+import { user } from "config/user";
 
 export function App() {
+    const { writeLang } = useLanguage();
+
     return (
-        <ThemeProvider defaultTheme="system" storageKey="quat-ui-theme">
-            <LanguageProvider
-                defaultLanguage={{
-                    lang: "en",
-                    locale: "en-US",
-                    currency: "USD",
-                }}
-                storageKey="quat-language"
-            >
-                <Toaster />
-                <BrowserRouter>
-                    <Routes>
-                        <Route path="/" element={<Dashboard />} />
-                        <Route path="/members">
+        <BrowserRouter>
+            {user.role === "admin" && (
+                <Routes>
+                    <Route path="/">
+                        <Route path="" element={<Console />} />
+                        <Route path="emails" element={<NotFound />} />
+                        <Route
+                            path={
+                                writeLang([
+                                    ["en", "/clients"],
+                                    ["pt", "/clientes"],
+                                ]) as string
+                            }
+                        >
                             <Route path="" element={<Members />} />
-                            <Route path=":username" element={<MemberDetails />} />
+                            <Route path=":id" element={<MemberDetails />} />
                         </Route>
-                        <Route path="/teams">
-                            <Route path="" element={<Teams />} />
-                            <Route path=":slug" element={<TeamDetails />} />
-                        </Route>
-                        <Route path="/projects">
+                        <Route
+                            path={
+                                writeLang([
+                                    ["en", "/projects"],
+                                    ["pt", "/projetos"],
+                                ]) as string
+                            }
+                        >
                             <Route path="" element={<Projects />} />
                             <Route path=":id" element={<ProjectDetails />} />
                         </Route>
-                        <Route path="/tasks">
+                        <Route
+                            path={
+                                writeLang([
+                                    ["en", "/tasks"],
+                                    ["pt", "/tarefas"],
+                                ]) as string
+                            }
+                        >
                             <Route path="" element={<Tasks />} />
                             <Route path=":id" element={<TaskDetails />} />
                         </Route>
-                        <Route path="/schedule">
+                        <Route
+                            path={
+                                writeLang([
+                                    ["en", "/schedule"],
+                                    ["pt", "/calendario"],
+                                ]) as string
+                            }
+                        >
                             <Route path="" element={<Schedule />} />
                         </Route>
-                        <Route path="/notes">
-                            <Route path="" element={<Notes />} />
-                        </Route>
-                        <Route path="/profile" element={<Profile />} />
-                        <Route path="/preferences" element={<Preferences />} />
-                        <Route path="/pricing">
-                            <Route path="" element={<Pricing />} />
-                            <Route path="customize/:id" element={<PlanCustomize />} />
-                            <Route path="checkout" element={<PlanCheckout />} />
-                        </Route>
+                        <Route
+                            path={
+                                writeLang([
+                                    ["en", "/profile"],
+                                    ["pt", "/perfil"],
+                                ]) as string
+                            }
+                            element={<Profile />}
+                        />
+                        <Route
+                            path={
+                                writeLang([
+                                    ["en", "/preferences"],
+                                    ["pt", "/preferencias"],
+                                ]) as string
+                            }
+                            element={<Preferences />}
+                        />
+                        <Route
+                            path={
+                                writeLang([
+                                    ["en", "/support"],
+                                    ["pt", "/suporte"],
+                                ]) as string
+                            }
+                            element={<NotFound />}
+                        />
                         <Route path="*" element={<NotFound />} />
-                    </Routes>
-                </BrowserRouter>
-            </LanguageProvider>
-        </ThemeProvider>
+                    </Route>
+                </Routes>
+            )}
+            {user.role === "client" && (
+                <Routes>
+                    <Route path="/">
+                        <Route path="" element={<Console />} />
+                        <Route
+                            path={
+                                writeLang([
+                                    ["en", "/projects"],
+                                    ["pt", "/projetos"],
+                                ]) as string
+                            }
+                        >
+                            <Route path="" element={<Projects />} />
+                            <Route path=":id" element={<ProjectDetails />} />
+                        </Route>
+                        <Route
+                            path={
+                                writeLang([
+                                    ["en", "/tasks"],
+                                    ["pt", "/tarefas"],
+                                ]) as string
+                            }
+                        >
+                            <Route path="" element={<Tasks />} />
+                            <Route path=":id" element={<TaskDetails />} />
+                        </Route>
+                        <Route
+                            path={
+                                writeLang([
+                                    ["en", "/schedule"],
+                                    ["pt", "/calendario"],
+                                ]) as string
+                            }
+                        >
+                            <Route path="" element={<Schedule />} />
+                        </Route>
+                        <Route
+                            path={
+                                writeLang([
+                                    ["en", "/profile"],
+                                    ["pt", "/perfil"],
+                                ]) as string
+                            }
+                            element={<Profile />}
+                        />
+                        <Route
+                            path={
+                                writeLang([
+                                    ["en", "/preferences"],
+                                    ["pt", "/preferencias"],
+                                ]) as string
+                            }
+                            element={<Preferences />}
+                        />
+                        <Route
+                            path={
+                                writeLang([
+                                    ["en", "/support"],
+                                    ["pt", "/suporte"],
+                                ]) as string
+                            }
+                            element={<NotFound />}
+                        />
+                        <Route path="*" element={<NotFound />} />
+                    </Route>
+                </Routes>
+            )}
+        </BrowserRouter>
     );
 }

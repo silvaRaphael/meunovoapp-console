@@ -8,7 +8,6 @@ export interface User {
     email: string;
     gender?: "feminine" | "masculine";
     avatar?: string;
-    bio?: string;
     role: Role;
 }
 
@@ -20,9 +19,6 @@ export const user: User = {
     email: "rsilva@email.com",
     gender: "masculine",
     avatar: "https://ui.shadcn.com/avatars/02.png",
-    bio: "",
-    role: "owner",
-    // role: "admin",
-    // role: "manager",
-    // role: "member",
+    role: "admin",
+    // role: "client",
 };

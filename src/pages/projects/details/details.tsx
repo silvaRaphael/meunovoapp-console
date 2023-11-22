@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { SectionHeader } from "../../../components/shared/section-header";
-import { Separator } from "../../../components/ui/separator";
 import { ProjectForm } from "./form";
 import { Button, buttonVariants } from "../../../components/ui/button";
 import { Page } from "../../../components/shared/page";
@@ -13,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui
 import { ProjectTasks } from "./tasks";
 import { HandleRequest } from "../../../lib/handle-request";
 import { useLanguage } from "../../../components/shared/language-provider";
+import { SectionDetails } from "components/shared/section-details";
 
 export function ProjectDetails() {
     const { writeLang } = useLanguage();
@@ -108,15 +108,30 @@ export function ProjectDetails() {
             }
         >
             <div className="space-y-6 pb-40">
-                <div>
-                    <h3 className="text-lg font-medium">Edit Project</h3>
-                    <p className="text-sm text-muted-foreground">Some of this informations are public for other users</p>
-                </div>
-                <Separator />
+                <SectionDetails
+                    title={writeLang([
+                        ["en", "Edit Project"],
+                        ["pt", "Editar Projeto"],
+                    ])}
+                    subtitle={writeLang([
+                        ["en", "Some of this informations are public for other users"],
+                        ["pt", "Algumas informações são públicas para outros usuários"],
+                    ])}
+                />
                 <Tabs defaultValue="project">
                     <TabsList>
-                        <TabsTrigger value="project">Project</TabsTrigger>
-                        <TabsTrigger value="tasks">Tasks</TabsTrigger>
+                        <TabsTrigger value="project">
+                            {writeLang([
+                                ["en", "Project"],
+                                ["pt", "Projeto"],
+                            ])}
+                        </TabsTrigger>
+                        <TabsTrigger value="tasks">
+                            {writeLang([
+                                ["en", "Tasks"],
+                                ["pt", "Tarefas"],
+                            ])}
+                        </TabsTrigger>
                     </TabsList>
                     <TabsContent value="project" className="pt-3">
                         <ProjectForm project={project} />

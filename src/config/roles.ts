@@ -1,3 +1,3 @@
-export type Role = "owner" | "admin" | "manager" | "member";
+export type Role = "admin" | "client";
 
-export const roles: Role[] = ["owner", "admin", "manager", "member"];
+export const roles: Role[] = ["admin", "client"];
