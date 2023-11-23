@@ -14,6 +14,7 @@ import { Profile } from "pages/profile";
 import { Preferences } from "pages/preferences";
 import { useLanguage } from "components/shared/language-provider";
 import { useAuth } from "components/shared/auth-provider";
+import { Emails } from "pages/emails";
 
 export function App() {
     const { writeLang } = useLanguage();
@@ -33,7 +34,7 @@ export function App() {
                         {auth.role === "admin" && (
                             <Route path="/">
                                 <Route path="" element={<Console />} />
-                                <Route path="emails" element={<NotFound />} />
+                                <Route path="emails" element={<Emails />} />
                                 <Route
                                     path={
                                         writeLang([
