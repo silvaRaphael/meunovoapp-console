@@ -1,2 +1,2 @@
-export const SITE_URI = "http://localhost:3000";
-export const BASE_API = "http://localhost:3333/v1/api";
+export const SITE_URI = process.env.REACT_APP_SITE_URI;
+export const BASE_API = process.env.REACT_APP_API_BASE;
