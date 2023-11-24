@@ -28,6 +28,7 @@ export function LoginInForm() {
     async function onSubmit(data: SignInSchema) {
         try {
             const response = await fetch(`${BASE_API}/auth/sign-in`, {
+                mode: "no-cors",
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -36,7 +37,7 @@ export function LoginInForm() {
             });
 
             if (!response.ok) {
-                throw new Error((await response.json()).error);
+                throw (await response.json()).error;
             }
 
             const user = await response.json();
@@ -54,7 +55,6 @@ export function LoginInForm() {
 
             return navigate("/");
         } catch (error: any) {
-            console.error(error);
             toast({
                 title: "Ocorreu algum erro!",
                 description:
