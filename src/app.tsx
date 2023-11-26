@@ -15,6 +15,7 @@ import { Preferences } from "pages/preferences";
 import { useLanguage } from "components/shared/language-provider";
 import { useAuth } from "components/shared/auth-provider";
 import { Emails } from "pages/emails";
+import { EmailDetails } from "pages/emails/details";
 
 export function App() {
     const { writeLang } = useLanguage();
@@ -26,15 +27,18 @@ export function App() {
                 {
                     <Route>
                         <Route path="/login" element={<Login />} />
-                        <Route path="/*" element={<Navigate to="/login" />} />
+                        {!auth && <Route path="/*" element={<Navigate to="/login" />} />}
                     </Route>
                 }
                 {auth && (
                     <Route>
-                        {auth.role === "admin" && (
+                        {["master", "admin"].includes(auth.role) && (
                             <Route path="/">
                                 <Route path="" element={<Console />} />
-                                <Route path="emails" element={<Emails />} />
+                                <Route path="emails">
+                                    <Route path="" element={<Emails />} />
+                                    <Route path=":id" element={<EmailDetails />} />
+                                </Route>
                                 <Route
                                     path={
                                         writeLang([
@@ -108,7 +112,7 @@ export function App() {
                                 <Route path="*" element={<NotFound />} />
                             </Route>
                         )}
-                        {auth.role === "client" && (
+                        {["client"].includes(auth.role) && (
                             <Route path="/">
                                 <Route path="" element={<Console />} />
                                 <Route

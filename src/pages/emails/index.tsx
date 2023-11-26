@@ -1,6 +1,6 @@
 import { useLanguage } from "components/shared/language-provider";
 import { Email } from "./data/email";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Page } from "components/shared/page";
 import { SectionHeader } from "components/shared/section-header";
 import { Search } from "components/shared/search";
@@ -8,6 +8,7 @@ import { DataTable } from "components/ui/data-table/data-table";
 import { emailsColumns } from "./data/columns";
 import { BASE_API } from "config/constants";
 import { useAuth } from "components/shared/auth-provider";
+import { toast } from "components/ui/toast/use-toast";
 
 export function Emails() {
     const { writeLang } = useLanguage();
@@ -15,17 +16,37 @@ export function Emails() {
 
     const [emails, setEmails] = useState<Email[]>([]);
 
-    function getEmails() {
-        fetch(`${BASE_API}/emails`, {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${auth?.token}`,
-            },
-        })
-            .then((res) => res.json())
-            .then((res) => {
-                setEmails(res.emails);
+    async function getEmails() {
+        try {
+            const response = await fetch(`${BASE_API}/emails`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${auth?.token}`,
+                },
             });
+
+            if (!response.ok) {
+                throw (await response.json()).error;
+            }
+
+            const emails = await response.json();
+
+            setEmails(emails);
+        } catch (error: any) {
+            toast({
+                title: "Ocorreu algum erro!",
+                description:
+                    error.length &&
+                    error.map(({ message }: any, i: number) => (
+                        <Fragment key={i}>
+                            {message}
+                            <br />
+                        </Fragment>
+                    )),
+                variant: "destructive",
+            });
+        }
     }
 
     useEffect(() => {

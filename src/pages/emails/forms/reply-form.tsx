@@ -6,81 +6,20 @@ import { Input } from "components/ui/input";
 import { toast } from "components/ui/toast/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
-import * as z from "zod";
 import { Textarea } from "components/ui/textarea";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { Email } from "../data/email";
-
-const FormSchema = z.object({
-    subject: z
-        .string({
-            required_error: "Digite um assunto para o e-mail.",
-        })
-        .min(1, {
-            message: "Digite um assunto para o e-mail.",
-        }),
-    name: z
-        .string({
-            required_error: "Digite o nome do contato.",
-        })
-        .min(1, {
-            message: "Digite o nome do contato.",
-        }),
-    projectDetails: z
-        .string({
-            required_error: "Digite os detalhes do projeto.",
-        })
-        .min(1, {
-            message: "Digite os detalhes do projeto.",
-        }),
-    projectScope: z.array(
-        z.object({
-            title: z
-                .string({
-                    required_error: "Digite um escopo do projeto",
-                })
-                .min(1, {
-                    message: "Digite um escopo do projeto",
-                }),
-            value: z
-                .string({
-                    required_error: "Descreva o escopo",
-                })
-                .min(1, {
-                    message: "Descreva o escopo",
-                }),
-        }),
-    ),
-    projectDueDays: z
-        .string({
-            required_error: "Digite um prazo em dias.",
-        })
-        .min(1, {
-            message: "Digite um prazo em dias.",
-        }),
-    projectPayment: z
-        .string({
-            required_error: "Digite a estrutura de pagamento.",
-        })
-        .min(1, {
-            message: "Digite a estrutura de pagamento.",
-        }),
-    projectBenefits: z
-        .string({
-            required_error: "Digite os benefícios adicionais.",
-        })
-        .min(1, {
-            message: "Digite os benefícios adicionais.",
-        }),
-});
-
-export type FormValues = z.infer<typeof FormSchema>;
+import { BASE_API } from "config/constants";
+import { useAuth } from "components/shared/auth-provider";
+import { EmailSchema, emailSchema } from "adapters/email";
 
 export function EmailReply({ email }: { email: Email }) {
+    const { auth } = useAuth();
+
     const [replySent, setReplySent] = useState<boolean>(false);
 
-    const form = useForm<FormValues>({
-        resolver: zodResolver(FormSchema),
+    const form = useForm<EmailSchema>({
+        resolver: zodResolver(emailSchema),
         mode: "onChange",
         defaultValues: {
             subject: "Sua Mensagem foi Respondida - MeuNovoApp",
@@ -107,14 +46,13 @@ export function EmailReply({ email }: { email: Email }) {
         control: form.control,
     });
 
-    async function onSubmit(data: FormValues) {
+    async function onSubmit(data: EmailSchema) {
         try {
-            if (!email) throw Error;
-
-            const response = await fetch(`/api/send-email?email=reply`, {
+            const response = await fetch(`${BASE_API}/emails`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    Authorization: `Bearer ${auth?.token}`,
                 },
                 body: JSON.stringify({
                     email: email.to,
@@ -124,7 +62,7 @@ export function EmailReply({ email }: { email: Email }) {
             });
 
             if (!response.ok) {
-                throw new Error((await response.json()).error);
+                throw (await response.json()).error;
             }
 
             toast({
@@ -133,11 +71,17 @@ export function EmailReply({ email }: { email: Email }) {
 
             setReplySent(true);
         } catch (error: any) {
-            console.error(error);
             toast({
+                title: "Ocorreu algum erro!",
+                description:
+                    error.length &&
+                    error.map(({ message }: any, i: number) => (
+                        <Fragment key={i}>
+                            {message}
+                            <br />
+                        </Fragment>
+                    )),
                 variant: "destructive",
-                title: "Ocorreu um erro!",
-                description: error.message,
             });
         }
     }

@@ -26,10 +26,8 @@ export function LoginInForm() {
     });
 
     async function onSubmit(data: SignInSchema) {
-        console.log(BASE_API);
         try {
             const response = await fetch(`${BASE_API}/auth/sign-in`, {
-                mode: "no-cors",
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
