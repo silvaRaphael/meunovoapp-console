@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 
 import { sideBarWidth } from "./side-bar";
 import { MainNav } from "./main-nav";
-import { Notifications } from "./notifications";
 import { LanguageToggle } from "./language-toggle";
 import { ThemeToggle } from "./theme-toggle";
 import { UserNav } from "./user-nav";
