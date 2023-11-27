@@ -36,31 +36,7 @@ export const projectColumns: ColumnDef<Project>[] = [
         accessorKey: "manager.name",
         header: ({ column }) => <DataTableColumnHeader column={column} title="Manager" />,
         cell: ({ row }) => {
-            return (
-                <MemberInfo
-                    avatar={row.original.manager?.avatar}
-                    username={row.original.manager?.username}
-                    name={row.original.manager?.name}
-                    lastName={row.original.manager?.lastName}
-                    email={row.original.manager?.email}
-                    jobTitle={row.original.manager?.jobTitle.name}
-                    since={row.original.manager?.since}
-                />
-            );
-        },
-    },
-    {
-        accessorKey: "teams",
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Teams" />,
-        enableSorting: false,
-        cell: ({ row }) => {
-            return (
-                <div className="flex items-center space-x-1">
-                    <Badge variant="outline" className="cursor-pointer" onClick={() => (row.original as any).seeTeams(row.original)}>
-                        see all ({row.original.teams.length})
-                    </Badge>
-                </div>
-            );
+            return <MemberInfo avatar={row.original.manager.manager.avatar} name={row.original.manager.manager.name} email={row.original.manager.manager.email} />;
         },
     },
     {

@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Loader, Eye, EyeOff } from "lucide-react";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "components/ui/form";
@@ -10,7 +10,9 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { signInSchema } from "adapters/auth";
 import { BASE_API } from "config/constants";
-import { useAuth } from "components/shared/auth-provider";
+import { Auth, useAuth } from "components/shared/auth-provider";
+import { HandleRequest } from "lib/handle-request";
+import { errorToast } from "components/shared/error-toast";
 
 export type SignInSchema = z.infer<typeof signInSchema>;
 
@@ -26,22 +28,10 @@ export function LoginInForm() {
     });
 
     async function onSubmit(data: SignInSchema) {
-        try {
-            const response = await fetch(`${BASE_API}/auth/sign-in`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data),
-            });
+        const request = await new HandleRequest(data).post(`${BASE_API}/auth/sign-in`);
 
-            if (!response.ok) {
-                throw (await response.json()).error;
-            }
-
-            const user = await response.json();
-
-            setAuth(user);
+        request.onDone((response) => {
+            setAuth(response as unknown as Auth);
 
             toast({
                 title: "Você acessou o console!",
@@ -53,20 +43,11 @@ export function LoginInForm() {
             });
 
             return navigate("/");
-        } catch (error: any) {
-            toast({
-                title: "Ocorreu algum erro!",
-                description:
-                    error.length &&
-                    error.map(({ message }: any, i: number) => (
-                        <Fragment key={i}>
-                            {message}
-                            <br />
-                        </Fragment>
-                    )),
-                variant: "destructive",
-            });
-        }
+        });
+
+        request.onError((error) => {
+            errorToast(error);
+        });
     }
 
     return (

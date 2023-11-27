@@ -13,7 +13,6 @@ import { useLanguage } from "components/shared/language-provider";
 import { HandleRequest } from "lib/handle-request";
 import { Project } from "./data/project";
 import { projectColumns } from "./data/columns";
-import { Team } from "../teams/data/team";
 
 export interface ProjectRow extends Project {
     deleteAction?: (props: Project) => any;
@@ -26,7 +25,6 @@ export function Projects() {
     const [projects, setProjects] = useState<ProjectRow[]>([]);
     const [openDelete, setOpenDelete] = useState<boolean>(false);
     const [projectName, setProjectName] = useState<string>("");
-    const [teamsList, setTeamsList] = useState<Team[] | null>(null);
 
     function getProjects() {
         fetch("/api/projects.json")
@@ -39,7 +37,6 @@ export function Projects() {
                             setOpenDelete(true);
                         },
                         seeTeams(item) {
-                            setTeamsList(item.teams);
                             setProjectName(item.title);
                         },
                     };
@@ -124,21 +121,6 @@ export function Projects() {
                     />
                 }
             />
-            <ContentAlert open={!!teamsList} onOpenChange={(open: boolean) => setTeamsList(open ? teamsList : null)} title={`Teams of ${projectName}`}>
-                <div className="max-h-[70vh] overflow-y-auto vertical-scrollbar space-y-2">
-                    {!!teamsList && (
-                        <>
-                            {teamsList.map((team: Team, i) => (
-                                <div key={i} className="flex justify-between items-center">
-                                    {team.name}
-                                    <Actions.Edit to={`/teams/${team.slug}`} />
-                                </div>
-                            ))}
-                            {!teamsList.length && <p className="text-xs font-medium text-muted-foreground p-2 py-3">No teams yet</p>}
-                        </>
-                    )}
-                </div>
-            </ContentAlert>
         </Page>
     );
 }

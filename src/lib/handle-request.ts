@@ -19,15 +19,15 @@ export class HandleRequest {
             const response = await fetch(url, {
                 method: "get",
                 headers: new Headers({
-                    Authorization: "Bearear " + option?.token,
+                    Authorization: "Bearer " + option?.token,
                     "Content-Type": "application/json",
                     "Content-Language": option?.language?.locale ?? "",
                 }),
             });
 
-            if (!response.ok) throw new Error(response.status.toString());
+            if (!response.ok) throw (await response.json()).error;
 
-            this.response = await response.json();
+            this.response = response.headers.get("Content-Type")?.includes("application/json") ? await response.json() : null;
         } catch (error: any) {
             this.error = error;
         }
@@ -45,16 +45,16 @@ export class HandleRequest {
             const response = await fetch(url, {
                 method: "post",
                 headers: new Headers({
-                    Authorization: "Bearear " + option?.token,
+                    Authorization: "Bearer " + option?.token,
                     "Content-Type": "application/json",
                     "Content-Language": option?.language?.locale ?? "",
                 }),
                 body: JSON.stringify(this.data),
             });
 
-            if (!response.ok) throw new Error(response.status.toString());
+            if (!response.ok) throw (await response.json()).error;
 
-            this.response = await response.json();
+            this.response = response.headers.get("Content-Type")?.includes("application/json") ? await response.json() : null;
         } catch (error: any) {
             this.error = error;
         }
@@ -72,16 +72,16 @@ export class HandleRequest {
             const response = await fetch(url, {
                 method: "put",
                 headers: new Headers({
-                    Authorization: "Bearear " + option?.token,
+                    Authorization: "Bearer " + option?.token,
                     "Content-Type": "application/json",
                     "Content-Language": option?.language?.locale ?? "",
                 }),
                 body: JSON.stringify(this.data),
             });
 
-            if (!response.ok) throw new Error(response.status.toString());
+            if (!response.ok) throw (await response.json()).error;
 
-            this.response = await response.json();
+            this.response = response.headers.get("Content-Type")?.includes("application/json") ? await response.json() : null;
         } catch (error: any) {
             this.error = error;
         }
@@ -97,15 +97,15 @@ export class HandleRequest {
             const response = await fetch(url, {
                 method: "delete",
                 headers: new Headers({
-                    Authorization: "Bearear " + option?.token,
+                    Authorization: "Bearer " + option?.token,
                     "Content-Type": "application/json",
                     "Content-Language": option?.language?.locale ?? "",
                 }),
             });
 
-            if (!response.ok) throw new Error(response.status.toString());
+            if (!response.ok) throw (await response.json()).error;
 
-            this.response = await response.json();
+            this.response = response.headers.get("Content-Type")?.includes("application/json") ? await response.json() : null;
         } catch (error: any) {
             this.error = error;
         }

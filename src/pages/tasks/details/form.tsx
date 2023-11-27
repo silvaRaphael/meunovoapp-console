@@ -14,7 +14,7 @@ import { CalendarIcon, CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { Calendar } from "../../../components/ui/calendar";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "../../../components/ui/command";
 import { useEffect, useState } from "react";
-import { Member } from "../../members/data/member";
+import { Client } from "../../clients/data/client";
 import { SubmitButton } from "../../../components/shared/submit-button";
 import { toast } from "../../../components/ui/toast/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../../components/ui/select";
@@ -32,9 +32,9 @@ const taskFormSchema = z.object({
             message: "Title must not be longer than 100 characters.",
         }),
     description: z.string().min(4),
-    member: z
+    client: z
         .string({
-            required_error: "Please select a member to display.",
+            required_error: "Please select a client to display.",
         })
         .uuid()
         .optional(),
@@ -48,14 +48,14 @@ const taskFormSchema = z.object({
 type TaskFormValues = z.infer<typeof taskFormSchema>;
 
 export function TaskForm({ task }: { task: Task }) {
-    const [members, setMembers] = useState<Member[]>([]);
+    const [clients, setClients] = useState<Client[]>([]);
 
     const form = useForm<TaskFormValues>({
         resolver: zodResolver(taskFormSchema),
         defaultValues: {
             title: task.title,
             description: task.description,
-            member: task.member.id,
+            // client: task.client.id,
             status: task.status,
             priority: task.priority.toString(),
             due: new Date(task.due),
@@ -63,18 +63,18 @@ export function TaskForm({ task }: { task: Task }) {
         mode: "onChange",
     });
 
-    function getMembers() {
-        fetch("/api/members.json")
+    function getClients() {
+        fetch("/api/clients.json")
             .then((res) => res.json())
             .then((res) => {
-                setMembers(res);
+                setClients(res);
             });
     }
 
     useEffect(() => {
         const controller = new AbortController();
 
-        getMembers();
+        getClients();
 
         return () => {
             controller.abort();
@@ -119,18 +119,18 @@ export function TaskForm({ task }: { task: Task }) {
                         </div>
                         <FormField
                             control={form.control}
-                            name="member"
+                            name="client"
                             render={({ field }) => (
                                 <FormItem className="flex flex-col">
-                                    <FormLabel>Member</FormLabel>
+                                    <FormLabel>Client</FormLabel>
                                     <Popover>
                                         <PopoverTrigger asChild>
                                             <FormControl>
                                                 <Button variant="outline" role="combobox" className={cn("justify-between bg-muted/50", !field.value && "text-muted-foreground")}>
                                                     <span className="text-left leading-4">
-                                                        {field.value
-                                                            ? members.filter((member) => field.value === member.id).map((item) => `${item.name} ${item.lastName}`)
-                                                            : "Select member"}
+                                                        {/* {field.value
+                                                            ? clients.filter((client) => field.value === client.id).map((item) => `${item.name} ${item.lastName}`)
+                                                            : "Select client"} */}
                                                     </span>
                                                     <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                                 </Button>
@@ -138,21 +138,21 @@ export function TaskForm({ task }: { task: Task }) {
                                         </PopoverTrigger>
                                         <PopoverContent className="p-0">
                                             <Command>
-                                                <CommandInput placeholder="Search member..." />
-                                                <CommandEmpty>No member found.</CommandEmpty>
+                                                <CommandInput placeholder="Search client..." />
+                                                <CommandEmpty>No client found.</CommandEmpty>
                                                 <CommandGroup>
-                                                    {members.map((member, i) => (
+                                                    {/* {clients.map((client, i) => (
                                                         <CommandItem
-                                                            value={member.name}
+                                                            value={client.name}
                                                             key={i}
                                                             onSelect={() => {
-                                                                form.setValue("member", form.getValues().member !== member.id ? member.id : undefined);
+                                                                form.setValue("client", form.getValues().client !== client.id ? client.id : undefined);
                                                             }}
                                                         >
-                                                            <CheckIcon className={cn("mr-2 h-4 w-4", field.value === member.id ? "opacity-100" : "opacity-0")} />
-                                                            {`${member.name} ${member.lastName}`}
+                                                            <CheckIcon className={cn("mr-2 h-4 w-4", field.value === client.id ? "opacity-100" : "opacity-0")} />
+                                                            {`${client.name} ${client.lastName}`}
                                                         </CommandItem>
-                                                    ))}
+                                                    ))} */}
                                                 </CommandGroup>
                                             </Command>
                                         </PopoverContent>

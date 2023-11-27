@@ -1,53 +1,43 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { SectionHeader } from "../../../components/shared/section-header";
-import { Separator } from "../../../components/ui/separator";
-import { MemberForm } from "./form";
+import { ClientForm } from "./form";
 import { Button, buttonVariants } from "../../../components/ui/button";
 import { Page } from "../../../components/shared/page";
 import { ConfirmationAlert } from "../../../components/shared/confirmation-alert";
 import { SubmitButton } from "../../../components/shared/submit-button";
 import { toast } from "../../../components/ui/toast/use-toast";
-import { Member } from "../data/member";
+import { Client } from "../data/client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
-import { MemberTeams } from "./teams";
-import { MemberProjects } from "./projects";
-import { MemberTasks } from "./tasks";
 import { HandleRequest } from "../../../lib/handle-request";
 import { useLanguage } from "../../../components/shared/language-provider";
 
-export function MemberDetails() {
+export function ClientDetails() {
     const { writeLang } = useLanguage();
 
-    const { username } = useParams();
+    const { id } = useParams();
     const navigate = useNavigate();
-    const [member, setMember] = useState<Member>();
+    const [client, setClient] = useState<Client>();
 
-    function getMember(username?: string) {
-        fetch("/api/members.json")
-            .then((res) => res.json())
-            .then((res) => {
-                setMember(res.find((res: any) => res.username === username?.replace("@", "")) || null);
-            });
-    }
+    function getClient(id?: string) {}
 
     useEffect(() => {
         const controller = new AbortController();
 
-        getMember(username);
+        // getClient(id);
 
         return () => {
             controller.abort();
         };
-    }, [username]);
+    }, [id]);
 
-    if (!member) return <></>;
+    if (!client) return <></>;
 
     return (
         <Page
-            pathname="/members"
+            pathname="/clients"
             header={
-                <SectionHeader title="Members" pathname="/members" tree={!!member ? [{ label: `${member.name} ${member.lastName}` }] : []}>
+                <SectionHeader title="Clients" pathname="/clients" tree={!!client ? [{ label: client.company }] : []}>
                     <ConfirmationAlert
                         triggerButton={
                             <Button>
@@ -57,7 +47,7 @@ export function MemberDetails() {
                                 ])}
                             </Button>
                         }
-                        title="Are you sure you want to delete this member?"
+                        title="Are you sure you want to delete this client?"
                         description={
                             writeLang([
                                 ["en", "This action cannot be undone. This will permanently delete this data."],
@@ -78,9 +68,9 @@ export function MemberDetails() {
                                     onDone(() => {
                                         toast({
                                             variant: "success",
-                                            title: "Member removed successfully!",
+                                            title: "Client removed successfully!",
                                         });
-                                        navigate("/members");
+                                        navigate("/clients");
                                     });
                                     onError(() =>
                                         toast({
@@ -96,29 +86,23 @@ export function MemberDetails() {
             }
         >
             <div className="space-y-6 pb-40">
-                <div>
-                    <h3 className="text-lg font-medium">Edit Member</h3>
-                    <p className="text-sm text-muted-foreground">Some of this informations are public for other users</p>
-                </div>
-                <Separator />
-                <Tabs defaultValue="member">
+                <Tabs defaultValue="client">
                     <TabsList>
-                        <TabsTrigger value="member">Member</TabsTrigger>
-                        <TabsTrigger value="teams">Teams</TabsTrigger>
+                        <TabsTrigger value="client">Client</TabsTrigger>
+                        <TabsTrigger value="users">Users</TabsTrigger>
                         <TabsTrigger value="projects">Projects</TabsTrigger>
-                        <TabsTrigger value="tasks">Tasks</TabsTrigger>
                     </TabsList>
-                    <TabsContent value="member" className="pt-3">
-                        <MemberForm member={member} />
+                    <TabsContent value="client" className="pt-3">
+                        <ClientForm client={client} />
                     </TabsContent>
-                    <TabsContent value="teams" className="pt-3">
-                        <MemberTeams member={member} />
+                    <TabsContent value="users" className="pt-3">
+                        {/* <ClientTeams client={client} /> */}
                     </TabsContent>
                     <TabsContent value="projects" className="pt-3">
-                        <MemberProjects member={member} />
+                        {/* <ClientProjects client={client} /> */}
                     </TabsContent>
                     <TabsContent value="tasks" className="pt-3">
-                        <MemberTasks member={member} />
+                        {/* <ClientTasks client={client} /> */}
                     </TabsContent>
                 </Tabs>
             </div>

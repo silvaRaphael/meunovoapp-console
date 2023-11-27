@@ -30,7 +30,7 @@ export function TopBar({ pathname, toggleSideBar, isOpen }: { pathname: string; 
                 <MainNav pathname={pathname} />
                 <div className="flex items-center justify-end space-x-2 ps-2 pe-4 border-l h-full">
                     <div className="flex items-center space-x-1">
-                        <Notifications />
+                        {/* <Notifications /> */}
                         <LanguageToggle />
                         <ThemeToggle />
                     </div>

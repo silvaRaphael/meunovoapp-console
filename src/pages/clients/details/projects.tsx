@@ -6,8 +6,8 @@ import { ConfirmationAlert } from "../../../components/shared/confirmation-alert
 import { ContentAlert } from "../../../components/shared/content-alert";
 import { Actions } from "../../../components/shared/actions";
 import { Project } from "../../projects/data/project";
-import { Team } from "../../teams/data/team";
 import { projectColumns } from "../../projects/data/columns";
+import { Client } from "../data/client";
 import { useLanguage } from "../../../components/shared/language-provider";
 import { buttonVariants } from "../../../components/ui/button";
 
@@ -15,29 +15,25 @@ export interface ProjectRow extends Project {
     seeTeams?: (props: Project) => any;
 }
 
-export function TeamProjects({ team }: { team: Team }) {
+export function ClientProjects({ client }: { client: Client }) {
     const { writeLang } = useLanguage();
 
     const [projects, setProjects] = useState<ProjectRow[]>([]);
     const [openDelete, setOpenDelete] = useState<boolean>(false);
     const [projectName, setProjectName] = useState<string>("");
-    const [teamsList, setTeamsList] = useState<Team[] | null>(null);
 
-    function getProjects(team: Team) {
+    function getProjects(client: Client) {
         fetch("/api/projects.json")
             .then((res) => res.json())
             .then((res) => {
-                res = res
-                    .filter((item: Project) => item.teams.filter((item: Team) => item.id === team.id).length)
-                    .map((item: Project): ProjectRow => {
-                        return {
-                            ...item,
-                            seeTeams(item) {
-                                setTeamsList(item.teams);
-                                setProjectName(item.title);
-                            },
-                        };
-                    });
+                res = res.map((item: Project): ProjectRow => {
+                    return {
+                        ...item,
+                        seeTeams(item) {
+                            setProjectName(item.title);
+                        },
+                    };
+                });
                 setProjects(res);
             });
     }
@@ -45,12 +41,12 @@ export function TeamProjects({ team }: { team: Team }) {
     useEffect(() => {
         const controller = new AbortController();
 
-        getProjects(team);
+        getProjects(client);
 
         return () => {
             controller.abort();
         };
-    }, [team]);
+    }, [client]);
 
     return (
         <>
@@ -97,21 +93,6 @@ export function TeamProjects({ team }: { team: Team }) {
                     />
                 }
             />
-            <ContentAlert open={!!teamsList} onOpenChange={(open: boolean) => setTeamsList(open ? teamsList : null)} title={`Teams of ${projectName}`}>
-                <div className="max-h-[70vh] overflow-y-auto vertical-scrollbar space-y-2">
-                    {!!teamsList && (
-                        <>
-                            {teamsList.map((team: Team, i) => (
-                                <div key={i} className="flex justify-between items-center">
-                                    {team.name}
-                                    <Actions.Edit to={`/teams/${team.slug}`} />
-                                </div>
-                            ))}
-                            {!teamsList.length && <p className="text-xs font-medium text-muted-foreground p-2 py-3">No teams yet</p>}
-                        </>
-                    )}
-                </div>
-            </ContentAlert>
         </>
     );
 }

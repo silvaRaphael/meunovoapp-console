@@ -1,6 +1,6 @@
 import fs from "fs";
 import { jobTitles } from "../../src/config/job-titles";
-import { members } from "../../src/pages/members/data/data";
+import { members } from "../../src/pages/clients/data/data";
 import { teams } from "../../src/pages/teams/data/data";
 import { projects } from "../../src/pages/projects/data/data";
 import { tasks } from "../../src/pages/tasks/data/data";

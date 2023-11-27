@@ -17,6 +17,7 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../ui/table";
 
 import { DataTablePagination } from "./data-table-pagination";
+import { useLanguage } from "components/shared/language-provider";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -24,6 +25,8 @@ interface DataTableProps<TData, TValue> {
 }
 
 export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+    const { writeLang } = useLanguage();
+
     const [rowSelection, setRowSelection] = React.useState({});
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -76,7 +79,10 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                         ) : (
                             <TableRow>
                                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                                    No results.
+                                    {writeLang([
+                                        ["en", "No result."],
+                                        ["pt", "Sem resultados."],
+                                    ])}
                                 </TableCell>
                             </TableRow>
                         )}

@@ -14,11 +14,10 @@ import { CalendarIcon, CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { Calendar } from "../../../components/ui/calendar";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "../../../components/ui/command";
 import { useEffect, useState } from "react";
-import { Member } from "../../members/data/member";
+import { Client } from "../../clients/data/client";
 import { SubmitButton } from "../../../components/shared/submit-button";
 import { toast } from "../../../components/ui/toast/use-toast";
 import { Actions } from "../../../components/shared/actions";
-import { Team } from "../../teams/data/team";
 import { HandleRequest } from "../../../lib/handle-request";
 import { Separator } from "../../../components/ui/separator";
 import { useLanguage } from "../../../components/shared/language-provider";
@@ -42,7 +41,7 @@ const projectFormSchema = z.object({
     teams: z.array(
         z
             .string({
-                required_error: "Please select member(s) to display.",
+                required_error: "Please select client(s) to display.",
             })
             .uuid(),
     ),
@@ -58,8 +57,7 @@ export function ProjectForm({ project }: { project: Project }) {
     const { language, writeLang } = useLanguage();
     const locale = languages.find((item) => item.lang === language.lang)?.dateLocale;
 
-    const [members, setMembers] = useState<Member[]>([]);
-    const [teams, setTeams] = useState<Team[]>([]);
+    const [clients, setClients] = useState<Client[]>([]);
 
     const form = useForm<ProjectFormValues>({
         resolver: zodResolver(projectFormSchema),
@@ -67,33 +65,23 @@ export function ProjectForm({ project }: { project: Project }) {
             title: project.title,
             description: project.description,
             manager: project.manager.id,
-            teams: project.teams.map((item) => item.id),
             due: new Date(project.due),
         },
         mode: "onChange",
     });
 
-    function getMembers() {
-        fetch("/api/members.json")
+    function getClients() {
+        fetch("/api/clients.json")
             .then((res) => res.json())
             .then((res) => {
-                setMembers(res);
-            });
-    }
-
-    function getTeams() {
-        fetch("/api/teams.json")
-            .then((res) => res.json())
-            .then((res) => {
-                setTeams(res);
+                setClients(res);
             });
     }
 
     useEffect(() => {
         const controller = new AbortController();
 
-        getMembers();
-        getTeams();
+        getClients();
 
         return () => {
             controller.abort();
@@ -267,12 +255,12 @@ export function ProjectForm({ project }: { project: Project }) {
                                             <FormControl>
                                                 <Button variant="outline" role="combobox" className={cn("justify-between bg-muted/50", !field.value && "text-muted-foreground")}>
                                                     <span className="text-left leading-4">
-                                                        {field.value
-                                                            ? members.filter((member) => field.value === member.id).map((item) => `${item.name} ${item.lastName}`)
+                                                        {/* {field.value
+                                                            ? clients.filter((client) => field.value === client.id).map((item) => `${item.name} ${item.lastName}`)
                                                             : writeLang([
-                                                                  ["en", "Search member"],
+                                                                  ["en", "Search client"],
                                                                   ["pt", "Procurar membro"],
-                                                              ])}
+                                                              ])} */}
                                                     </span>
                                                     <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                                 </Button>
@@ -283,30 +271,30 @@ export function ProjectForm({ project }: { project: Project }) {
                                                 <CommandInput
                                                     placeholder={
                                                         writeLang([
-                                                            ["en", "Search member..."],
+                                                            ["en", "Search client..."],
                                                             ["pt", "Procurar membro..."],
                                                         ]) as string
                                                     }
                                                 />
                                                 <CommandEmpty>
                                                     {writeLang([
-                                                        ["en", "No member found."],
+                                                        ["en", "No client found."],
                                                         ["pt", "Nenhum membro encontrado."],
                                                     ])}
                                                 </CommandEmpty>
                                                 <CommandGroup>
-                                                    {members.map((member, i) => (
+                                                    {/* {clients.map((client, i) => (
                                                         <CommandItem
-                                                            value={member.name}
+                                                            value={client.name}
                                                             key={i}
                                                             onSelect={() => {
-                                                                form.setValue("manager", form.getValues().manager !== member.id ? member.id : undefined);
+                                                                form.setValue("manager", form.getValues().manager !== client.id ? client.id : undefined);
                                                             }}
                                                         >
-                                                            <CheckIcon className={cn("mr-2 h-4 w-4", field.value === member.id ? "opacity-100" : "opacity-0")} />
-                                                            {`${member.name} ${member.lastName}`}
+                                                            <CheckIcon className={cn("mr-2 h-4 w-4", field.value === client.id ? "opacity-100" : "opacity-0")} />
+                                                            {`${client.name} ${client.lastName}`}
                                                         </CommandItem>
-                                                    ))}
+                                                    ))} */}
                                                 </CommandGroup>
                                             </Command>
                                         </PopoverContent>
@@ -332,113 +320,6 @@ export function ProjectForm({ project }: { project: Project }) {
                                 ["pt", "Alterar times"],
                             ])}
                         </p>
-                    </div>
-                    <div className="col-span-6 space-y-4">
-                        <FormField
-                            control={form.control}
-                            name="teams"
-                            render={({ field }) => (
-                                <div className="space-y-4">
-                                    <FormItem className="flex flex-col">
-                                        <FormDescription>
-                                            {writeLang([
-                                                ["en", "Teams"],
-                                                ["pt", "Times"],
-                                            ])}
-                                        </FormDescription>
-                                        <Popover>
-                                            <PopoverTrigger asChild>
-                                                <FormControl>
-                                                    <Button
-                                                        variant="outline"
-                                                        role="combobox"
-                                                        className={cn("justify-between bg-muted/50", !field.value && "text-muted-foreground")}
-                                                    >
-                                                        <span className="text-left leading-4">
-                                                            {writeLang([
-                                                                ["en", "Select teams..."],
-                                                                ["pt", "Selecione os times..."],
-                                                            ])}
-                                                        </span>
-                                                        <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                                    </Button>
-                                                </FormControl>
-                                            </PopoverTrigger>
-                                            <PopoverContent className="p-0">
-                                                <Command>
-                                                    <CommandInput
-                                                        placeholder={
-                                                            writeLang([
-                                                                ["en", "Search teams..."],
-                                                                ["pt", "Procurar times..."],
-                                                            ]) as string
-                                                        }
-                                                    />
-                                                    <CommandEmpty>
-                                                        {writeLang([
-                                                            ["en", "No teams found."],
-                                                            ["pt", "Nenhum time encontrado."],
-                                                        ])}
-                                                    </CommandEmpty>
-                                                    <CommandGroup>
-                                                        {teams.map((team, i) => (
-                                                            <CommandItem
-                                                                value={team.name}
-                                                                key={i}
-                                                                onSelect={() => {
-                                                                    let selectedMembers = form.getValues().teams;
-                                                                    if (selectedMembers.includes(team.id)) {
-                                                                        selectedMembers = selectedMembers.filter((item) => item !== team.id);
-                                                                    } else {
-                                                                        selectedMembers.push(team.id);
-                                                                    }
-                                                                    form.setValue("teams", selectedMembers);
-                                                                }}
-                                                            >
-                                                                <CheckIcon className={cn("mr-2 h-4 w-4", field.value.includes(team.id) ? "opacity-100" : "opacity-0")} />
-                                                                {team.name}
-                                                            </CommandItem>
-                                                        ))}
-                                                    </CommandGroup>
-                                                </Command>
-                                            </PopoverContent>
-                                        </Popover>
-                                        <FormMessage />
-                                    </FormItem>
-                                    <div className="space-y-2">
-                                        <div className="max-h-[50vh] overflow-y-auto vertical-scrollbar space-y-2 pe-2">
-                                            {!!form.getValues().teams && (
-                                                <>
-                                                    {teams
-                                                        .filter((item) => form.getValues().teams.includes(item.id))
-                                                        .map((item: Team, i) => (
-                                                            <div key={i} className="flex justify-between items-center group">
-                                                                {item.name}
-                                                                <Actions.Remove
-                                                                    className="w-6 h-6 invisible group-hover:visible"
-                                                                    onClick={() => {
-                                                                        let selectedMembers = form.getValues().teams;
-                                                                        selectedMembers = selectedMembers.filter((selectedItem) => selectedItem !== item.id);
-                                                                        form.setValue("teams", selectedMembers);
-                                                                    }}
-                                                                />
-                                                            </div>
-                                                        ))}
-                                                    {!teams.filter((item) => form.getValues().teams.includes(item.id)).length && (
-                                                        <p className="text-xs font-medium text-muted-foreground p-2 py-3">
-                                                            {writeLang([
-                                                                ["en", "No teams yet."],
-                                                                ["pt", "Nenhum time ainda."],
-                                                            ])}
-                                                        </p>
-                                                    )}
-                                                </>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-                        />
                     </div>
                 </div>
                 <Separator />

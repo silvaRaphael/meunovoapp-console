@@ -3,16 +3,24 @@ import { Table } from "@tanstack/react-table";
 
 import { Button } from "../button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../select";
+import { useLanguage } from "components/shared/language-provider";
 
 interface DataTablePaginationProps<TData> {
     table: Table<TData>;
 }
 
 export function DataTablePagination<TData>({ table }: DataTablePaginationProps<TData>) {
+    const { writeLang } = useLanguage();
+
     return (
         <div className="flex items-center justify-between px-2">
             <div className="flex items-center space-x-2">
-                <p className="text-sm font-medium">Rows per page</p>
+                <p className="text-sm font-medium">
+                    {writeLang([
+                        ["en", "Rows per page"],
+                        ["pt", "Resultados por página"],
+                    ])}
+                </p>
                 <Select
                     value={`${table.getState().pagination.pageSize}`}
                     onValueChange={(value) => {
@@ -23,7 +31,7 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
                         <SelectValue placeholder={table.getState().pagination.pageSize} />
                     </SelectTrigger>
                     <SelectContent side="top">
-                        {[10, 20, 30, 40, 50].map((pageSize) => (
+                        {[10, 25, 50, 100].map((pageSize) => (
                             <SelectItem key={pageSize} value={`${pageSize}`}>
                                 {pageSize}
                             </SelectItem>
@@ -32,7 +40,20 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
                 </Select>
             </div>
             <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-                Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+                {writeLang([
+                    [
+                        "en",
+                        <>
+                            Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+                        </>,
+                    ],
+                    [
+                        "pt",
+                        <>
+                            Página {table.getState().pagination.pageIndex + 1} de {table.getPageCount()}
+                        </>,
+                    ],
+                ])}
             </div>
             <div className="flex items-center space-x-2">
                 <Button variant="outline" className="hidden h-8 w-8 p-0 lg:flex" onClick={() => table.setPageIndex(0)} disabled={!table.getCanPreviousPage()}>

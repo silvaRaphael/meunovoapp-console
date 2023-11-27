@@ -7,21 +7,19 @@ import { Button } from "../../../components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../../../components/ui/form";
 import { Input } from "../../../components/ui/input";
 import { Textarea } from "../../../components/ui/textarea";
-import { Member } from "../data/member";
+import { Client } from "../data/client";
 import { Popover, PopoverContent, PopoverTrigger } from "../../../components/ui/popover";
 import format from "date-fns/format";
 import { CalendarIcon, CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { Calendar } from "../../../components/ui/calendar";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "../../../components/ui/command";
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader } from "../../../components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "../../../components/ui/avatar";
 import { SubmitButton } from "../../../components/shared/submit-button";
 import { toast } from "../../../components/ui/toast/use-toast";
 import { JobTitle } from "../../../config/job-titles";
 import { HandleRequest } from "../../../lib/handle-request";
 
-const memberFormSchema = z.object({
+const clientFormSchema = z.object({
     username: z
         .string()
         .min(3, {
@@ -64,22 +62,14 @@ const memberFormSchema = z.object({
     }),
 });
 
-type MemberFormValues = z.infer<typeof memberFormSchema>;
+type ClientFormValues = z.infer<typeof clientFormSchema>;
 
-export function MemberForm({ member }: { member: Member }) {
+export function ClientForm({ client }: { client: Client }) {
     const [jobTitles, setJobTitles] = useState<JobTitle[]>([]);
 
-    const form = useForm<MemberFormValues>({
-        resolver: zodResolver(memberFormSchema),
-        defaultValues: {
-            username: member.username,
-            name: member.name,
-            lastName: member.lastName,
-            email: member.email,
-            jobTitle: [member.jobTitle.id],
-            bio: member.bio,
-            since: new Date(member.since),
-        },
+    const form = useForm<ClientFormValues>({
+        resolver: zodResolver(clientFormSchema),
+        defaultValues: {},
         mode: "onChange",
     });
 
@@ -101,12 +91,12 @@ export function MemberForm({ member }: { member: Member }) {
         };
     }, []);
 
-    async function onSubmit(data: MemberFormValues) {
+    async function onSubmit(data: ClientFormValues) {
         const { onDone, onError } = await new HandleRequest(data).post("https://jsonplaceholder.typicode.com/users");
         onDone(() =>
             toast({
                 variant: "success",
-                title: "Member updated successfully!",
+                title: "Client updated successfully!",
             }),
         );
         onError(() =>
@@ -254,26 +244,8 @@ export function MemberForm({ member }: { member: Member }) {
                             </FormItem>
                         )}
                     />
-                    <SubmitButton label="Update Member" type="submit" state={form.formState.isSubmitting ? "loading" : "initial"} />
+                    <SubmitButton label="Update Client" type="submit" state={form.formState.isSubmitting ? "loading" : "initial"} />
                 </div>
-                <Card className="w-full h-min">
-                    <CardHeader>
-                        <Avatar className="h-24 w-24 mx-auto">
-                            <AvatarImage src={member.avatar} alt={`@${member.username}`} />
-                            <AvatarFallback>{[member.name.charAt(0), member.lastName.charAt(0)].join("").toUpperCase()}</AvatarFallback>
-                        </Avatar>
-                    </CardHeader>
-                    <CardContent className="space-y-1">
-                        <div className="flex flex-col space-y-1 items-center">
-                            <p className="text-sm text-center font-medium leading-none">@{member.username}</p>
-                            <p className="text-xs text-center leading-none text-muted-foreground">{member.email}</p>
-                        </div>
-                        <div className="flex flex-col space-y-1 items-center">
-                            <p className="text-sm text-center font-medium leading-none">{member.jobTitle.name}</p>
-                            <p className="text-xs text-center leading-none text-muted-foreground">{format(new Date(member.since), "PPP")}</p>
-                        </div>
-                    </CardContent>
-                </Card>
             </form>
         </Form>
     );

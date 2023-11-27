@@ -1,106 +1,71 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
 
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from "../../components/ui/form";
 import { Input } from "../../components/ui/input";
-import { Textarea } from "../../components/ui/textarea";
 import { SubmitButton } from "../../components/shared/submit-button";
 import { toast } from "../../components/ui/toast/use-toast";
 import { HandleRequest } from "../../lib/handle-request";
 import { User } from "../../config/user";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select";
 import { Separator } from "../../components/ui/separator";
-import { UpperFirst } from "../../lib/helper";
-
-const profileFormSchema = z.object({
-    username: z
-        .string()
-        .min(3, {
-            message: "Username must be at least 3 characters.",
-        })
-        .max(30, {
-            message: "Username must not be longer than 30 characters.",
-        }),
-    name: z
-        .string()
-        .min(2, {
-            message: "Name must be at least 2 characters.",
-        })
-        .max(50, {
-            message: "Name must not be longer than 50 characters.",
-        }),
-    lastName: z
-        .string()
-        .min(2, {
-            message: "Last name must be at least 2 characters.",
-        })
-        .max(50, {
-            message: "Last name must not be longer than 50 characters.",
-        }),
-    email: z
-        .string({
-            required_error: "Please select an email to display.",
-        })
-        .email(),
-    gender: z.string({
-        required_error: "Please select a gender to display.",
-    }),
-    role: z.string({
-        required_error: "Please select a role to display.",
-    }),
-    avatar: z.any().optional(),
-    bio: z.string().max(160).min(4).optional(),
-});
-
-type ProfileFormValues = z.infer<typeof profileFormSchema>;
+import { ProfileSchema, profileSchema } from "adapters/user";
+import { errorToast } from "components/shared/error-toast";
+import { useLanguage } from "components/shared/language-provider";
+import { useAuth } from "components/shared/auth-provider";
+import { BASE_API } from "config/constants";
 
 let usernameTimeout: any;
 
 export function ProfileForm({ user }: { user: User }) {
-    const form = useForm<ProfileFormValues>({
-        resolver: zodResolver(profileFormSchema),
+    const { auth } = useAuth();
+    const { writeLang } = useLanguage();
+
+    const form = useForm<ProfileSchema>({
+        resolver: zodResolver(profileSchema),
         defaultValues: {
-            username: user.username,
             name: user.name,
-            lastName: user.lastName,
             email: user.email,
-            gender: user.gender,
             role: user.role,
             // avatar: user.avatar,
         },
         mode: "onChange",
     });
 
-    async function checkUsernameAvailability(e: React.ChangeEvent<HTMLInputElement>) {
-        const username = e.target.value;
+    async function checkEmailAvailability(e: React.ChangeEvent<HTMLInputElement>) {
+        const email = e.target.value;
 
-        const { onDone, onError } = await new HandleRequest({ username }).get("https://jsonplaceholder.typicode.com/users");
-        onDone(() => {
-            if (username.trim() === "existent") form.setError("username", { message: "Username not available" });
+        const request = await new HandleRequest({ email }).post(`${BASE_API}/users/email`, {
+            token: auth?.token,
         });
-        onError(() =>
-            toast({
-                variant: "destructive",
-                title: "It was not possible to check username availability!",
-            }),
-        );
+
+        request.onDone(() => {
+            if (email.trim() === "existent")
+                form.setError("email", {
+                    message: writeLang([
+                        ["en", "Email not available"],
+                        ["pt", "E-mail não disponível"],
+                    ]) as string,
+                });
+        });
+
+        request.onError((error) => errorToast(error));
     }
 
-    async function onSubmit(data: ProfileFormValues) {
-        const { onDone, onError } = await new HandleRequest(data).post("https://jsonplaceholder.typicode.com/users");
-        onDone(() =>
+    async function onSubmit(data: ProfileSchema) {
+        const request = await new HandleRequest(data).post(`${BASE_API}/users`, {
+            token: auth?.token,
+        });
+
+        request.onDone(() =>
             toast({
-                variant: "success",
-                title: "Profile updated successfully!",
+                title: writeLang([
+                    ["en", "Profile updated successfully!"],
+                    ["pt", "Perfil atualizado com sucesso!"],
+                ]) as string,
             }),
         );
-        onError(() =>
-            toast({
-                variant: "destructive",
-                title: "An error occured!",
-            }),
-        );
+
+        request.onError((error) => errorToast(error));
     }
 
     return (
@@ -108,8 +73,18 @@ export function ProfileForm({ user }: { user: User }) {
             <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
                 <div className="grid grid-cols-12">
                     <div className="col-span-3">
-                        <h3 className="font-semibold leading-4">Name</h3>
-                        <p className="text-sm text-muted-foreground">Change your name</p>
+                        <h3 className="font-semibold leading-4">
+                            {writeLang([
+                                ["en", "Name"],
+                                ["pt", "Nome"],
+                            ])}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">
+                            {writeLang([
+                                ["en", "Change your name"],
+                                ["pt", "Altere seu nome"],
+                            ])}
+                        </p>
                     </div>
                     <div className="col-span-6 space-y-4">
                         <FormField
@@ -117,20 +92,22 @@ export function ProfileForm({ user }: { user: User }) {
                             name="name"
                             render={({ field }) => (
                                 <FormItem className="flex flex-col">
+                                    <FormDescription>
+                                        {writeLang([
+                                            ["en", "Enter you name"],
+                                            ["pt", "Digite seu nome"],
+                                        ])}
+                                    </FormDescription>
                                     <FormControl>
-                                        <Input placeholder="Your name" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="lastName"
-                            render={({ field }) => (
-                                <FormItem className="flex flex-col">
-                                    <FormControl>
-                                        <Input placeholder="Your last name" {...field} />
+                                        <Input
+                                            placeholder={
+                                                writeLang([
+                                                    ["en", "Your name"],
+                                                    ["pt", "Seu nome"],
+                                                ]) as string
+                                            }
+                                            {...field}
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -141,23 +118,44 @@ export function ProfileForm({ user }: { user: User }) {
                 <Separator />
                 <div className="grid grid-cols-12">
                     <div className="col-span-3">
-                        <h3 className="font-semibold leading-4">Username</h3>
-                        <p className="text-sm text-muted-foreground">Change your username</p>
+                        <h3 className="font-semibold leading-4">
+                            {writeLang([
+                                ["en", "Info"],
+                                ["pt", "Informações"],
+                            ])}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">
+                            {writeLang([
+                                ["en", "Change your informations"],
+                                ["pt", "Altere suas informações"],
+                            ])}
+                        </p>
                     </div>
                     <div className="col-span-6 space-y-4">
                         <FormField
                             control={form.control}
-                            name="username"
+                            name="email"
                             render={({ field }) => (
                                 <FormItem className="flex flex-col">
+                                    <FormDescription>
+                                        {writeLang([
+                                            ["en", "Enter your email"],
+                                            ["pt", "Digite seu e-mail"],
+                                        ])}
+                                    </FormDescription>
                                     <FormControl>
                                         <Input
-                                            placeholder="Your username"
+                                            placeholder={
+                                                writeLang([
+                                                    ["en", "Your email"],
+                                                    ["pt", "Seu e-mail"],
+                                                ]) as string
+                                            }
                                             onChange={(e) => {
                                                 if (e.target.value.includes(" ")) e.target.value = e.target.value.replaceAll(" ", "");
                                                 field.onChange(e);
                                                 clearTimeout(usernameTimeout);
-                                                usernameTimeout = setTimeout(() => checkUsernameAvailability(e), 500);
+                                                usernameTimeout = setTimeout(() => checkEmailAvailability(e), 500);
                                             }}
                                             name={field.name}
                                             value={field.value}
@@ -169,80 +167,31 @@ export function ProfileForm({ user }: { user: User }) {
                                 </FormItem>
                             )}
                         />
-                    </div>
-                </div>
-                <Separator />
-                <div className="grid grid-cols-12">
-                    <div className="col-span-3">
-                        <h3 className="font-semibold leading-4">Info</h3>
-                        <p className="text-sm text-muted-foreground">Change your informations</p>
-                    </div>
-                    <div className="col-span-6 space-y-4">
-                        <FormField
-                            control={form.control}
-                            name="email"
-                            render={({ field }) => (
-                                <FormItem className="flex flex-col">
-                                    <FormControl>
-                                        <Input placeholder="Your email" {...field} />
-                                    </FormControl>
-                                    <FormDescription>Enter your email</FormDescription>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="gender"
-                            render={({ field }) => (
-                                <FormItem className="flex flex-col">
-                                    <FormControl>
-                                        <Select value={field.value} onValueChange={field.onChange}>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder={"ok"} />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {["feminine", "masculine"].map((gender, i) => (
-                                                    <SelectItem key={i} value={`${gender}`}>
-                                                        {UpperFirst(gender)}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                    </FormControl>
-                                    <FormDescription>Pick your gender</FormDescription>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
                         <FormField
                             control={form.control}
                             name="avatar"
                             render={({ field }) => (
                                 <FormItem className="flex flex-col">
+                                    <FormDescription>
+                                        {writeLang([
+                                            ["en", "Upload your avatar image"],
+                                            ["pt", "Envie sua imagem de perfil"],
+                                        ])}
+                                    </FormDescription>
                                     <FormControl>
                                         <Input
-                                            placeholder="Pick a photo"
+                                            placeholder={
+                                                writeLang([
+                                                    ["en", "Pick a photo"],
+                                                    ["pt", "Escolha uma foto"],
+                                                ]) as string
+                                            }
                                             type="file"
                                             lang="en"
                                             className="file:text-neutral-800 dark:file:text-neutral-100 file:border-r file:border-neutral-200 file:h-full file:me-2"
                                             {...field}
                                         />
                                     </FormControl>
-                                    <FormDescription>Upload your avatar image</FormDescription>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="bio"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormControl>
-                                        <Textarea placeholder="Tell us a little bit about yourself" className="resize-none" rows={5} {...field} />
-                                    </FormControl>
-                                    <FormDescription>This will be shown in your profile</FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             )}
@@ -250,7 +199,16 @@ export function ProfileForm({ user }: { user: User }) {
                     </div>
                 </div>
                 <Separator />
-                <SubmitButton label="Update Profile" type="submit" state={form.formState.isSubmitting ? "loading" : "initial"} />
+                <SubmitButton
+                    label={
+                        writeLang([
+                            ["en", "Update Profile"],
+                            ["pt", "Atualizar Perfil"],
+                        ]) as string
+                    }
+                    type="submit"
+                    state={form.formState.isSubmitting ? "loading" : "initial"}
+                />
             </form>
         </Form>
     );

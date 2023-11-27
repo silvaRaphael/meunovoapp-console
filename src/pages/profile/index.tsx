@@ -33,14 +33,7 @@ export function Profile() {
                 ></SectionHeader>
             }
         >
-            <div className="space-y-6 pb-40">
-                <div>
-                    <h3 className="text-lg font-medium">Edit your Profile</h3>
-                    <p className="text-sm text-muted-foreground">Some of this informations are public for other users</p>
-                </div>
-                <Separator />
-                <ProfileForm user={user} />
-            </div>
+            <ProfileForm user={user} />
         </Page>
     );
 }

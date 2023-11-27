@@ -56,17 +56,8 @@ export const taskColumns: ColumnDef<Task>[] = [
         id: "member",
         header: ({ column }) => <DataTableColumnHeader column={column} title="Member" />,
         cell: ({ row }) => {
-            return (
-                <MemberInfo
-                    avatar={row.original.member?.avatar}
-                    username={row.original.member?.username}
-                    name={row.original.member?.name}
-                    lastName={row.original.member?.lastName}
-                    email={row.original.member?.email}
-                    jobTitle={row.original.member?.jobTitle.name}
-                    since={row.original.member?.since}
-                />
-            );
+            return <>Client Info</>;
+            // return <MemberInfo avatar={row.original.member?.avatar} name={row.original.member?.name} email={row.original.member?.email} />;
         },
     },
     {

@@ -25,7 +25,7 @@ export function Page({ pathname, header, children }: Props) {
                 <div className="flex pb-20">
                     <SideBar pathname={pathname} isOpen={isOpen} />
                     <Section
-                        className="h-screen"
+                        className="min-h-screen h-full"
                         style={{
                             paddingLeft: isOpen ? sideBarWidth : sideBarWidthCollapsed,
                         }}

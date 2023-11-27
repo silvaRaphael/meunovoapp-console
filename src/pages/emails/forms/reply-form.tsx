@@ -1,22 +1,28 @@
 import { Loader } from "lucide-react";
 
 import { Button } from "components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from "components/ui/form";
 import { Input } from "components/ui/input";
 import { toast } from "components/ui/toast/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import { Textarea } from "components/ui/textarea";
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import { Email } from "../data/email";
-import { BASE_API } from "config/constants";
+import { BASE_API, SENDER_EMAIL } from "config/constants";
 import { useAuth } from "components/shared/auth-provider";
 import { EmailSchema, emailSchema } from "adapters/email";
+import { errorToast } from "components/shared/error-toast";
+import { HandleRequest } from "lib/handle-request";
+import { useLanguage } from "components/shared/language-provider";
+import { render } from "@react-email/components";
+import { ReplyMessageEmail } from "components/shared/emails/reply-message-email";
 
 export function EmailReply({ email }: { email: Email }) {
     const { auth } = useAuth();
+    const { writeLang } = useLanguage();
 
-    const [replySent, setReplySent] = useState<boolean>(false);
+    const [replySent, setReplySent] = useState<"not-sent" | "sending" | "sent">(email.has_reply ? "sent" : "not-sent");
 
     const form = useForm<EmailSchema>({
         resolver: zodResolver(emailSchema),
@@ -47,49 +53,43 @@ export function EmailReply({ email }: { email: Email }) {
     });
 
     async function onSubmit(data: EmailSchema) {
-        try {
-            const response = await fetch(`${BASE_API}/emails`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${auth?.token}`,
-                },
-                body: JSON.stringify({
-                    email: email.to,
-                    title: "Resposta Contato - MeuNovoApp",
-                    ...data,
-                }),
-            });
+        setReplySent("sending");
 
-            if (!response.ok) {
-                throw (await response.json()).error;
-            }
+        const request = await new HandleRequest({
+            name: data.name,
+            from: SENDER_EMAIL,
+            to: Array.isArray(email.to) ? email.to.flat() : email.to,
+            subject: data.subject,
+            html: render(<ReplyMessageEmail title="Resposta Contato - MeuNovoApp" {...data} />),
+        }).post(`${BASE_API}/emails/${email.id}`, {
+            token: auth?.token,
+        });
 
+        request.onDone(() => {
             toast({
-                title: "Sua proposta foi enviada!",
+                title: writeLang([
+                    ["en", "Your proposal has been sent!"],
+                    ["pt", "Sua proposta foi enviada!"],
+                ]) as string,
             });
+            setReplySent("sent");
+        });
 
-            setReplySent(true);
-        } catch (error: any) {
-            toast({
-                title: "Ocorreu algum erro!",
-                description:
-                    error.length &&
-                    error.map(({ message }: any, i: number) => (
-                        <Fragment key={i}>
-                            {message}
-                            <br />
-                        </Fragment>
-                    )),
-                variant: "destructive",
-            });
-        }
+        request.onError((error) => {
+            errorToast(error);
+            setReplySent("not-sent");
+        });
     }
 
-    if (replySent)
+    if (replySent === "sent")
         return (
-            <div className="w-full text-center py-10">
-                <h4 className="text-2xl font-semibold text-center">Resposta enviada!</h4>
+            <div className="w-full text-center py-20">
+                <h4 className="text-2xl font-semibold text-center text-muted-foreground">
+                    {writeLang([
+                        ["en", "Reply sent!"],
+                        ["pt", "Resposta enviada!"],
+                    ])}
+                </h4>
             </div>
         );
 
@@ -101,9 +101,20 @@ export function EmailReply({ email }: { email: Email }) {
                     name="subject"
                     render={({ field }) => (
                         <FormItem className="flex flex-col w-full">
+                            <FormDescription>
+                                {writeLang([
+                                    ["en", "Email subject"],
+                                    ["pt", "Assunto do e-mail"],
+                                ])}
+                            </FormDescription>
                             <FormControl>
                                 <Input
-                                    placeholder="Assunto do e-mail"
+                                    placeholder={
+                                        writeLang([
+                                            ["en", "Email subject"],
+                                            ["pt", "Assunto do e-mail"],
+                                        ]) as string
+                                    }
                                     className="bg-muted/50 border"
                                     maxLength={65}
                                     onChange={field.onChange}
@@ -123,9 +134,20 @@ export function EmailReply({ email }: { email: Email }) {
                     name="name"
                     render={({ field }) => (
                         <FormItem className="flex flex-col w-full">
+                            <FormDescription>
+                                {writeLang([
+                                    ["en", "Contact name"],
+                                    ["pt", "Nome do contato"],
+                                ])}
+                            </FormDescription>
                             <FormControl>
                                 <Input
-                                    placeholder="Nome do contato"
+                                    placeholder={
+                                        writeLang([
+                                            ["en", "Contact name"],
+                                            ["pt", "Nome do contato"],
+                                        ]) as string
+                                    }
                                     className="bg-muted/50 border"
                                     maxLength={50}
                                     onChange={field.onChange}
@@ -145,9 +167,20 @@ export function EmailReply({ email }: { email: Email }) {
                     name="projectDetails"
                     render={({ field }) => (
                         <FormItem className="flex flex-col w-full">
+                            <FormDescription>
+                                {writeLang([
+                                    ["en", "Project details"],
+                                    ["pt", "Detalhes do projeto"],
+                                ])}
+                            </FormDescription>
                             <FormControl>
                                 <Textarea
-                                    placeholder="Detalhes do projeto"
+                                    placeholder={
+                                        writeLang([
+                                            ["en", "Project details"],
+                                            ["pt", "Detalhes do projeto"],
+                                        ]) as string
+                                    }
                                     className="bg-muted/50 border whitespace-pre-line"
                                     rows={5}
                                     onChange={field.onChange}
@@ -166,29 +199,56 @@ export function EmailReply({ email }: { email: Email }) {
                     {fields.map((field, i) => (
                         <div key={i} className="grid grid-cols-5 gap-4">
                             <div className="col-span-2 space-y-2">
-                                <FormField
-                                    control={form.control}
-                                    key={field.id}
-                                    name={`projectScope.${i}.title`}
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormControl>
-                                                <Input
-                                                    placeholder="Títudo do escopo"
-                                                    className="bg-muted/50 border whitespace-pre-line"
-                                                    onChange={field.onChange}
-                                                    value={field.value || ""}
-                                                    ref={field.ref}
-                                                    name={field.name}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
+                                <div className="flex items-end space-x-2">
+                                    <div className="flex-grow">
+                                        <FormField
+                                            control={form.control}
+                                            key={field.id}
+                                            name={`projectScope.${i}.title`}
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormDescription>
+                                                        {writeLang([
+                                                            ["en", "Scope title"],
+                                                            ["pt", "Título do escopo"],
+                                                        ])}
+                                                    </FormDescription>
+                                                    <FormControl>
+                                                        <Input
+                                                            placeholder={
+                                                                writeLang([
+                                                                    ["en", "Scope title"],
+                                                                    ["pt", "Título do escopo"],
+                                                                ]) as string
+                                                            }
+                                                            className="bg-muted/50 border whitespace-pre-line"
+                                                            onChange={field.onChange}
+                                                            value={field.value || ""}
+                                                            ref={field.ref}
+                                                            name={field.name}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                    {i === fields.length - 1 && i !== 0 && (
+                                        <Button variant="destructive" onClick={() => remove(i)}>
+                                            {writeLang([
+                                                ["en", "Remove"],
+                                                ["pt", "Remover"],
+                                            ])}
+                                        </Button>
                                     )}
-                                />
+                                </div>
                                 {i === fields.length - 1 && i !== 0 && (
-                                    <Button variant="ghost" size="sm" className="text-muted-foreground w-full" onClick={() => remove(i)}>
-                                        Remover
+                                    <Button type="button" variant="outline" className="w-full" onClick={() => append({ title: "", value: "" })}>
+                                        Adicionar Escopo
+                                        {writeLang([
+                                            ["en", "Add Scope"],
+                                            ["pt", "Adicionar Escopo"],
+                                        ])}
                                     </Button>
                                 )}
                             </div>
@@ -199,9 +259,20 @@ export function EmailReply({ email }: { email: Email }) {
                                     name={`projectScope.${i}.value`}
                                     render={({ field }) => (
                                         <FormItem>
+                                            <FormDescription>
+                                                {writeLang([
+                                                    ["en", "Project scope"],
+                                                    ["pt", "Escopo do projeto"],
+                                                ])}
+                                            </FormDescription>
                                             <FormControl>
                                                 <Textarea
-                                                    placeholder="Escopo do projeto"
+                                                    placeholder={
+                                                        writeLang([
+                                                            ["en", "Project scope"],
+                                                            ["pt", "Escopo do projeto"],
+                                                        ]) as string
+                                                    }
                                                     className="bg-muted/50 border whitespace-pre-line"
                                                     rows={3}
                                                     onChange={field.onChange}
@@ -217,20 +288,28 @@ export function EmailReply({ email }: { email: Email }) {
                             </div>
                         </div>
                     ))}
-                    <Button type="button" variant="outline" size="sm" className="mt-2" onClick={() => append({ title: "", value: "" })}>
-                        Adicionar Escopo
-                    </Button>
                 </div>
                 <FormField
                     control={form.control}
                     name="projectDueDays"
                     render={({ field }) => (
                         <FormItem className="flex flex-col w-full">
+                            <FormDescription>
+                                {writeLang([
+                                    ["en", "Due in days"],
+                                    ["pt", "Prazo em dias"],
+                                ])}
+                            </FormDescription>
                             <FormControl>
                                 <Input
                                     type="number"
                                     inputMode="numeric"
-                                    placeholder="Prazo em dias"
+                                    placeholder={
+                                        writeLang([
+                                            ["en", "Due in days"],
+                                            ["pt", "Prazo em dias"],
+                                        ]) as string
+                                    }
                                     className="bg-muted/50 border"
                                     onChange={field.onChange}
                                     value={field.value || ""}
@@ -249,10 +328,22 @@ export function EmailReply({ email }: { email: Email }) {
                     name="projectPayment"
                     render={({ field }) => (
                         <FormItem className="flex flex-col w-full">
+                            <FormDescription>
+                                {writeLang([
+                                    ["en", "Payment Structure"],
+                                    ["pt", "Estrutura de pagamento"],
+                                ])}
+                            </FormDescription>
                             <FormControl>
                                 <Textarea
-                                    placeholder="Estrutura de pagamento"
+                                    placeholder={
+                                        writeLang([
+                                            ["en", "Payment Structure"],
+                                            ["pt", "Estrutura de pagamento"],
+                                        ]) as string
+                                    }
                                     className="bg-muted/50 border"
+                                    rows={5}
                                     onChange={field.onChange}
                                     value={field.value || ""}
                                     ref={field.ref}
@@ -270,10 +361,22 @@ export function EmailReply({ email }: { email: Email }) {
                     name="projectBenefits"
                     render={({ field }) => (
                         <FormItem className="flex flex-col w-full">
+                            <FormDescription>
+                                {writeLang([
+                                    ["en", "Aditional Benefits"],
+                                    ["pt", "Benefícios adicionais"],
+                                ])}
+                            </FormDescription>
                             <FormControl>
                                 <Textarea
-                                    placeholder="Benefícios adicionais"
+                                    placeholder={
+                                        writeLang([
+                                            ["en", "Aditional Benefits"],
+                                            ["pt", "Benefícios adicionais"],
+                                        ]) as string
+                                    }
                                     className="bg-muted/50 border"
+                                    rows={5}
                                     onChange={field.onChange}
                                     value={field.value || ""}
                                     ref={field.ref}
@@ -287,12 +390,17 @@ export function EmailReply({ email }: { email: Email }) {
                     )}
                 />
 
-                <div className="flex justify-end">
-                    <Button className="gap-x-1" disabled={form.formState.isSubmitting}>
-                        {form.formState.isSubmitting && <Loader size={14} className="animate-spin" />}
-                        Enviar Resposta
-                    </Button>
-                </div>
+                {!email.has_reply && (
+                    <div className="flex justify-end">
+                        <Button className="gap-x-1" disabled={replySent === "sending"}>
+                            {replySent === "sending" && <Loader size={14} className="animate-spin" />}
+                            {writeLang([
+                                ["en", "Send Reply"],
+                                ["pt", "Enviar Resposta"],
+                            ])}
+                        </Button>
+                    </div>
+                )}
             </form>
         </Form>
     );

@@ -3,8 +3,8 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Login } from "pages/login";
 import { NotFound } from "pages/not-found";
 import { Console } from "pages/console";
-import { Members } from "pages/members";
-import { MemberDetails } from "pages/members/details/details";
+import { Clients } from "pages/clients";
+import { ClientDetails } from "pages/clients/details/details";
 import { Projects } from "pages/projects";
 import { Tasks } from "pages/tasks";
 import { ProjectDetails } from "pages/projects/details/details";
@@ -27,10 +27,10 @@ export function App() {
                 {
                     <Route>
                         <Route path="/login" element={<Login />} />
-                        {!auth && <Route path="/*" element={<Navigate to="/login" />} />}
+                        {!auth?.token && <Route path="/*" element={<Navigate to="/login" />} />}
                     </Route>
                 }
-                {auth && (
+                {!!auth?.token && (
                     <Route>
                         {["master", "admin"].includes(auth.role) && (
                             <Route path="/">
@@ -47,8 +47,8 @@ export function App() {
                                         ]) as string
                                     }
                                 >
-                                    <Route path="" element={<Members />} />
-                                    <Route path=":id" element={<MemberDetails />} />
+                                    <Route path="" element={<Clients />} />
+                                    <Route path=":id" element={<ClientDetails />} />
                                 </Route>
                                 <Route
                                     path={
