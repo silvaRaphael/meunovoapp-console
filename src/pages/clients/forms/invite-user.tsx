@@ -15,8 +15,9 @@ import { ContentAlert } from "components/shared/content-alert";
 import { Client } from "../data/client";
 import { InviteUserEmail } from "components/shared/emails/invite-user-email";
 import { render } from "@react-email/components";
+import { Button } from "components/ui/button";
 
-export function InviteUserForm({ client, setClient }: { client: Client | null; setClient: React.Dispatch<React.SetStateAction<Client | null>> }) {
+export function InviteUserForm({ client, open, setOpen }: { client: Client; open: boolean; setOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
     const { auth } = useAuth();
     const { writeLang } = useLanguage();
 
@@ -39,8 +40,8 @@ export function InviteUserForm({ client, setClient }: { client: Client | null; s
         request.onDone((response) => {
             toast({
                 title: writeLang([
-                    ["en", "Manager has been invited successfully!"],
-                    ["pt", "Responsável foi convidado com sucesso!"],
+                    ["en", "User has been invited successfully!"],
+                    ["pt", "Usuário foi convidado com sucesso!"],
                 ]) as string,
             });
 
@@ -48,7 +49,7 @@ export function InviteUserForm({ client, setClient }: { client: Client | null; s
                 email: "",
             });
 
-            setClient(null);
+            setOpen(false);
 
             new HandleRequest({
                 name: "",
@@ -69,13 +70,21 @@ export function InviteUserForm({ client, setClient }: { client: Client | null; s
 
     return (
         <ContentAlert
-            open={!!client?.id}
-            onOpenChange={(open) => setClient(open ? client : null)}
+            open={open}
+            onOpenChange={setOpen}
             title={
                 writeLang([
-                    ["en", "Invite new manager"],
-                    ["pt", "Convidar novo responsável"],
+                    ["en", "Invite new user"],
+                    ["pt", "Convidar novo usuário"],
                 ]) as string
+            }
+            triggerButton={
+                <Button>
+                    {writeLang([
+                        ["en", "Invite user"],
+                        ["pt", "Convidar usuário"],
+                    ])}
+                </Button>
             }
             hideCloseButton
         >
@@ -108,8 +117,8 @@ export function InviteUserForm({ client, setClient }: { client: Client | null; s
                         <SubmitButton
                             label={
                                 writeLang([
-                                    ["en", "Invite Manager"],
-                                    ["pt", "Convidar Responsável"],
+                                    ["en", "Invite User"],
+                                    ["pt", "Convidar Usuário"],
                                 ]) as string
                             }
                             type="submit"

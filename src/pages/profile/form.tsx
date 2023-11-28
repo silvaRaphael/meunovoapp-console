@@ -6,27 +6,29 @@ import { Input } from "../../components/ui/input";
 import { SubmitButton } from "../../components/shared/submit-button";
 import { toast } from "../../components/ui/toast/use-toast";
 import { HandleRequest } from "../../lib/handle-request";
-import { User } from "../../config/user";
 import { Separator } from "../../components/ui/separator";
-import { ProfileSchema, profileSchema } from "adapters/user";
 import { errorToast } from "components/shared/error-toast";
 import { useLanguage } from "components/shared/language-provider";
 import { useAuth } from "components/shared/auth-provider";
 import { BASE_API } from "config/constants";
+import { useState } from "react";
+import { Button } from "components/ui/button";
+import { Eye, EyeOff } from "lucide-react";
+import { UpdateUserSchema, updateUserSchema } from "adapters/user";
 
 let usernameTimeout: any;
 
-export function ProfileForm({ user }: { user: User }) {
-    const { auth } = useAuth();
+export function ProfileForm() {
+    const { auth, setAuth } = useAuth();
     const { writeLang } = useLanguage();
 
-    const form = useForm<ProfileSchema>({
-        resolver: zodResolver(profileSchema),
+    const [passwordVisible, setPasswordVisible] = useState<boolean[]>([false, false]);
+
+    const form = useForm<UpdateUserSchema>({
+        resolver: zodResolver(updateUserSchema),
         defaultValues: {
-            name: user.name,
-            email: user.email,
-            role: user.role,
-            // avatar: user.avatar,
+            name: auth?.name,
+            email: auth?.email,
         },
         mode: "onChange",
     });
@@ -34,36 +36,51 @@ export function ProfileForm({ user }: { user: User }) {
     async function checkEmailAvailability(e: React.ChangeEvent<HTMLInputElement>) {
         const email = e.target.value;
 
-        const request = await new HandleRequest({ email }).post(`${BASE_API}/users/email`, {
+        if (!email.length) return;
+
+        const request = await new HandleRequest({ email }).post(`${BASE_API}/users/can-use-email`, {
+            token: auth?.token,
+        });
+
+        request.onError(() => {
+            form.setError("email", {
+                message: writeLang([
+                    ["en", "Email not available"],
+                    ["pt", "E-mail não disponível"],
+                ]) as string,
+            });
+        });
+    }
+
+    async function onSubmit(data: UpdateUserSchema) {
+        if (!auth) return;
+
+        const request = await new HandleRequest(data).put(`${BASE_API}/users`, {
             token: auth?.token,
         });
 
         request.onDone(() => {
-            if (email.trim() === "existent")
-                form.setError("email", {
-                    message: writeLang([
-                        ["en", "Email not available"],
-                        ["pt", "E-mail não disponível"],
-                    ]) as string,
-                });
-        });
+            setAuth({
+                name: data.name,
+                email: data.email,
+                role: auth?.role,
+                token: auth?.token,
+            });
 
-        request.onError((error) => errorToast(error));
-    }
-
-    async function onSubmit(data: ProfileSchema) {
-        const request = await new HandleRequest(data).post(`${BASE_API}/users`, {
-            token: auth?.token,
-        });
-
-        request.onDone(() =>
             toast({
                 title: writeLang([
                     ["en", "Profile updated successfully!"],
                     ["pt", "Perfil atualizado com sucesso!"],
                 ]) as string,
-            }),
-        );
+            });
+
+            form.reset({
+                name: data.name,
+                email: data.email,
+                old_password: "",
+                password: "",
+            });
+        });
 
         request.onError((error) => errorToast(error));
     }
@@ -94,7 +111,7 @@ export function ProfileForm({ user }: { user: User }) {
                                 <FormItem className="flex flex-col">
                                     <FormDescription>
                                         {writeLang([
-                                            ["en", "Enter you name"],
+                                            ["en", "Enter your name"],
                                             ["pt", "Digite seu nome"],
                                         ])}
                                     </FormDescription>
@@ -155,7 +172,7 @@ export function ProfileForm({ user }: { user: User }) {
                                                 if (e.target.value.includes(" ")) e.target.value = e.target.value.replaceAll(" ", "");
                                                 field.onChange(e);
                                                 clearTimeout(usernameTimeout);
-                                                usernameTimeout = setTimeout(() => checkEmailAvailability(e), 500);
+                                                usernameTimeout = setTimeout(() => checkEmailAvailability(e), 1000);
                                             }}
                                             name={field.name}
                                             value={field.value}
@@ -167,32 +184,92 @@ export function ProfileForm({ user }: { user: User }) {
                                 </FormItem>
                             )}
                         />
+                    </div>
+                </div>
+                <Separator />
+                <div className="grid grid-cols-12">
+                    <div className="col-span-3">
+                        <h3 className="font-semibold leading-4">
+                            {writeLang([
+                                ["en", "Password"],
+                                ["pt", "Senha"],
+                            ])}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">
+                            {writeLang([
+                                ["en", "Change your password"],
+                                ["pt", "Altere sua senha"],
+                            ])}
+                        </p>
+                    </div>
+                    <div className="col-span-6 space-y-4">
                         <FormField
                             control={form.control}
-                            name="avatar"
+                            name="old_password"
                             render={({ field }) => (
                                 <FormItem className="flex flex-col">
-                                    <FormDescription>
-                                        {writeLang([
-                                            ["en", "Upload your avatar image"],
-                                            ["pt", "Envie sua imagem de perfil"],
-                                        ])}
-                                    </FormDescription>
                                     <FormControl>
-                                        <Input
-                                            placeholder={
-                                                writeLang([
-                                                    ["en", "Pick a photo"],
-                                                    ["pt", "Escolha uma foto"],
-                                                ]) as string
-                                            }
-                                            type="file"
-                                            lang="en"
-                                            className="file:text-neutral-800 dark:file:text-neutral-100 file:border-r file:border-neutral-200 file:h-full file:me-2"
-                                            {...field}
-                                        />
+                                        <div className="flex space-x-2">
+                                            <Input
+                                                type={!passwordVisible[0] ? "password" : "text"}
+                                                placeholder={
+                                                    writeLang([
+                                                        ["en", "Old password"],
+                                                        ["pt", "Senha antiga"],
+                                                    ]) as string
+                                                }
+                                                maxLength={20}
+                                                onChange={field.onChange}
+                                                value={field.value || ""}
+                                            />
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                className="bg-muted/80"
+                                                onClick={() => setPasswordVisible([!passwordVisible[0], passwordVisible[1]])}
+                                            >
+                                                {!passwordVisible[0] ? <Eye size={14} /> : <EyeOff size={14} />}
+                                            </Button>
+                                        </div>
                                     </FormControl>
-                                    <FormMessage />
+                                    <div className="flex">
+                                        <FormMessage />
+                                    </div>
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="password"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-col">
+                                    <FormControl>
+                                        <div className="flex space-x-2">
+                                            <Input
+                                                type={!passwordVisible[1] ? "password" : "text"}
+                                                placeholder={
+                                                    writeLang([
+                                                        ["en", "New password"],
+                                                        ["pt", "Nova senha"],
+                                                    ]) as string
+                                                }
+                                                maxLength={20}
+                                                onChange={field.onChange}
+                                                value={field.value || ""}
+                                            />
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                className="bg-muted/80"
+                                                onClick={() => setPasswordVisible([passwordVisible[0], !passwordVisible[1]])}
+                                            >
+                                                {!passwordVisible[1] ? <Eye size={14} /> : <EyeOff size={14} />}
+                                            </Button>
+                                        </div>
+                                    </FormControl>
+                                    <div className="flex">
+                                        <FormMessage />
+                                    </div>
                                 </FormItem>
                             )}
                         />

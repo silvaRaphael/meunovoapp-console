@@ -1,9 +1,11 @@
 import { Button, Link, Text } from "@react-email/components";
 import { EmailBase } from "./email-base";
+import { buttonVariants } from "components/ui/button";
+import { cn } from "lib/utils";
 
 export function InviteUserEmail({ userId }: { userId: string }) {
     return (
-        <EmailBase title="Agradecemos pelo seu Contato">
+        <EmailBase title="Você recebeu um convite">
             <Text className="text-lg">Olá</Text>
             <Text>
                 É com grande prazer que o recebemos na MeuNovoApp! Estamos entusiasmados por tê-lo(a) como parte da nossa comunidade e estamos ansiosos para ajudá-lo(a) a explorar
@@ -19,7 +21,12 @@ export function InviteUserEmail({ userId }: { userId: string }) {
                 Na plataforma você poderá acompanhar o andamento do seu projeto.
             </Text>
 
-            <Button href={`https://console.meunovoapp.com.br/comecar?key=${userId}`}>Criar Conta</Button>
+            <Button
+                className={cn(buttonVariants(), "bg-slate-800 text-slate-100 dark:bg-slate-300 dark:text-slate-900")}
+                href={`https://console.meunovoapp.com.br/comecar?u=${userId}`}
+            >
+                Criar Conta
+            </Button>
 
             <Text className="text-lg">Próximos Passos:</Text>
             <Text>

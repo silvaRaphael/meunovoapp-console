@@ -1,8 +1,6 @@
 import { useLanguage } from "components/shared/language-provider";
 import { SectionHeader } from "components/shared/section-header";
-import { Separator } from "components/ui/separator";
 import { Page } from "components/shared/page";
-import { user } from "config/user";
 import { ProfileForm } from "./form";
 
 export function Profile() {
@@ -33,7 +31,7 @@ export function Profile() {
                 ></SectionHeader>
             }
         >
-            <ProfileForm user={user} />
+            <ProfileForm />
         </Page>
     );
 }

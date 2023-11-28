@@ -4,7 +4,6 @@ import { Hash, LogOutIcon } from "lucide-react";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Badge } from "../ui/badge";
 import { SideMenu } from "config/site";
-import { user } from "config/user";
 import { cn } from "lib/utils";
 import { useLanguage } from "./language-provider";
 import { useAuth } from "./auth-provider";
@@ -14,9 +13,9 @@ export const sideBarWidthCollapsed = 48;
 
 export function SideBar({ pathname, isOpen }: { pathname: string; isOpen: boolean }) {
     const { writeLang } = useLanguage();
-    const { removeAuth } = useAuth();
+    const { auth, removeAuth } = useAuth();
 
-    const menu = SideMenu({ writeLang }).find((item) => item.role.includes(user.role))?.menu ?? [];
+    const menu = SideMenu({ writeLang }).find((item) => item.role.includes(auth?.role || "client"))?.menu ?? [];
 
     return (
         <div

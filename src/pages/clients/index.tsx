@@ -10,7 +10,7 @@ import { CreateClientForm } from "./forms/create";
 import { useAuth } from "components/shared/auth-provider";
 import { errorToast } from "components/shared/error-toast";
 import { BASE_API } from "config/constants";
-import { InviteUserForm } from "./forms/invite";
+import { InviteManagerForm } from "./forms/invite-manager";
 
 export interface ClientRow extends Client {
     inviteAction?: (props: Client) => any;
@@ -86,7 +86,7 @@ export function Clients() {
             }
         >
             <DataTable columns={clientColumns(writeLang)} data={clients} />
-            <InviteUserForm client={client} setClient={setClient} />
+            <InviteManagerForm client={client} setClient={setClient} isManager />
         </Page>
     );
 }

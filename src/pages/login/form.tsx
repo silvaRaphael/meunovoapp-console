@@ -7,14 +7,11 @@ import { Input } from "components/ui/input";
 import { toast } from "components/ui/toast/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { signInSchema } from "adapters/auth";
+import { SignInSchema, signInSchema } from "adapters/auth";
 import { BASE_API } from "config/constants";
 import { Auth, useAuth } from "components/shared/auth-provider";
 import { HandleRequest } from "lib/handle-request";
 import { errorToast } from "components/shared/error-toast";
-
-export type SignInSchema = z.infer<typeof signInSchema>;
 
 export function LoginInForm() {
     const navigate = useNavigate();

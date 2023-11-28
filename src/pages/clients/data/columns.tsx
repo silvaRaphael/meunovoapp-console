@@ -60,7 +60,7 @@ export const clientColumns = (writeLang: (texts: [string, React.ReactNode][]) =>
                                 ])}
                             </Badge>
                         )}
-                        <MemberInfo email={row.original.users[0].email} name={row.original.users[0].name} avatar={row.original.users[0].avatar} />
+                        <MemberInfo email={row.original.users[0].email} name={row.original.users[0].name} />
                     </div>
                 );
             },

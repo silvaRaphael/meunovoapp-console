@@ -3,11 +3,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { MenuItem, MenuItems } from "../../config/site";
 import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "./language-provider";
+import { useAuth } from "./auth-provider";
 
 export function MainNav({ pathname }: { pathname: string }) {
     const { language, writeLang } = useLanguage();
-
+    const { auth } = useAuth();
     const navigate = useNavigate();
+
     const ref = useRef<HTMLElement>(null);
     const [activeMenu, setActiveMenu] = useState<MenuItem[]>([]);
 
@@ -34,7 +36,8 @@ export function MainNav({ pathname }: { pathname: string }) {
 
         let _newActiveMenu: MenuItem[] = [];
         newActiveMenu.forEach((item) => {
-            const _item = MenuItems({ writeLang }).find((menu) => item === menu.path);
+            if (!auth) return;
+            const _item = MenuItems({ auth, writeLang }).find((menu) => item === menu.path);
             if (_item) _newActiveMenu.push(_item);
         });
 

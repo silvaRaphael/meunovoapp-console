@@ -1,23 +1,51 @@
 import { z } from "zod";
 
-export const profileSchema = z.object({
-    name: z
-        .string()
-        .min(2, {
-            message: "Name must be at least 2 characters.",
-        })
-        .max(50, {
-            message: "Name must not be longer than 100 characters.",
+export const updateUserSchema = z
+    .object({
+        name: z.string({
+            required_error: "Nome é necessário.",
         }),
-    email: z
-        .string({
-            required_error: "Please select an email to display.",
-        })
-        .email(),
-    role: z.string({
-        required_error: "Please select a role to display.",
-    }),
-    avatar: z.any().optional(),
-});
+        email: z
+            .string({
+                required_error: "E-mail é necessário.",
+            })
+            .email({ message: "Digite um e-mail válido" }),
+        old_password: z
+            .string({ required_error: "Senha antiga é necessária." })
+            .min(5, { message: "Digite uma senha maior." })
+            .max(20, { message: "Digite uma senha menor." })
+            .optional(),
+        password: z
+            .string({ required_error: "Nova senha é necessária." })
+            .min(5, { message: "Digite uma senha maior." })
+            .max(20, { message: "Digite uma senha menor." })
+            .optional(),
+    })
+    .refine((data) => !data.password || (data.old_password && data.password), {
+        message: "Digite sua senha antiga.",
+        path: ["old_password"],
+    });
+export type UpdateUserSchema = z.infer<typeof updateUserSchema>;
 
-export type ProfileSchema = z.infer<typeof profileSchema>;
+export const completeUserSchema = z
+    .object({
+        name: z.string({
+            required_error: "Nome é necessário.",
+        }),
+        email: z
+            .string({
+                required_error: "E-mail é necessário.",
+            })
+            .email({ message: "Digite um e-mail válido" }),
+        password: z.string({ required_error: "Senha é necessária." }).min(5, { message: "Digite uma senha maior." }).max(20, { message: "Digite uma senha menor." }),
+        confirm_password: z
+            .string({
+                required_error: "Confirme sua senha.",
+            })
+            .optional(),
+    })
+    .refine((data) => data.password === data.confirm_password, {
+        message: "As senhas devem ser iguais.",
+        path: ["confirm_password"],
+    });
+export type CompleteUserSchema = z.infer<typeof completeUserSchema>;

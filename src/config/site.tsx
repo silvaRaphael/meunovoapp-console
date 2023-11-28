@@ -1,8 +1,8 @@
 import { Calendar, ClipboardList, HelpCircle, LayoutDashboard, ListTodo, Mail, Settings2, User, Users } from "lucide-react";
 import { Role } from "./roles";
-import { user } from "./user";
 import { Plan } from "../pages/pricing/data/plan";
 import { ReactNode } from "react";
+import { Auth } from "components/shared/auth-provider";
 
 export interface MenuItem {
     path: string;
@@ -24,7 +24,7 @@ export interface SideBarMenuRole {
 export const SideMenu = ({ writeLang }: { writeLang: (texts: [string, React.ReactNode][]) => ReactNode }): SideBarMenuRole[] => {
     return [
         {
-            role: ["admin"],
+            role: ["master"],
             menu: [
                 {
                     menu: [
@@ -147,7 +147,7 @@ export const SideMenu = ({ writeLang }: { writeLang: (texts: [string, React.Reac
             ],
         },
         {
-            role: ["client"],
+            role: ["admin", "client"],
             menu: [
                 {
                     menu: [
@@ -253,11 +253,11 @@ export const SideMenu = ({ writeLang }: { writeLang: (texts: [string, React.Reac
     ];
 };
 
-export const MenuItems = ({ writeLang }: { writeLang: (texts: [string, React.ReactNode][]) => ReactNode }): MenuItem[] => {
+export const MenuItems = ({ auth, writeLang }: { auth: Auth; writeLang: (texts: [string, React.ReactNode][]) => ReactNode }): MenuItem[] => {
     let menuItems: MenuItem[] = [];
 
     for (const item of SideMenu({ writeLang })) {
-        if (!item.role.includes(user.role)) continue;
+        if (!item.role.includes(auth?.role)) continue;
         for (const subItem of item.menu) {
             menuItems.push(...subItem.menu);
         }

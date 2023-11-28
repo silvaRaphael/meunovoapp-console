@@ -4,7 +4,7 @@ import { Login } from "pages/login";
 import { NotFound } from "pages/not-found";
 import { Console } from "pages/console";
 import { Clients } from "pages/clients";
-import { ClientDetails } from "pages/clients/details/details";
+import { ClientDetails } from "pages/clients/details";
 import { Projects } from "pages/projects";
 import { Tasks } from "pages/tasks";
 import { ProjectDetails } from "pages/projects/details/details";
@@ -16,6 +16,7 @@ import { useLanguage } from "components/shared/language-provider";
 import { useAuth } from "components/shared/auth-provider";
 import { Emails } from "pages/emails";
 import { EmailDetails } from "pages/emails/details";
+import { CompleteProfile } from "pages/complete-profile";
 
 export function App() {
     const { writeLang } = useLanguage();
@@ -27,7 +28,7 @@ export function App() {
                 {
                     <Route>
                         <Route path="/login" element={<Login />} />
-                        <Route path="/comecar" element={<h1>Começar</h1>} />
+                        <Route path="/comecar" element={<CompleteProfile />} />
                         {!auth?.token && <Route path="/*" element={<Navigate to="/login" />} />}
                     </Route>
                 }

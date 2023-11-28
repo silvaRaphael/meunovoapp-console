@@ -5,57 +5,59 @@ import * as z from "zod";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from "../../components/ui/form";
 import { SubmitButton } from "../../components/shared/submit-button";
 import { toast } from "../../components/ui/toast/use-toast";
-import { HandleRequest } from "../../lib/handle-request";
-import { User } from "../../config/user";
 import { Separator } from "../../components/ui/separator";
-import { Switch } from "../../components/ui/switch";
 import { Label } from "../../components/ui/label";
 import { useTheme } from "../../components/shared/theme-provider";
 import { RadioGroup, RadioGroupItem } from "../../components/ui/radio-group";
 import { Laptop, MoonIcon, SunIcon } from "lucide-react";
+import { useLanguage } from "components/shared/language-provider";
 
 const preferencesFormSchema = z.object({
-    emailNotification: z.boolean(),
-    mobileNotification: z.boolean(),
+    // emailNotification: z.boolean(),
+    // mobileNotification: z.boolean(),
     themeMode: z.enum(["system", "light", "dark"]),
 });
 
 type PreferencesFormValues = z.infer<typeof preferencesFormSchema>;
 
-export function PreferencesForm({ user }: { user: User }) {
+export function PreferencesForm() {
     const { theme, setTheme } = useTheme();
+    const { writeLang } = useLanguage();
 
     const form = useForm<PreferencesFormValues>({
         resolver: zodResolver(preferencesFormSchema),
         defaultValues: {
-            emailNotification: true,
-            mobileNotification: false,
+            // emailNotification: true,
+            // mobileNotification: false,
             themeMode: theme,
         },
         mode: "onChange",
     });
 
     async function onSubmit(data: PreferencesFormValues) {
-        const { onDone, onError } = await new HandleRequest(data).post("https://jsonplaceholder.typicode.com/users");
-        onDone(() => {
-            toast({
-                variant: "success",
-                title: "Preferences updated successfully!",
-            });
-            setTheme(data.themeMode);
+        // const { onDone, onError } = await new HandleRequest(data).post("https://jsonplaceholder.typicode.com/users");
+        // onDone(() => {
+        toast({
+            variant: "success",
+            title: writeLang([
+                ["en", "Preferences updated successfully!"],
+                ["pt", "Preferências atualizadas com sucesso!"],
+            ]) as string,
         });
-        onError(() =>
-            toast({
-                variant: "destructive",
-                title: "An error occured!",
-            }),
-        );
+        setTheme(data.themeMode);
+        // });
+        // onError(() =>
+        //     toast({
+        //         variant: "destructive",
+        //         title: "An error occured!",
+        //     }),
+        // );
     }
 
     return (
         <Form {...form}>
             <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
-                <div className="grid grid-cols-12">
+                {/* <div className="grid grid-cols-12">
                     <div className="col-span-3">
                         <h3 className="font-semibold leading-4">Notification</h3>
                         <p className="text-sm text-muted-foreground">Change notification preferences</p>
@@ -97,11 +99,21 @@ export function PreferencesForm({ user }: { user: User }) {
                         />
                     </div>
                 </div>
-                <Separator />
+                <Separator /> */}
                 <div className="grid grid-cols-12">
                     <div className="col-span-3">
-                        <h3 className="font-semibold leading-4">Theme</h3>
-                        <p className="text-sm text-muted-foreground">Change your theme preferences</p>
+                        <h3 className="font-semibold leading-4">
+                            {writeLang([
+                                ["en", "Theme"],
+                                ["pt", "Tema"],
+                            ])}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">
+                            {writeLang([
+                                ["en", "Change your theme preferences"],
+                                ["pt", "Altere sua preferência de tema"],
+                            ])}
+                        </p>
                     </div>
                     <div className="col-span-6 space-y-4">
                         <FormField
@@ -118,7 +130,10 @@ export function PreferencesForm({ user }: { user: User }) {
                                                     className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
                                                 >
                                                     <Laptop size={16} className="mb-3" />
-                                                    System
+                                                    {writeLang([
+                                                        ["en", "System"],
+                                                        ["pt", "Sistema"],
+                                                    ])}
                                                 </Label>
                                             </div>
                                             <div>
@@ -128,7 +143,10 @@ export function PreferencesForm({ user }: { user: User }) {
                                                     className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
                                                 >
                                                     <SunIcon size={16} className="mb-3" />
-                                                    Light
+                                                    {writeLang([
+                                                        ["en", "Light"],
+                                                        ["pt", "Claro"],
+                                                    ])}
                                                 </Label>
                                             </div>
                                             <div>
@@ -138,12 +156,20 @@ export function PreferencesForm({ user }: { user: User }) {
                                                     className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
                                                 >
                                                     <MoonIcon size={16} className="mb-3" />
-                                                    Dark
+                                                    {writeLang([
+                                                        ["en", "Dark"],
+                                                        ["pt", "Escuro"],
+                                                    ])}
                                                 </Label>
                                             </div>
                                         </RadioGroup>
                                     </FormControl>
-                                    <FormDescription>Pick a theme mode</FormDescription>
+                                    <FormDescription>
+                                        {writeLang([
+                                            ["en", "Pick a theme mode"],
+                                            ["pt", "Escolha um modo"],
+                                        ])}
+                                    </FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             )}
@@ -151,7 +177,16 @@ export function PreferencesForm({ user }: { user: User }) {
                     </div>
                 </div>
                 <Separator />
-                <SubmitButton label="Update Preferences" type="submit" state={form.formState.isSubmitting ? "loading" : "initial"} />
+                <SubmitButton
+                    label={
+                        writeLang([
+                            ["en", "Update Preferences"],
+                            ["pt", "Atualizar Preferências"],
+                        ]) as string
+                    }
+                    type="submit"
+                    state={form.formState.isSubmitting ? "loading" : "initial"}
+                />
             </form>
         </Form>
     );

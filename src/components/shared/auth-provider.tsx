@@ -42,6 +42,7 @@ export function AuthProvider({ children, storageKey = "meunovoapp-auth", ...prop
         },
         removeAuth: () => {
             Cookies.remove(storageKey);
+            localStorage.clear();
             setAuth(null);
         },
     };

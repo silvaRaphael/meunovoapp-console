@@ -1,251 +1,148 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
 
-import { cn } from "../../../lib/utils";
-import { Button } from "../../../components/ui/button";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../../../components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from "../../../components/ui/form";
 import { Input } from "../../../components/ui/input";
-import { Textarea } from "../../../components/ui/textarea";
 import { Client } from "../data/client";
-import { Popover, PopoverContent, PopoverTrigger } from "../../../components/ui/popover";
-import format from "date-fns/format";
-import { CalendarIcon, CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
-import { Calendar } from "../../../components/ui/calendar";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "../../../components/ui/command";
-import { useEffect, useState } from "react";
 import { SubmitButton } from "../../../components/shared/submit-button";
 import { toast } from "../../../components/ui/toast/use-toast";
-import { JobTitle } from "../../../config/job-titles";
 import { HandleRequest } from "../../../lib/handle-request";
-
-const clientFormSchema = z.object({
-    username: z
-        .string()
-        .min(3, {
-            message: "Username must be at least 3 characters.",
-        })
-        .max(30, {
-            message: "Username must not be longer than 30 characters.",
-        }),
-    name: z
-        .string()
-        .min(2, {
-            message: "Name must be at least 2 characters.",
-        })
-        .max(50, {
-            message: "Name must not be longer than 50 characters.",
-        }),
-    lastName: z
-        .string()
-        .min(2, {
-            message: "Last name must be at least 2 characters.",
-        })
-        .max(50, {
-            message: "Last name must not be longer than 50 characters.",
-        }),
-    email: z
-        .string({
-            required_error: "Please select an email to display.",
-        })
-        .email(),
-    jobTitle: z.array(
-        z
-            .string({
-                required_error: "Please select a job title to display.",
-            })
-            .uuid(),
-    ),
-    bio: z.string().max(160).min(4).optional(),
-    since: z.date({
-        required_error: "Please select the hiring date",
-    }),
-});
-
-type ClientFormValues = z.infer<typeof clientFormSchema>;
+import { CreateClientSchema, createClientSchema } from "adapters/client";
+import { errorToast } from "components/shared/error-toast";
+import { BASE_API } from "config/constants";
+import { useLanguage } from "components/shared/language-provider";
+import { Separator } from "components/ui/separator";
+import { useAuth } from "components/shared/auth-provider";
 
 export function ClientForm({ client }: { client: Client }) {
-    const [jobTitles, setJobTitles] = useState<JobTitle[]>([]);
+    const { writeLang } = useLanguage();
+    const { auth } = useAuth();
 
-    const form = useForm<ClientFormValues>({
-        resolver: zodResolver(clientFormSchema),
-        defaultValues: {},
+    const form = useForm<CreateClientSchema>({
+        resolver: zodResolver(createClientSchema),
+        defaultValues: {
+            company: client.company,
+            logotipo: client.logotipo || "",
+        },
         mode: "onChange",
     });
 
-    function getJobTitles() {
-        fetch("/api/job-titles.json")
-            .then((res) => res.json())
-            .then((res) => {
-                setJobTitles(res);
+    async function onSubmit(data: CreateClientSchema) {
+        const request = await new HandleRequest(data).put(`${BASE_API}/clients/${client.id}`, {
+            token: auth?.token,
+        });
+
+        request.onDone(() => {
+            toast({
+                title: writeLang([
+                    ["en", "Client has been updated successfully!"],
+                    ["pt", "Cliente foi atualizado com sucesso!"],
+                ]) as string,
             });
-    }
+        });
 
-    useEffect(() => {
-        const controller = new AbortController();
-
-        getJobTitles();
-
-        return () => {
-            controller.abort();
-        };
-    }, []);
-
-    async function onSubmit(data: ClientFormValues) {
-        const { onDone, onError } = await new HandleRequest(data).post("https://jsonplaceholder.typicode.com/users");
-        onDone(() =>
-            toast({
-                variant: "success",
-                title: "Client updated successfully!",
-            }),
-        );
-        onError(() =>
-            toast({
-                variant: "destructive",
-                title: "An error occured!",
-            }),
-        );
+        request.onError((error) => errorToast(error));
     }
 
     return (
         <Form {...form}>
-            <form className="grid grid-cols-4 gap-x-4" onSubmit={form.handleSubmit(onSubmit)}>
-                <div className="col-span-3 space-y-8">
-                    <div className="grid grid-cols-3 gap-x-4">
+            <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
+                <div className="grid grid-cols-12">
+                    <div className="col-span-3">
+                        <h3 className="font-semibold leading-4">
+                            {writeLang([
+                                ["en", "Company"],
+                                ["pt", "Empresa"],
+                            ])}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">
+                            {writeLang([
+                                ["en", "Change company name"],
+                                ["pt", "Altere o nome da empresa"],
+                            ])}
+                        </p>
+                    </div>
+                    <div className="col-span-6 space-y-4">
                         <FormField
                             control={form.control}
-                            name="name"
+                            name="company"
                             render={({ field }) => (
                                 <FormItem className="flex flex-col">
-                                    <FormLabel>Name</FormLabel>
+                                    <FormDescription>
+                                        {writeLang([
+                                            ["en", "Enter company name"],
+                                            ["pt", "Digite o nome da empresa"],
+                                        ])}
+                                    </FormDescription>
                                     <FormControl>
-                                        <Input placeholder="Your name" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="lastName"
-                            render={({ field }) => (
-                                <FormItem className="flex flex-col">
-                                    <FormLabel>Last Name</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Your last name" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="username"
-                            render={({ field }) => (
-                                <FormItem className="flex flex-col">
-                                    <FormLabel>Username</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Your username" {...field} />
+                                        <Input
+                                            placeholder={
+                                                writeLang([
+                                                    ["en", "Company name"],
+                                                    ["pt", "Nome da empresa"],
+                                                ]) as string
+                                            }
+                                            {...field}
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
                     </div>
-                    <div className="grid grid-cols-3 gap-x-4">
-                        <FormField
-                            control={form.control}
-                            name="jobTitle"
-                            render={({ field }) => (
-                                <FormItem className="flex flex-col">
-                                    <FormLabel>Job Title</FormLabel>
-                                    <Popover>
-                                        <PopoverTrigger asChild>
-                                            <FormControl>
-                                                <Button variant="outline" role="combobox" className={cn("justify-between bg-muted/50", !field.value && "text-muted-foreground")}>
-                                                    <span className="text-left leading-4">
-                                                        {field.value.length
-                                                            ? jobTitles
-                                                                  .filter((jobTitle) => field.value.includes(jobTitle.id))
-                                                                  .map((item) => item.name)
-                                                                  .join(", ")
-                                                            : "Select jobTitle"}
-                                                    </span>
-                                                    <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                                </Button>
-                                            </FormControl>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="p-0">
-                                            <Command>
-                                                <CommandInput placeholder="Search jobTitle..." />
-                                                <CommandEmpty>No jobTitle found.</CommandEmpty>
-                                                <CommandGroup>
-                                                    {jobTitles.map((jobTitle, i) => (
-                                                        <CommandItem
-                                                            value={jobTitle.name}
-                                                            key={jobTitle.id}
-                                                            onSelect={() => {
-                                                                let selectedJobTitles = form.getValues().jobTitle;
-                                                                if (selectedJobTitles.includes(jobTitle.id)) {
-                                                                    selectedJobTitles = selectedJobTitles.filter((item) => item !== jobTitle.id);
-                                                                } else {
-                                                                    selectedJobTitles.push(jobTitle.id);
-                                                                }
-                                                                form.setValue("jobTitle", selectedJobTitles);
-                                                            }}
-                                                        >
-                                                            <CheckIcon className={cn("mr-2 h-4 w-4", field.value.includes(jobTitle.id) ? "opacity-100" : "opacity-0")} />
-                                                            {jobTitle.name}
-                                                        </CommandItem>
-                                                    ))}
-                                                </CommandGroup>
-                                            </Command>
-                                        </PopoverContent>
-                                    </Popover>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="since"
-                            render={({ field }) => (
-                                <FormItem className="flex flex-col">
-                                    <FormLabel>Hiring Date</FormLabel>
-                                    <Popover>
-                                        <PopoverTrigger asChild>
-                                            <FormControl>
-                                                <Button variant={"outline"} className={cn("pl-3 text-left font-normal bg-muted/50", !field.value && "text-muted-foreground")}>
-                                                    {field.value ? format(new Date(field.value), "PPP") : <span>Pick a date</span>}
-                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                </Button>
-                                            </FormControl>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-auto p-0" align="start">
-                                            <Calendar mode="single" defaultMonth={new Date(field.value)} selected={new Date(field.value)} onSelect={field.onChange} initialFocus />
-                                        </PopoverContent>
-                                    </Popover>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    </div>
-                    <FormField
-                        control={form.control}
-                        name="bio"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Bio</FormLabel>
-                                <FormControl>
-                                    <Textarea placeholder="Tell us a little bit about yourself" className="resize-none" rows={5} {...field} />
-                                </FormControl>
-                                <FormDescription>This will be shown in your profile</FormDescription>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <SubmitButton label="Update Client" type="submit" state={form.formState.isSubmitting ? "loading" : "initial"} />
                 </div>
+                <Separator />
+                <div className="grid grid-cols-12">
+                    <div className="col-span-3">
+                        <h3 className="font-semibold leading-4">Logotipo</h3>
+                        <p className="text-sm text-muted-foreground">
+                            {writeLang([
+                                ["en", "Change company logotipo"],
+                                ["pt", "Altere o logotipo da empresa"],
+                            ])}
+                        </p>
+                    </div>
+                    <div className="col-span-6 space-y-4">
+                        <FormField
+                            control={form.control}
+                            name="logotipo"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-col">
+                                    <FormDescription>
+                                        {writeLang([
+                                            ["en", "Upload company logotipo"],
+                                            ["pt", "Envie o logotipo da empresa"],
+                                        ])}
+                                    </FormDescription>
+                                    <FormControl>
+                                        <Input
+                                            type="file"
+                                            placeholder={
+                                                writeLang([
+                                                    ["en", "Company logotipo"],
+                                                    ["pt", "Logotipo da empresa"],
+                                                ]) as string
+                                            }
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                </div>
+                <Separator />
+                <SubmitButton
+                    label={
+                        writeLang([
+                            ["en", "Update Client"],
+                            ["pt", "Atualizar Cliente"],
+                        ]) as string
+                    }
+                    type="submit"
+                    state={form.formState.isSubmitting ? "loading" : "initial"}
+                />
             </form>
         </Form>
     );
