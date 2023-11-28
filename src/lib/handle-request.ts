@@ -33,7 +33,7 @@ export class HandleRequest {
         }
 
         return {
-            onDone: (fn: (response: Response) => any) => this.onDone(fn),
+            onDone: (fn: (response: any) => any) => this.onDone(fn),
             onError: (fn: (error: any) => any) => this.onError(fn),
         };
     }
@@ -60,7 +60,7 @@ export class HandleRequest {
         }
 
         return {
-            onDone: (fn: (response: Response) => any) => this.onDone(fn),
+            onDone: (fn: (response: any) => any) => this.onDone(fn),
             onError: (fn: (error: any) => any) => this.onError(fn),
         };
     }
@@ -87,7 +87,7 @@ export class HandleRequest {
         }
 
         return {
-            onDone: (fn: (response: Response) => any) => this.onDone(fn),
+            onDone: (fn: (response: any) => any) => this.onDone(fn),
             onError: (fn: (error: any) => any) => this.onError(fn),
         };
     }
@@ -111,12 +111,12 @@ export class HandleRequest {
         }
 
         return {
-            onDone: (fn: (response: Response) => any) => this.onDone(fn),
+            onDone: (fn: (response: any) => any) => this.onDone(fn),
             onError: (fn: (error: any) => any) => this.onError(fn),
         };
     }
 
-    private onDone(fn: (response: Response) => any) {
+    private onDone(fn: (response: any) => any) {
         if (this.error) return;
         return fn(this.response);
     }

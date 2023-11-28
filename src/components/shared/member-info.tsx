@@ -7,7 +7,10 @@ interface Props {
 }
 
 export function MemberInfo({ avatar, name, email }: Props) {
-    const nameInitials = [name.split(" ")[0][0], name.split(" ")[1][0]].join("").toUpperCase();
+    const nameSplitted = name?.split(" ");
+    const nameInitials = name
+        ? [nameSplitted[0][0], nameSplitted.length === 1 ? nameSplitted[0][nameSplitted[0].length - 1] : nameSplitted[nameSplitted.length - 1][0]].join("").toUpperCase()
+        : "";
 
     return (
         <div className="flex items-center space-x-2">

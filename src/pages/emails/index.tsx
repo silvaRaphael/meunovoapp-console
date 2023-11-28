@@ -11,8 +11,8 @@ import { HandleRequest } from "lib/handle-request";
 import { errorToast } from "components/shared/error-toast";
 
 export function Emails() {
-    const { writeLang } = useLanguage();
     const { auth } = useAuth();
+    const { writeLang } = useLanguage();
 
     const [emails, setEmails] = useState<Email[]>([]);
 

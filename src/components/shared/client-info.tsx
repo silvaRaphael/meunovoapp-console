@@ -6,7 +6,13 @@ interface Props {
 }
 
 export function ClientInfo({ logotipo, company }: Props) {
-    const companyInitials = [company.split(" ")[0][0], company.split(" ")[1][0]].join("").toUpperCase();
+    const companySplitted = company.split(" ");
+    const companyInitials = [
+        companySplitted[0][0],
+        companySplitted.length === 1 ? companySplitted[0][companySplitted[0].length - 1] : companySplitted[companySplitted.length - 1][0],
+    ]
+        .join("")
+        .toUpperCase();
 
     return (
         <div className="flex items-center space-x-2">

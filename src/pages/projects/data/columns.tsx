@@ -36,7 +36,8 @@ export const projectColumns: ColumnDef<Project>[] = [
         accessorKey: "manager.name",
         header: ({ column }) => <DataTableColumnHeader column={column} title="Manager" />,
         cell: ({ row }) => {
-            return <MemberInfo avatar={row.original.manager.manager.avatar} name={row.original.manager.manager.name} email={row.original.manager.manager.email} />;
+            return "-";
+            // return <MemberInfo avatar={row.original.manager.manager.avatar} name={row.original.manager.manager.name} email={row.original.manager.manager.email} />;
         },
     },
     {

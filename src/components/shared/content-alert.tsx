@@ -10,9 +10,10 @@ interface Props {
     description?: string;
     children?: ReactNode;
     confirmButton?: ReactElement;
+    hideCloseButton?: boolean;
 }
 
-export function ContentAlert({ open, onOpenChange, triggerButton, title, description, children, confirmButton }: Props) {
+export function ContentAlert({ open, onOpenChange, triggerButton, title, description, children, confirmButton, hideCloseButton }: Props) {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>{triggerButton}</DialogTrigger>
@@ -23,9 +24,11 @@ export function ContentAlert({ open, onOpenChange, triggerButton, title, descrip
                 </DialogHeader>
                 {children}
                 <DialogFooter>
-                    <DialogClose asChild>
-                        <Button variant="secondary">Close</Button>
-                    </DialogClose>
+                    {!hideCloseButton && (
+                        <DialogClose asChild>
+                            <Button variant="secondary">Close</Button>
+                        </DialogClose>
+                    )}
                     {confirmButton}
                 </DialogFooter>
             </DialogContent>

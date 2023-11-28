@@ -27,6 +27,7 @@ export function App() {
                 {
                     <Route>
                         <Route path="/login" element={<Login />} />
+                        <Route path="/comecar" element={<h1>Começar</h1>} />
                         {!auth?.token && <Route path="/*" element={<Navigate to="/login" />} />}
                     </Route>
                 }

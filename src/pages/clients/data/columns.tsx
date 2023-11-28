@@ -4,6 +4,8 @@ import { DataTableColumnHeader } from "../../../components/ui/data-table/data-ta
 import { MemberInfo } from "../../../components/shared/member-info";
 import { Client } from "./client";
 import { ClientInfo } from "components/shared/client-info";
+import { Button } from "components/ui/button";
+import { Badge } from "components/ui/badge";
 
 export const clientColumns = (writeLang: (texts: [string, React.ReactNode][]) => React.ReactNode): ColumnDef<Client>[] => {
     return [
@@ -26,7 +28,7 @@ export const clientColumns = (writeLang: (texts: [string, React.ReactNode][]) =>
             },
         },
         {
-            accessorKey: "manager",
+            accessorKey: "users",
             header: ({ column }) => (
                 <DataTableColumnHeader
                     column={column}
@@ -39,7 +41,28 @@ export const clientColumns = (writeLang: (texts: [string, React.ReactNode][]) =>
                 />
             ),
             cell: ({ row }) => {
-                return <MemberInfo email={row.original.manager.email} name={row.original.manager.name} avatar={row.original.manager.avatar} />;
+                if (!row.original.users?.length)
+                    return (
+                        <Button variant="outline" size="sm" onClick={() => (row.original as any).inviteAction(row.original)}>
+                            {writeLang([
+                                ["en", "Invite"],
+                                ["pt", "Convidar"],
+                            ])}
+                        </Button>
+                    );
+                return (
+                    <div className="flex items-center space-x-2">
+                        {!row.original.users[0].name && (
+                            <Badge variant="outline" className="h-min">
+                                {writeLang([
+                                    ["en", "Invited"],
+                                    ["pt", "Convidado"],
+                                ])}
+                            </Badge>
+                        )}
+                        <MemberInfo email={row.original.users[0].email} name={row.original.users[0].name} avatar={row.original.users[0].avatar} />
+                    </div>
+                );
             },
         },
         {
@@ -55,7 +78,6 @@ export const clientColumns = (writeLang: (texts: [string, React.ReactNode][]) =>
                                 ]) as string
                             }
                         />
-                        <Actions.Delete onClick={() => (row.original as any).deleteAction(row.original)} />
                     </div>
                 );
             },

@@ -4,6 +4,5 @@ export interface Client {
     id: string;
     company: string;
     logotipo?: string;
-    manager: User;
-    users?: string[];
+    users?: User[];
 }
