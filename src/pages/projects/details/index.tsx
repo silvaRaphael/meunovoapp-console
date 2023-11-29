@@ -1,49 +1,60 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { SectionHeader } from "../../../components/shared/section-header";
-import { Separator } from "../../../components/ui/separator";
-import { TaskForm } from "./form";
+import { ProjectForm } from "./form";
 import { Button, buttonVariants } from "../../../components/ui/button";
 import { Page } from "../../../components/shared/page";
 import { ConfirmationAlert } from "../../../components/shared/confirmation-alert";
 import { SubmitButton } from "../../../components/shared/submit-button";
 import { toast } from "../../../components/ui/toast/use-toast";
-import { Task } from "../data/task";
+import { Project } from "../data/project";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
+import { ProjectTasks } from "./tasks";
 import { HandleRequest } from "../../../lib/handle-request";
 import { useLanguage } from "../../../components/shared/language-provider";
+import { SectionDetails } from "components/shared/section-details";
 
-export function TaskDetails() {
+export function ProjectDetails() {
     const { writeLang } = useLanguage();
 
     const { id } = useParams();
     const navigate = useNavigate();
-    const [task, setTask] = useState<Task>();
+    const [project, setProject] = useState<Project>();
 
-    function getTask(id?: string) {
-        fetch("/api/tasks.json")
+    function getProject(id?: string) {
+        fetch("/api/projects.json")
             .then((res) => res.json())
             .then((res) => {
-                setTask(res.find((res: any) => res.id === id) || null);
+                setProject(res.find((res: any) => res.id === id) || null);
             });
     }
 
     useEffect(() => {
         const controller = new AbortController();
 
-        getTask(id);
+        getProject(id);
 
         return () => {
             controller.abort();
         };
     }, [id]);
 
-    if (!task) return <></>;
+    if (!project) return <></>;
 
     return (
         <Page
-            pathname="/tasks"
+            pathname="/projects"
             header={
-                <SectionHeader title="Tasks" pathname="/tasks" tree={!!task ? [{ label: task.title }] : []}>
+                <SectionHeader
+                    title={
+                        writeLang([
+                            ["en", "Projects"],
+                            ["pt", "Projetos"],
+                        ]) as string
+                    }
+                    pathname="/projects"
+                    tree={!!project ? [{ label: project.name }] : []}
+                >
                     <ConfirmationAlert
                         triggerButton={
                             <Button>
@@ -53,7 +64,12 @@ export function TaskDetails() {
                                 ])}
                             </Button>
                         }
-                        title="Are you sure you want to delete this task?"
+                        title={
+                            writeLang([
+                                ["en", "Are you sure you want to delete this project?"],
+                                ["pt", "Você tem certeza que deseja excluir este projeto?"],
+                            ]) as string
+                        }
                         description={
                             writeLang([
                                 ["en", "This action cannot be undone. This will permanently delete this data."],
@@ -74,9 +90,9 @@ export function TaskDetails() {
                                     onDone(() => {
                                         toast({
                                             variant: "success",
-                                            title: "Task removed successfully!",
+                                            title: "Project removed successfully!",
                                         });
-                                        navigate("/tasks");
+                                        navigate("/projects");
                                     });
                                     onError(() =>
                                         toast({
@@ -92,12 +108,38 @@ export function TaskDetails() {
             }
         >
             <div className="space-y-6 pb-40">
-                <div>
-                    <h3 className="text-lg font-medium">Edit Task</h3>
-                    <p className="text-sm text-muted-foreground">Some of this informations are public for other users</p>
-                </div>
-                <Separator />
-                <TaskForm task={task} />
+                <SectionDetails
+                    title={writeLang([
+                        ["en", "Edit Project"],
+                        ["pt", "Editar Projeto"],
+                    ])}
+                    subtitle={writeLang([
+                        ["en", "Some of this informations are public for other users"],
+                        ["pt", "Algumas informações são públicas para outros usuários"],
+                    ])}
+                />
+                <Tabs defaultValue="project">
+                    <TabsList>
+                        <TabsTrigger value="project">
+                            {writeLang([
+                                ["en", "Project"],
+                                ["pt", "Projeto"],
+                            ])}
+                        </TabsTrigger>
+                        <TabsTrigger value="tasks">
+                            {writeLang([
+                                ["en", "Tasks"],
+                                ["pt", "Tarefas"],
+                            ])}
+                        </TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="project" className="pt-3">
+                        <ProjectForm project={project} />
+                    </TabsContent>
+                    <TabsContent value="tasks" className="pt-3">
+                        <ProjectTasks project={project} />
+                    </TabsContent>
+                </Tabs>
             </div>
         </Page>
     );

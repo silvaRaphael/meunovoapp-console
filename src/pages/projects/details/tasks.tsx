@@ -44,7 +44,7 @@ export function ProjectTasks({ project }: { project: Project }) {
 
     return (
         <>
-            <DataTable columns={taskColumns.filter((item) => item.id !== "project")} data={tasks} />
+            <DataTable columns={taskColumns(writeLang).filter((item) => item.id !== "project")} data={tasks} />
             <ConfirmationAlert
                 open={openDelete}
                 onOpenChange={setOpenDelete}

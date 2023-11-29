@@ -10,16 +10,15 @@ import { Textarea } from "../../../components/ui/textarea";
 import { Task } from "../data/task";
 import { Popover, PopoverContent, PopoverTrigger } from "../../../components/ui/popover";
 import format from "date-fns/format";
-import { CalendarIcon, CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+import { CalendarIcon, CaretSortIcon } from "@radix-ui/react-icons";
 import { Calendar } from "../../../components/ui/calendar";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "../../../components/ui/command";
+import { Command, CommandEmpty, CommandGroup, CommandInput } from "../../../components/ui/command";
 import { useEffect, useState } from "react";
 import { Client } from "../../clients/data/client";
 import { SubmitButton } from "../../../components/shared/submit-button";
 import { toast } from "../../../components/ui/toast/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../../components/ui/select";
 import { statuses } from "../../projects/data/status";
-import { priorities } from "../../projects/data/priority";
 import { HandleRequest } from "../../../lib/handle-request";
 
 const taskFormSchema = z.object({
@@ -53,12 +52,10 @@ export function TaskForm({ task }: { task: Task }) {
     const form = useForm<TaskFormValues>({
         resolver: zodResolver(taskFormSchema),
         defaultValues: {
-            title: task.title,
+            title: task.name,
             description: task.description,
             // client: task.client.id,
             status: task.status,
-            priority: task.priority.toString(),
-            due: new Date(task.due),
         },
         mode: "onChange",
     });
@@ -199,30 +196,6 @@ export function TaskForm({ task }: { task: Task }) {
                                                 {statuses.map((status, i) => (
                                                     <SelectItem key={i} value={status}>
                                                         {status}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                        </div>
-                        <div className="mt-8">
-                            <FormField
-                                control={form.control}
-                                name="priority"
-                                render={({ field }) => (
-                                    <FormItem className="flex flex-col">
-                                        <FormLabel>Status</FormLabel>
-                                        <Select value={field.value.toString()} onValueChange={field.onChange}>
-                                            <SelectTrigger className="h-8">
-                                                <SelectValue placeholder="Select a priority" />
-                                            </SelectTrigger>
-                                            <SelectContent side="top">
-                                                {priorities.map((priority, i) => (
-                                                    <SelectItem key={i} value={i.toString()}>
-                                                        {priority}
                                                     </SelectItem>
                                                 ))}
                                             </SelectContent>

@@ -16,83 +16,84 @@ export interface ProjectRow extends Project {
 }
 
 export function ClientProjects({ client }: { client: Client }) {
-    const { writeLang } = useLanguage();
+    return <></>;
+    // const { writeLang } = useLanguage();
 
-    const [projects, setProjects] = useState<ProjectRow[]>([]);
-    const [openDelete, setOpenDelete] = useState<boolean>(false);
-    const [projectName, setProjectName] = useState<string>("");
+    // const [projects, setProjects] = useState<ProjectRow[]>([]);
+    // const [openDelete, setOpenDelete] = useState<boolean>(false);
+    // const [projectName, setProjectName] = useState<string>("");
 
-    function getProjects(client: Client) {
-        fetch("/api/projects.json")
-            .then((res) => res.json())
-            .then((res) => {
-                res = res.map((item: Project): ProjectRow => {
-                    return {
-                        ...item,
-                        seeTeams(item) {
-                            setProjectName(item.title);
-                        },
-                    };
-                });
-                setProjects(res);
-            });
-    }
+    // function getProjects(client: Client) {
+    //     fetch("/api/projects.json")
+    //         .then((res) => res.json())
+    //         .then((res) => {
+    //             res = res.map((item: Project): ProjectRow => {
+    //                 return {
+    //                     ...item,
+    //                     seeTeams(item) {
+    //                         setProjectName(item.title);
+    //                     },
+    //                 };
+    //             });
+    //             setProjects(res);
+    //         });
+    // }
 
-    useEffect(() => {
-        const controller = new AbortController();
+    // useEffect(() => {
+    //     const controller = new AbortController();
 
-        getProjects(client);
+    //     getProjects(client);
 
-        return () => {
-            controller.abort();
-        };
-    }, [client]);
+    //     return () => {
+    //         controller.abort();
+    //     };
+    // }, [client]);
 
-    return (
-        <>
-            <DataTable columns={projectColumns} data={projects} />
-            <ConfirmationAlert
-                open={openDelete}
-                onOpenChange={setOpenDelete}
-                title="Are you sure you want to delete this project?"
-                description={
-                    writeLang([
-                        ["en", "This action cannot be undone. This will permanently delete this data."],
-                        ["pt", "Esta ação não pode ser desfeita. Isto excluirá permanentemente estes dados."],
-                    ]) as string
-                }
-                confirmButton={
-                    <SubmitButton
-                        label={
-                            writeLang([
-                                ["en", "Delete"],
-                                ["pt", "Excluir"],
-                            ]) as string
-                        }
-                        className={buttonVariants({ variant: "destructive" })}
-                        onSubmit={async () => {
-                            await new Promise((resolve, rejects) => {
-                                setTimeout(() => {
-                                    resolve(1);
-                                    // rejects("An error occured!");
-                                }, 1000);
-                            });
-                        }}
-                        onError={(error: any) => {
-                            toast({
-                                variant: "destructive",
-                                title: error || "An error occured!",
-                            });
-                        }}
-                        onSuccess={() => {
-                            toast({
-                                title: "Project removed successfully!",
-                            });
-                            setOpenDelete(false);
-                        }}
-                    />
-                }
-            />
-        </>
-    );
+    // return (
+    //     <>
+    //         <DataTable columns={projectColumns} data={projects} />
+    //         <ConfirmationAlert
+    //             open={openDelete}
+    //             onOpenChange={setOpenDelete}
+    //             title="Are you sure you want to delete this project?"
+    //             description={
+    //                 writeLang([
+    //                     ["en", "This action cannot be undone. This will permanently delete this data."],
+    //                     ["pt", "Esta ação não pode ser desfeita. Isto excluirá permanentemente estes dados."],
+    //                 ]) as string
+    //             }
+    //             confirmButton={
+    //                 <SubmitButton
+    //                     label={
+    //                         writeLang([
+    //                             ["en", "Delete"],
+    //                             ["pt", "Excluir"],
+    //                         ]) as string
+    //                     }
+    //                     className={buttonVariants({ variant: "destructive" })}
+    //                     onSubmit={async () => {
+    //                         await new Promise((resolve, rejects) => {
+    //                             setTimeout(() => {
+    //                                 resolve(1);
+    //                                 // rejects("An error occured!");
+    //                             }, 1000);
+    //                         });
+    //                     }}
+    //                     onError={(error: any) => {
+    //                         toast({
+    //                             variant: "destructive",
+    //                             title: error || "An error occured!",
+    //                         });
+    //                     }}
+    //                     onSuccess={() => {
+    //                         toast({
+    //                             title: "Project removed successfully!",
+    //                         });
+    //                         setOpenDelete(false);
+    //                     }}
+    //                 />
+    //             }
+    //         />
+    //     </>
+    // );
 }

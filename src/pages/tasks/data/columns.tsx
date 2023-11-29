@@ -1,122 +1,102 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Actions } from "../../../components/shared/actions";
 import { DataTableColumnHeader } from "../../../components/ui/data-table/data-table-column-header";
-import { Badge } from "../../../components/ui/badge";
-import format from "date-fns/format";
-import { AlarmClock, ArrowDown, ArrowRight, ArrowUp, CheckCircle2, Circle } from "lucide-react";
+import { AlarmClock, CheckCircle2, Circle, XCircle } from "lucide-react";
 import { Status } from "../../projects/data/status";
-import { Priority, priorities } from "../../projects/data/priority";
-import { cn } from "../../../lib/utils";
-import { Task } from "./task";
 import { Project } from "../../projects/data/project";
 import { Link } from "react-router-dom";
-import { MemberInfo } from "../../../components/shared/member-info";
+import { Task } from "./task";
 
-export const taskColumns: ColumnDef<Task>[] = [
-    {
-        accessorKey: "title",
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Task" noDislocate />,
-        cell: ({ row }) => {
-            const date: Date = row.original.due;
-
-            const isLate = new Date(date) < new Date() && row.original.status !== "completed";
-
-            return (
-                <div className="text-left font-medium truncate max-w-[240px]">
-                    {isLate && (
-                        <Badge variant="outline" className="me-1">
-                            overdue
-                        </Badge>
-                    )}
-                    {row.getValue("title")}
-                </div>
-            );
+export const taskColumns = (writeLang: (texts: [string, React.ReactNode][]) => React.ReactNode): ColumnDef<Task>[] => {
+    return [
+        {
+            accessorKey: "name",
+            header: ({ column }) => (
+                <DataTableColumnHeader
+                    column={column}
+                    title={
+                        writeLang([
+                            ["en", "Task"],
+                            ["pt", "Tarefa"],
+                        ]) as string
+                    }
+                    noDislocate
+                />
+            ),
+            cell: ({ row }) => {
+                return <div className="text-left font-medium truncate max-w-[240px]">{row.getValue("name")}</div>;
+            },
         },
-    },
-    {
-        accessorKey: "project",
-        enableHiding: true,
-        id: "project",
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Project" />,
-        cell: ({ row }) => {
-            const project: Project = row.getValue("project");
+        {
+            accessorKey: "project",
+            enableHiding: true,
+            id: "project",
+            header: ({ column }) => (
+                <DataTableColumnHeader
+                    column={column}
+                    title={
+                        writeLang([
+                            ["en", "Project"],
+                            ["pt", "Projeto"],
+                        ]) as string
+                    }
+                />
+            ),
+            cell: ({ row }) => {
+                const project: Project = row.getValue("project");
 
-            return (
-                <div className="flex item-center space-x-1">
-                    <div className="text-left font-medium truncate max-w-[240px]">{project.title}</div>
-                    <Link to={`/projects/${project.id}`}>
-                        <Badge variant="outline">see</Badge>
+                return (
+                    <Link
+                        to={
+                            writeLang([
+                                ["en", `/projects/${row.original.id}`],
+                                ["pt", `/projetos/${row.original.id}`],
+                            ]) as string
+                        }
+                    >
+                        <div className="flex item-center space-x-1">
+                            <div className="text-left font-medium truncate max-w-[240px]">{project.name}</div>
+                        </div>
                     </Link>
-                </div>
-            );
+                );
+            },
         },
-    },
-    {
-        accessorKey: "member",
-        id: "member",
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Member" />,
-        cell: ({ row }) => {
-            return <>Client Info</>;
-            // return <MemberInfo avatar={row.original.member?.avatar} name={row.original.member?.name} email={row.original.member?.email} />;
+        {
+            accessorKey: "status",
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+            cell: ({ row }) => {
+                const status: Status = row.getValue("status");
+                const icons = {
+                    waiting: <Circle size={16} className="text-muted-foreground" />,
+                    "in progress": <AlarmClock size={16} className="text-muted-foreground" />,
+                    completed: <CheckCircle2 size={16} className="text-muted-foreground" />,
+                    cancelled: <XCircle size={16} className="text-muted-foreground" />,
+                };
+                return (
+                    <div className="flex items-center space-x-1">
+                        {icons[status]}
+                        <span className="whitespace-nowrap">{status}</span>
+                    </div>
+                );
+            },
         },
-    },
-    {
-        accessorKey: "status",
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
-        cell: ({ row }) => {
-            const status: Status = row.getValue("status");
-            const icons = {
-                waiting: <Circle size={16} className="text-muted-foreground" />,
-                "in progress": <AlarmClock size={16} className="text-muted-foreground" />,
-                completed: <CheckCircle2 size={16} className="text-muted-foreground" />,
-            };
-            return (
-                <div className="flex items-center space-x-1">
-                    {icons[status]}
-                    <span className="whitespace-nowrap">{status}</span>
-                </div>
-            );
+        {
+            id: "actions",
+            cell: ({ row }) => {
+                return (
+                    <div className="text-right">
+                        <Actions.Edit
+                            to={
+                                writeLang([
+                                    ["en", `/tasks/${row.original.id}`],
+                                    ["pt", `/tarefas/${row.original.id}`],
+                                ]) as string
+                            }
+                        />
+                        {(row.original as any).deleteAction && <Actions.Delete onClick={() => (row.original as any).deleteAction(row.original)} />}
+                    </div>
+                );
+            },
         },
-    },
-    {
-        accessorKey: "priority",
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Priority" />,
-        cell: ({ row }) => {
-            const priority: Priority = row.getValue("priority");
-            const icons = [
-                <ArrowUp size={16} className="text-muted-foreground" />,
-                <ArrowRight size={16} className="text-muted-foreground" />,
-                <ArrowDown size={16} className="text-muted-foreground" />,
-            ];
-            return (
-                <div className="flex items-center space-x-1">
-                    {icons[priority]}
-                    <span className="whitespace-nowrap">{priorities[priority]}</span>
-                </div>
-            );
-        },
-    },
-    {
-        accessorKey: "due",
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Due Date" />,
-        cell: ({ row }) => {
-            const date: string = row.getValue("due");
-            const formatted = format(new Date(date), "PPP");
-
-            const isLate = new Date(date) < new Date() && row.original.status !== "completed";
-
-            return <div className={cn("text-left font-medium", isLate ? "text-red-600" : "")}>{formatted}</div>;
-        },
-    },
-    {
-        id: "actions",
-        cell: ({ row }) => {
-            return (
-                <div className="text-right">
-                    <Actions.Edit to={`/tasks/${row.original.id}`} />
-                    {(row.original as any).deleteAction && <Actions.Delete onClick={() => (row.original as any).deleteAction(row.original)} />}
-                </div>
-            );
-        },
-    },
-];
+    ];
+};

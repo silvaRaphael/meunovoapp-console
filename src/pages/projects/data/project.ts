@@ -1,14 +1,12 @@
 import { Client } from "../../clients/data/client";
-import { Priority } from "./priority";
 import { Status } from "./status";
 
 export interface Project {
     id: string;
-    title: string;
+    name: string;
     description: string;
-    manager: Client;
-    priority: Priority;
+    client: Client;
     status: Status;
-    start: Date;
+    tasks: any[];
     due: Date;
 }

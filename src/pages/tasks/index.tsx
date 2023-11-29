@@ -76,7 +76,7 @@ export function Tasks() {
                 </SectionHeader>
             }
         >
-            <DataTable columns={taskColumns} data={tasks} />
+            <DataTable columns={taskColumns(writeLang)} data={tasks} />
             <ConfirmationAlert
                 open={openDelete}
                 onOpenChange={setOpenDelete}

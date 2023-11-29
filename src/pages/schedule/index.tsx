@@ -94,7 +94,7 @@ export function Schedule() {
                     ...projects.map((item: Project) => {
                         return {
                             id: item.id,
-                            title: item.title,
+                            title: item.name,
                             // date: item.start,
                             // end: item.due,
                             date: item.due,
@@ -113,7 +113,7 @@ export function Schedule() {
                 eventChange={() => {}}
                 eventRemove={() => {}}
             />
-            <ContentAlert open={!!projectSelected} onOpenChange={(open: boolean) => setProjectSelected(open ? projectSelected : null)} title={`${projectSelected?.title}`}>
+            <ContentAlert open={!!projectSelected} onOpenChange={(open: boolean) => setProjectSelected(open ? projectSelected : null)} title={`${projectSelected?.name}`}>
                 <div className="max-h-[70vh] overflow-y-auto vertical-scrollbar space-y-2">
                     {!!projectSelected && (
                         <div className="flex flex-col space-y-4">
