@@ -1,32 +1,37 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { SectionHeader } from "../../../components/shared/section-header";
 import { ProjectForm } from "./form";
-import { Button, buttonVariants } from "../../../components/ui/button";
 import { Page } from "../../../components/shared/page";
-import { ConfirmationAlert } from "../../../components/shared/confirmation-alert";
-import { SubmitButton } from "../../../components/shared/submit-button";
-import { toast } from "../../../components/ui/toast/use-toast";
 import { Project } from "../data/project";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
-import { ProjectTasks } from "./tasks";
 import { HandleRequest } from "../../../lib/handle-request";
 import { useLanguage } from "../../../components/shared/language-provider";
-import { SectionDetails } from "components/shared/section-details";
+import { useAuth } from "components/shared/auth-provider";
+import { errorToast } from "components/shared/error-toast";
+import { BASE_API } from "config/constants";
+import { Button } from "components/ui/button";
 
 export function ProjectDetails() {
     const { writeLang } = useLanguage();
-
+    const { auth } = useAuth();
     const { id } = useParams();
-    const navigate = useNavigate();
-    const [project, setProject] = useState<Project>();
 
-    function getProject(id?: string) {
-        fetch("/api/projects.json")
-            .then((res) => res.json())
-            .then((res) => {
-                setProject(res.find((res: any) => res.id === id) || null);
-            });
+    const [project, setProject] = useState<Project>();
+    const [tab, setTab] = useState<string>();
+
+    async function getProject(id?: string) {
+        const request = await new HandleRequest().get(`${BASE_API}/projects/${id}`, {
+            token: auth?.token,
+        });
+
+        request.onDone((response) => {
+            setProject(response);
+        });
+
+        request.onError((error) => {
+            errorToast(error);
+        });
     }
 
     useEffect(() => {
@@ -37,13 +42,20 @@ export function ProjectDetails() {
         return () => {
             controller.abort();
         };
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
 
     if (!project) return <></>;
 
     return (
         <Page
-            pathname="/projects"
+            pathname={
+                writeLang([
+                    ["en", "/projects"],
+                    ["pt", "/projetos"],
+                ]) as string
+            }
             header={
                 <SectionHeader
                     title={
@@ -52,81 +64,47 @@ export function ProjectDetails() {
                             ["pt", "Projetos"],
                         ]) as string
                     }
-                    pathname="/projects"
+                    pathname={
+                        writeLang([
+                            ["en", "/projects"],
+                            ["pt", "/projetos"],
+                        ]) as string
+                    }
                     tree={!!project ? [{ label: project.name }] : []}
                 >
-                    <ConfirmationAlert
-                        triggerButton={
-                            <Button>
-                                {writeLang([
-                                    ["en", "Remove"],
-                                    ["pt", "Remover"],
-                                ])}
-                            </Button>
-                        }
-                        title={
-                            writeLang([
-                                ["en", "Are you sure you want to delete this project?"],
-                                ["pt", "Você tem certeza que deseja excluir este projeto?"],
-                            ]) as string
-                        }
-                        description={
-                            writeLang([
-                                ["en", "This action cannot be undone. This will permanently delete this data."],
-                                ["pt", "Esta ação não pode ser desfeita. Isto excluirá permanentemente estes dados."],
-                            ]) as string
-                        }
-                        confirmButton={
-                            <SubmitButton
-                                label={
-                                    writeLang([
-                                        ["en", "Delete"],
-                                        ["pt", "Excluir"],
-                                    ]) as string
-                                }
-                                className={buttonVariants({ variant: "destructive" })}
-                                onSubmit={async () => {
-                                    const { onDone, onError } = await new HandleRequest().delete("https://jsonplaceholder.typicode.com/users");
-                                    onDone(() => {
-                                        toast({
-                                            variant: "success",
-                                            title: "Project removed successfully!",
-                                        });
-                                        navigate("/projects");
-                                    });
-                                    onError(() =>
-                                        toast({
-                                            variant: "destructive",
-                                            title: "An error occured!",
-                                        }),
-                                    );
-                                }}
-                            />
-                        }
-                    />
+                    {tab === "tasks" && !["completed", "cancelled"].includes(project.status) && (
+                        // <CreateProjectForm
+                        //     label={
+                        //         writeLang([
+                        //             ["en", "Create project"],
+                        //             ["pt", "Novo projeto"],
+                        //         ]) as string
+                        //     }
+                        //     client_id={client.id}
+                        //     onCreated={() => getClient(id)}
+                        // />
+                        <Button>
+                            {
+                                writeLang([
+                                    ["en", "Create task"],
+                                    ["pt", "Nova tarefa"],
+                                ]) as string
+                            }
+                        </Button>
+                    )}
                 </SectionHeader>
             }
         >
             <div className="space-y-6 pb-40">
-                <SectionDetails
-                    title={writeLang([
-                        ["en", "Edit Project"],
-                        ["pt", "Editar Projeto"],
-                    ])}
-                    subtitle={writeLang([
-                        ["en", "Some of this informations are public for other users"],
-                        ["pt", "Algumas informações são públicas para outros usuários"],
-                    ])}
-                />
-                <Tabs defaultValue="project">
-                    <TabsList>
-                        <TabsTrigger value="project">
+                <Tabs defaultValue="project" className="w-full" value={tab} onValueChange={setTab}>
+                    <TabsList className="w-min flex mx-auto">
+                        <TabsTrigger value="project" className="w-auto sm:w-36">
                             {writeLang([
                                 ["en", "Project"],
                                 ["pt", "Projeto"],
                             ])}
                         </TabsTrigger>
-                        <TabsTrigger value="tasks">
+                        <TabsTrigger value="tasks" className="w-auto sm:w-36">
                             {writeLang([
                                 ["en", "Tasks"],
                                 ["pt", "Tarefas"],
@@ -137,7 +115,7 @@ export function ProjectDetails() {
                         <ProjectForm project={project} />
                     </TabsContent>
                     <TabsContent value="tasks" className="pt-3">
-                        <ProjectTasks project={project} />
+                        {/* <ProjectTasks project={project} /> */}
                     </TabsContent>
                 </Tabs>
             </div>

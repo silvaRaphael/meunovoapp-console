@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import { DataTable } from "components/ui/data-table/data-table";
 import { SectionHeader } from "components/shared/section-header";
-import { Search } from "components/shared/search";
 import { Page } from "components/shared/page";
-import { Button } from "components/ui/button";
 import { useLanguage } from "components/shared/language-provider";
 import { HandleRequest } from "lib/handle-request";
 import { Project } from "./data/project";
@@ -11,12 +9,15 @@ import { projectColumns } from "./data/columns";
 import { errorToast } from "components/shared/error-toast";
 import { BASE_API } from "config/constants";
 import { useAuth } from "components/shared/auth-provider";
+import { CreateProjectForm } from "./forms/create";
+import { Client } from "pages/clients/data/client";
 
 export function Projects() {
     const { auth } = useAuth();
     const { language, writeLang } = useLanguage();
 
     const [projects, setProjects] = useState<Project[]>([]);
+    const [clients, setClients] = useState<Client[]>([]);
 
     async function getProjects() {
         const request = await new HandleRequest().get(`${BASE_API}/projects`, {
@@ -32,10 +33,25 @@ export function Projects() {
         });
     }
 
+    async function getClients() {
+        const request = await new HandleRequest().get(`${BASE_API}/clients`, {
+            token: auth?.token,
+        });
+
+        request.onDone((response) => {
+            setClients(response);
+        });
+
+        request.onError((error) => {
+            errorToast(error);
+        });
+    }
+
     useEffect(() => {
         const controller = new AbortController();
 
         getProjects();
+        getClients();
 
         return () => {
             controller.abort();
@@ -67,8 +83,7 @@ export function Projects() {
                         ]) as string
                     }
                 >
-                    <Search />
-                    <Button>Create</Button>
+                    <CreateProjectForm clients={clients} onCreated={getProjects} />
                 </SectionHeader>
             }
         >

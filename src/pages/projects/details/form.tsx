@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
 
 import { cn } from "../../../lib/utils";
 import { Button } from "../../../components/ui/button";
@@ -10,11 +9,8 @@ import { Textarea } from "../../../components/ui/textarea";
 import { Project } from "../data/project";
 import { Popover, PopoverContent, PopoverTrigger } from "../../../components/ui/popover";
 import format from "date-fns/format";
-import { CalendarIcon, CaretSortIcon } from "@radix-ui/react-icons";
+import { CalendarIcon } from "@radix-ui/react-icons";
 import { Calendar } from "../../../components/ui/calendar";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "../../../components/ui/command";
-import { useEffect, useState } from "react";
-import { Client } from "../../clients/data/client";
 import { SubmitButton } from "../../../components/shared/submit-button";
 import { Separator } from "../../../components/ui/separator";
 import { useLanguage } from "../../../components/shared/language-provider";
@@ -23,76 +19,46 @@ import { HandleRequest } from "lib/handle-request";
 import { BASE_API } from "config/constants";
 import { useAuth } from "components/shared/auth-provider";
 import { errorToast } from "components/shared/error-toast";
-import { CheckIcon } from "lucide-react";
-
-const projectFormSchema = z.object({
-    name: z
-        .string()
-        .min(2, {
-            message: "Title must be at least 2 characters.",
-        })
-        .max(50, {
-            message: "Title must not be longer than 100 characters.",
-        }),
-    client_id: z
-        .string({
-            required_error: "Please select a manager to display.",
-        })
-        .uuid()
-        .optional(),
-    description: z.string().min(4),
-    due: z.date({
-        required_error: "Please select the due date",
-    }),
-});
-
-type ProjectFormValues = z.infer<typeof projectFormSchema>;
+import { CreateProjectSchema, createProjectSchema } from "adapters/project";
+import { toast } from "components/ui/toast/use-toast";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "components/ui/select";
+import { statuses, statusesColors, statusesIcons } from "../data/status";
 
 export function ProjectForm({ project }: { project: Project }) {
     const { language, writeLang } = useLanguage();
     const { auth } = useAuth();
 
     const locale = languages.find((item) => item.lang === language.lang)?.dateLocale;
+    const isEditable = !["completed", "cancelled"].includes(project.status);
 
-    const [clients, setClients] = useState<Client[]>([]);
-
-    const form = useForm<ProjectFormValues>({
-        resolver: zodResolver(projectFormSchema),
+    const form = useForm<CreateProjectSchema>({
+        resolver: zodResolver(createProjectSchema),
         defaultValues: {
             name: project.name,
-            description: project.description,
+            description: project.description ?? "",
+            client_id: project.client.id,
+            status: project.status,
             due: new Date(project.due),
         },
         mode: "onChange",
     });
 
-    async function getClients() {
-        const request = await new HandleRequest().get(`${BASE_API}/clients`, {
+    async function onSubmit(data: CreateProjectSchema) {
+        const request = await new HandleRequest(data).put(`${BASE_API}/projects/${project.id}`, {
             token: auth?.token,
         });
 
-        request.onDone((response) => {
-            setClients(response);
+        request.onDone(() => {
+            toast({
+                title: writeLang([
+                    ["en", "Project has been updated successfully!"],
+                    ["pt", "Projeto foi atualizado com sucesso!"],
+                ]) as string,
+            });
         });
 
-        request.onError((error) => {
-            errorToast(error);
-        });
+        request.onError((error) => errorToast(error));
     }
-
-    useEffect(() => {
-        const controller = new AbortController();
-
-        getClients();
-
-        return () => {
-            controller.abort();
-        };
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    async function onSubmit(data: ProjectFormValues) {}
 
     return (
         <Form {...form}>
@@ -133,8 +99,84 @@ export function ProjectForm({ project }: { project: Project }) {
                                                 ]) as string
                                             }
                                             {...field}
+                                            disabled={!isEditable}
                                         />
                                     </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="due"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-col">
+                                    <FormDescription>
+                                        {writeLang([
+                                            ["en", "Due date"],
+                                            ["pt", "Prazo de entrega"],
+                                        ])}
+                                    </FormDescription>
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <FormControl>
+                                                <Button
+                                                    variant={"outline"}
+                                                    className={cn("pl-3 text-left font-normal bg-muted/50", !field.value && "text-muted-foreground")}
+                                                    disabled={!isEditable}
+                                                >
+                                                    {field.value ? (
+                                                        format(new Date(field.value), "PPP", {
+                                                            locale,
+                                                        })
+                                                    ) : (
+                                                        <span>
+                                                            {writeLang([
+                                                                ["en", "Pick a due date"],
+                                                                ["pt", "Selecione um prazo"],
+                                                            ])}
+                                                        </span>
+                                                    )}
+                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                </Button>
+                                            </FormControl>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0" align="start">
+                                            <Calendar
+                                                mode="single"
+                                                defaultMonth={new Date(field.value)}
+                                                selected={new Date(field.value)}
+                                                onSelect={field.onChange}
+                                                initialFocus
+                                                locale={locale}
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="status"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-col">
+                                    <FormDescription>Status</FormDescription>
+                                    <Select value={field.value} onValueChange={field.onChange}>
+                                        <SelectTrigger className={!field.value ? "text-muted-foreground" : ""} disabled={!isEditable}>
+                                            <SelectValue placeholder="Select a status" />
+                                        </SelectTrigger>
+                                        <SelectContent side="top">
+                                            {statuses.map((status, i) => (
+                                                <SelectItem key={i} value={status}>
+                                                    <div className={cn("flex items-center space-x-1", statusesColors[status])}>
+                                                        {statusesIcons[status]}
+                                                        <span className="whitespace-nowrap">{status}</span>
+                                                    </div>
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                     <FormMessage />
                                 </FormItem>
                             )}
@@ -161,49 +203,9 @@ export function ProjectForm({ project }: { project: Project }) {
                                             className="resize-none"
                                             rows={5}
                                             {...field}
+                                            disabled={!isEditable}
                                         />
                                     </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="due"
-                            render={({ field }) => (
-                                <FormItem className="flex flex-col">
-                                    <FormDescription>
-                                        {writeLang([
-                                            ["en", "Due date"],
-                                            ["pt", "Prazo de entrega"],
-                                        ])}
-                                    </FormDescription>
-                                    <Popover>
-                                        <PopoverTrigger asChild>
-                                            <FormControl>
-                                                <Button variant={"outline"} className={cn("pl-3 text-left font-normal bg-muted/50", !field.value && "text-muted-foreground")}>
-                                                    {field.value ? (
-                                                        format(new Date(field.value), "PPP", {
-                                                            locale: locale,
-                                                        })
-                                                    ) : (
-                                                        <span>Pick a date</span>
-                                                    )}
-                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                </Button>
-                                            </FormControl>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-auto p-0" align="start">
-                                            <Calendar
-                                                mode="single"
-                                                defaultMonth={new Date(field.value)}
-                                                selected={new Date(field.value)}
-                                                onSelect={field.onChange}
-                                                initialFocus
-                                                locale={locale}
-                                            />
-                                        </PopoverContent>
-                                    </Popover>
                                     <FormMessage />
                                 </FormItem>
                             )}
@@ -211,98 +213,18 @@ export function ProjectForm({ project }: { project: Project }) {
                     </div>
                 </div>
                 <Separator />
-                <div className="grid grid-cols-12">
-                    <div className="col-span-3">
-                        <h3 className="font-semibold leading-4">
-                            {writeLang([
-                                ["en", "Client"],
-                                ["pt", "Cliente"],
-                            ])}
-                        </h3>
-                        <p className="text-sm text-muted-foreground">
-                            {writeLang([
-                                ["en", "Change client"],
-                                ["pt", "Alterar cliente"],
-                            ])}
-                        </p>
-                    </div>
-                    <div className="col-span-6 space-y-4">
-                        <FormField
-                            control={form.control}
-                            name="client_id"
-                            render={({ field }) => (
-                                <FormItem className="flex flex-col">
-                                    <FormDescription>
-                                        {writeLang([
-                                            ["en", "Client"],
-                                            ["pt", "Cliente"],
-                                        ])}
-                                    </FormDescription>
-                                    <Popover>
-                                        <PopoverTrigger asChild>
-                                            <FormControl>
-                                                <Button variant="outline" role="combobox" className={cn("justify-between bg-muted/50", !field.value && "text-muted-foreground")}>
-                                                    <span className="text-left leading-4">
-                                                        {field.value
-                                                            ? clients.filter((client) => field.value === client.id).map((item) => `${item.company}}`)
-                                                            : writeLang([
-                                                                  ["en", "Search client"],
-                                                                  ["pt", "Procurar cliente"],
-                                                              ])}
-                                                    </span>
-                                                    <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                                </Button>
-                                            </FormControl>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="p-0">
-                                            <Command>
-                                                <CommandInput
-                                                    placeholder={
-                                                        writeLang([
-                                                            ["en", "Search client..."],
-                                                            ["pt", "Procurar cliente..."],
-                                                        ]) as string
-                                                    }
-                                                />
-                                                <CommandEmpty>
-                                                    {writeLang([
-                                                        ["en", "No clients found."],
-                                                        ["pt", "Nenhum cliente encontrado."],
-                                                    ])}
-                                                </CommandEmpty>
-                                                <CommandGroup>
-                                                    {clients.map((client, i) => (
-                                                        <CommandItem
-                                                            value={client.company}
-                                                            key={i}
-                                                            onSelect={() => {
-                                                                form.setValue("client_id", form.getValues().client_id !== client.id ? client.id : undefined);
-                                                            }}
-                                                        >
-                                                            <CheckIcon className={cn("mr-2 h-4 w-4", field.value === client.id ? "opacity-100" : "opacity-0")} />
-                                                            {`${client.company}`}
-                                                        </CommandItem>
-                                                    ))}
-                                                </CommandGroup>
-                                            </Command>
-                                        </PopoverContent>
-                                    </Popover>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    </div>
-                </div>
-                <SubmitButton
-                    label={
-                        writeLang([
-                            ["en", "Update Project"],
-                            ["pt", "Atualizar Projeto"],
-                        ]) as string
-                    }
-                    type="submit"
-                    state={form.formState.isSubmitting ? "loading" : "initial"}
-                />
+                {isEditable && (
+                    <SubmitButton
+                        label={
+                            writeLang([
+                                ["en", "Update Project"],
+                                ["pt", "Atualizar Projeto"],
+                            ]) as string
+                        }
+                        type="submit"
+                        state={form.formState.isSubmitting ? "loading" : "initial"}
+                    />
+                )}
             </form>
         </Form>
     );

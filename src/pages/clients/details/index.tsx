@@ -12,6 +12,8 @@ import { errorToast } from "components/shared/error-toast";
 import { ClientForm } from "./form";
 import { ClientUsers } from "./users";
 import { InviteUserForm } from "../forms/invite-user";
+import { ClientProjects } from "./projects";
+import { CreateProjectForm } from "pages/projects/forms/create";
 
 export function ClientDetails() {
     const { writeLang } = useLanguage();
@@ -75,12 +77,24 @@ export function ClientDetails() {
                     tree={!!client ? [{ label: client.company }] : []}
                 >
                     {tab === "users" && <InviteUserForm client={client} open={inviteUserOpen} setOpen={setInviteUserOpen} />}
+                    {tab === "projects" && (
+                        <CreateProjectForm
+                            label={
+                                writeLang([
+                                    ["en", "Create project"],
+                                    ["pt", "Novo projeto"],
+                                ]) as string
+                            }
+                            client_id={client.id}
+                            onCreated={() => getClient(id)}
+                        />
+                    )}
                 </SectionHeader>
             }
         >
             <div className="space-y-6 pb-40">
                 <Tabs defaultValue="client" className="w-full" value={tab} onValueChange={setTab}>
-                    <TabsList className="w-auto sm:w-[400px] flex mx-auto">
+                    <TabsList className="w-min flex mx-auto">
                         <TabsTrigger value="client" className="w-auto sm:w-36">
                             {writeLang([
                                 ["en", "Client"],
@@ -107,7 +121,7 @@ export function ClientDetails() {
                         <ClientUsers client={client} />
                     </TabsContent>
                     <TabsContent value="projects" className="pt-3">
-                        {/* <ClientProjects client={client} /> */}
+                        <ClientProjects client={client} />
                     </TabsContent>
                 </Tabs>
             </div>

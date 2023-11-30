@@ -16,15 +16,7 @@ import { Client } from "../data/client";
 import { InviteUserEmail } from "components/shared/emails/invite-user-email";
 import { render } from "@react-email/components";
 
-export function InviteManagerForm({
-    client,
-    setClient,
-    isManager,
-}: {
-    client: Client | null;
-    setClient: React.Dispatch<React.SetStateAction<Client | null>>;
-    isManager?: boolean;
-}) {
+export function InviteManagerForm({ client, setClient }: { client: Client | null; setClient: React.Dispatch<React.SetStateAction<Client | null>> }) {
     const { auth } = useAuth();
     const { writeLang } = useLanguage();
 
@@ -40,7 +32,7 @@ export function InviteManagerForm({
         const request = await new HandleRequest({
             email: data.email,
             client_id: client.id,
-            is_manager: isManager,
+            is_manager: true,
         }).post(`${BASE_API}/users`, {
             token: auth?.token,
         });

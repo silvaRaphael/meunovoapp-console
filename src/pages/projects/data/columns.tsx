@@ -5,12 +5,11 @@ import { Badge } from "../../../components/ui/badge";
 import format from "date-fns/format";
 import { Project } from "./project";
 import { Progress } from "../../../components/ui/progress";
-import { AlarmClock, CheckCircle2, Circle, XCircle } from "lucide-react";
-import { Status } from "./status";
 import { cn } from "../../../lib/utils";
 import { ClientInfo } from "components/shared/client-info";
 import { languages } from "config/languages";
 import { Language } from "components/shared/language-provider";
+import { Status, statusesColors, statusesIcons } from "./status";
 
 export const projectColumns = (
     language: Pick<Language, "lang" | "locale" | "currency">,
@@ -46,13 +45,14 @@ export const projectColumns = (
                                 ])}
                             </Badge>
                         )}
-                        {row.getValue("title")}
+                        {row.getValue("name")}
                     </div>
                 );
             },
         },
         {
-            accessorKey: "client",
+            accessorKey: "client.company",
+            id: "client",
             header: ({ column }) => (
                 <DataTableColumnHeader
                     column={column}
@@ -65,6 +65,7 @@ export const projectColumns = (
                 />
             ),
             cell: ({ row }) => {
+                if (!row.original.client) return <></>;
                 return <ClientInfo logotipo={row.original.client.logotipo} company={row.original.client.company} />;
             },
         },
@@ -73,15 +74,9 @@ export const projectColumns = (
             header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
             cell: ({ row }) => {
                 const status: Status = row.getValue("status");
-                const icons = {
-                    waiting: <Circle size={16} className="text-muted-foreground" />,
-                    "in progress": <AlarmClock size={16} className="text-muted-foreground" />,
-                    completed: <CheckCircle2 size={16} className="text-muted-foreground" />,
-                    cancelled: <XCircle size={16} className="text-muted-foreground" />,
-                };
                 return (
-                    <div className="flex items-center space-x-1">
-                        {icons[status]}
+                    <div className={cn("flex items-center space-x-1", statusesColors[status])}>
+                        {statusesIcons[status]}
                         <span className="whitespace-nowrap">{status}</span>
                     </div>
                 );

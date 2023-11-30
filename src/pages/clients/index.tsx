@@ -86,7 +86,7 @@ export function Clients() {
             }
         >
             <DataTable columns={clientColumns(writeLang)} data={clients} />
-            <InviteManagerForm client={client} setClient={setClient} isManager />
+            <InviteManagerForm client={client} setClient={setClient} />
         </Page>
     );
 }

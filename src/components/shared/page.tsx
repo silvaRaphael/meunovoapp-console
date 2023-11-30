@@ -11,23 +11,23 @@ interface Props {
 }
 
 export function Page({ pathname, header, children }: Props) {
-    const [isOpen, setIsOpen] = useState<boolean>(localStorage.getItem("side-bar-is-close") !== "true");
+    const [isClose, setIsClose] = useState<boolean>(localStorage.getItem("side-bar-is-close") !== "false");
 
     function toggleSideBar() {
-        localStorage.setItem("side-bar-is-close", String(!isOpen));
-        setIsOpen(!isOpen);
+        localStorage.setItem("side-bar-is-close", String(!isClose));
+        setIsClose(!isClose);
     }
 
     return (
         <>
-            <TopBar pathname={pathname} isOpen={isOpen} toggleSideBar={toggleSideBar} />
+            <TopBar pathname={pathname} isOpen={!isClose} toggleSideBar={toggleSideBar} />
             <div>
                 <div className="flex pb-20">
-                    <SideBar pathname={pathname} isOpen={isOpen} />
+                    <SideBar pathname={pathname} isOpen={!isClose} />
                     <Section
                         className="min-h-screen h-full"
                         style={{
-                            paddingLeft: isOpen ? sideBarWidth : sideBarWidthCollapsed,
+                            paddingLeft: !isClose ? sideBarWidth : sideBarWidthCollapsed,
                         }}
                     >
                         {header}
