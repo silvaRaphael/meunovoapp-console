@@ -101,7 +101,7 @@ export const projectColumns = (
                 const totalTasks = row.original.tasks.length;
                 const doneTasks = row.original.tasks.filter((item) => ["completed", "cancelled"].includes(item.status)).length;
 
-                return <Progress value={totalTasks / doneTasks} />;
+                return <Progress value={(doneTasks / totalTasks) * 100} />;
             },
         },
         {

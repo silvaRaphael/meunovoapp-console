@@ -1,51 +1,63 @@
 import { useEffect, useState } from "react";
-import { DataTable } from "../../components/ui/data-table/data-table";
-import { SectionHeader } from "../../components/shared/section-header";
-import { Search } from "../../components/shared/search";
-import { Page } from "../../components/shared/page";
-import { Button, buttonVariants } from "../../components/ui/button";
-import { SubmitButton } from "../../components/shared/submit-button";
-import { toast } from "../../components/ui/toast/use-toast";
-import { ConfirmationAlert } from "../../components/shared/confirmation-alert";
+import { DataTable } from "components/ui/data-table/data-table";
+import { SectionHeader } from "components/shared/section-header";
+import { Page } from "components/shared/page";
+import { useLanguage } from "components/shared/language-provider";
+import { HandleRequest } from "lib/handle-request";
 import { Task } from "./data/task";
 import { taskColumns } from "./data/columns";
-import { HandleRequest } from "../../lib/handle-request";
-import { useLanguage } from "../../components/shared/language-provider";
-
-export interface TaskRow extends Task {
-    deleteAction?: (props: Task) => any;
-}
+import { errorToast } from "components/shared/error-toast";
+import { BASE_API } from "config/constants";
+import { useAuth } from "components/shared/auth-provider";
+import { CreateTaskForm } from "./forms/create";
+import { Project } from "pages/projects/data/project";
 
 export function Tasks() {
+    const { auth } = useAuth();
     const { writeLang } = useLanguage();
 
-    const [tasks, setTasks] = useState<TaskRow[]>([]);
-    const [openDelete, setOpenDelete] = useState<boolean>(false);
+    const [tasks, setTasks] = useState<Task[]>([]);
+    const [projects, setProjects] = useState<Project[]>([]);
 
-    function getTasks() {
-        fetch("/api/tasks.json")
-            .then((res) => res.json())
-            .then((res) => {
-                res = res.map((item: Task): TaskRow => {
-                    return {
-                        ...item,
-                        deleteAction() {
-                            setOpenDelete(true);
-                        },
-                    };
-                });
-                setTasks(res);
-            });
+    async function getTasks() {
+        const request = await new HandleRequest().get(`${BASE_API}/tasks`, {
+            token: auth?.token,
+        });
+
+        request.onDone((response) => {
+            setTasks(response);
+        });
+
+        request.onError((error) => {
+            errorToast(error);
+        });
+    }
+
+    async function getProjects() {
+        const request = await new HandleRequest().get(`${BASE_API}/projects`, {
+            token: auth?.token,
+        });
+
+        request.onDone((response) => {
+            setProjects(response.filter((item: Project) => !["completed", "cancelled"].includes(item.status)));
+        });
+
+        request.onError((error) => {
+            errorToast(error);
+        });
     }
 
     useEffect(() => {
         const controller = new AbortController();
 
         getTasks();
+        getProjects();
 
         return () => {
             controller.abort();
         };
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
@@ -71,49 +83,11 @@ export function Tasks() {
                         ]) as string
                     }
                 >
-                    <Search />
-                    <Button>Create</Button>
+                    <CreateTaskForm projects={projects} onCreated={getTasks} />
                 </SectionHeader>
             }
         >
             <DataTable columns={taskColumns(writeLang)} data={tasks} />
-            <ConfirmationAlert
-                open={openDelete}
-                onOpenChange={setOpenDelete}
-                title="Are you sure you want to delete this task?"
-                description={
-                    writeLang([
-                        ["en", "This action cannot be undone. This will permanently delete this data."],
-                        ["pt", "Esta ação não pode ser desfeita. Isto excluirá permanentemente estes dados."],
-                    ]) as string
-                }
-                confirmButton={
-                    <SubmitButton
-                        label={
-                            writeLang([
-                                ["en", "Delete"],
-                                ["pt", "Excluir"],
-                            ]) as string
-                        }
-                        className={buttonVariants({ variant: "destructive" })}
-                        onSubmit={async () => {
-                            const { onDone, onError } = await new HandleRequest().delete("https://jsonplaceholder.typicode.com/users");
-                            onDone(() => {
-                                toast({
-                                    variant: "success",
-                                    title: "Task removed successfully!",
-                                });
-                            });
-                            onError(() =>
-                                toast({
-                                    variant: "destructive",
-                                    title: "An error occured!",
-                                }),
-                            );
-                        }}
-                    />
-                }
-            />
         </Page>
     );
 }
