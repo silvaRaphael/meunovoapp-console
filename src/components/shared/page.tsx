@@ -11,7 +11,7 @@ interface Props {
 }
 
 export function Page({ pathname, header, children }: Props) {
-    const [isClose, setIsClose] = useState<boolean>(localStorage.getItem("side-bar-is-close") !== "false");
+    const [isClose, setIsClose] = useState<boolean>(localStorage.getItem("side-bar-is-close") === "true");
 
     function toggleSideBar() {
         localStorage.setItem("side-bar-is-close", String(!isClose));
