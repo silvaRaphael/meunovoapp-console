@@ -8,10 +8,9 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 interface DataTableColumnHeaderProps<TData, TValue> extends React.HTMLAttributes<HTMLDivElement> {
     column: Column<TData, TValue>;
     title: string;
-    noDislocate?: boolean;
 }
 
-export function DataTableColumnHeader<TData, TValue>({ column, title, className, noDislocate = false }: DataTableColumnHeaderProps<TData, TValue>) {
+export function DataTableColumnHeader<TData, TValue>({ column, title, className }: DataTableColumnHeaderProps<TData, TValue>) {
     if (!column.getCanSort()) {
         return <div className={cn(className)}>{title}</div>;
     }
@@ -20,7 +19,7 @@ export function DataTableColumnHeader<TData, TValue>({ column, title, className,
         <div className={cn("flex items-center space-x-2", className)}>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className={cn("h-8 data-[state=open]:bg-accent", !noDislocate ? "-ml-3" : "")}>
+                    <Button variant="ghost" size="sm" className="h-8 data-[state=open]:bg-accent">
                         <span>{title}</span>
                         {column.getIsSorted() === "desc" ? (
                             <ArrowDownIcon className="ml-2 h-4 w-4" />

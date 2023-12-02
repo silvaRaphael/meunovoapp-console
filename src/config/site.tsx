@@ -82,17 +82,17 @@ export const SideMenu = ({ writeLang }: { writeLang: (texts: [string, React.Reac
                             ]) as string,
                             icon: <ListTodo className="mr-1" size={14} />,
                         },
-                        {
-                            label: writeLang([
-                                ["en", "Schedule"],
-                                ["pt", "Calendário"],
-                            ]) as string,
-                            path: writeLang([
-                                ["en", "/schedule"],
-                                ["pt", "/calendario"],
-                            ]) as string,
-                            icon: <Calendar className="mr-1" size={14} />,
-                        },
+                        // {
+                        //     label: writeLang([
+                        //         ["en", "Schedule"],
+                        //         ["pt", "Calendário"],
+                        //     ]) as string,
+                        //     path: writeLang([
+                        //         ["en", "/schedule"],
+                        //         ["pt", "/calendario"],
+                        //     ]) as string,
+                        //     icon: <Calendar className="mr-1" size={14} />,
+                        // },
                     ],
                 },
                 {
@@ -186,17 +186,17 @@ export const SideMenu = ({ writeLang }: { writeLang: (texts: [string, React.Reac
                             ]) as string,
                             icon: <ListTodo className="mr-1" size={14} />,
                         },
-                        {
-                            label: writeLang([
-                                ["en", "Schedule"],
-                                ["pt", "Calendário"],
-                            ]) as string,
-                            path: writeLang([
-                                ["en", "/schedule"],
-                                ["pt", "/calendario"],
-                            ]) as string,
-                            icon: <Calendar className="mr-1" size={14} />,
-                        },
+                        // {
+                        //     label: writeLang([
+                        //         ["en", "Schedule"],
+                        //         ["pt", "Calendário"],
+                        //     ]) as string,
+                        //     path: writeLang([
+                        //         ["en", "/schedule"],
+                        //         ["pt", "/calendario"],
+                        //     ]) as string,
+                        //     icon: <Calendar className="mr-1" size={14} />,
+                        // },
                     ],
                 },
                 {

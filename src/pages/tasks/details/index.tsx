@@ -11,20 +11,29 @@ import { toast } from "../../../components/ui/toast/use-toast";
 import { Task } from "../data/task";
 import { HandleRequest } from "../../../lib/handle-request";
 import { useLanguage } from "../../../components/shared/language-provider";
+import { errorToast } from "components/shared/error-toast";
+import { BASE_API } from "config/constants";
+import { useAuth } from "components/shared/auth-provider";
 
 export function TaskDetails() {
     const { writeLang } = useLanguage();
-
+    const { auth } = useAuth();
     const { id } = useParams();
-    const navigate = useNavigate();
+
     const [task, setTask] = useState<Task>();
 
-    function getTask(id?: string) {
-        fetch("/api/tasks.json")
-            .then((res) => res.json())
-            .then((res) => {
-                setTask(res.find((res: any) => res.id === id) || null);
-            });
+    async function getTask(id?: string) {
+        const request = await new HandleRequest().get(`${BASE_API}/tasks/${id}`, {
+            token: auth?.token,
+        });
+
+        request.onDone((response) => {
+            setTask(response);
+        });
+
+        request.onError((error) => {
+            errorToast(error);
+        });
     }
 
     useEffect(() => {
@@ -35,68 +44,39 @@ export function TaskDetails() {
         return () => {
             controller.abort();
         };
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
 
     if (!task) return <></>;
 
     return (
         <Page
-            pathname="/tasks"
+            pathname={
+                writeLang([
+                    ["en", "/tasks"],
+                    ["pt", "/tarefas"],
+                ]) as string
+            }
             header={
-                <SectionHeader title="Tasks" pathname="/tasks" tree={!!task ? [{ label: task.name }] : []}>
-                    <ConfirmationAlert
-                        triggerButton={
-                            <Button>
-                                {writeLang([
-                                    ["en", "Remove"],
-                                    ["pt", "Remover"],
-                                ])}
-                            </Button>
-                        }
-                        title="Are you sure you want to delete this task?"
-                        description={
-                            writeLang([
-                                ["en", "This action cannot be undone. This will permanently delete this data."],
-                                ["pt", "Esta ação não pode ser desfeita. Isto excluirá permanentemente estes dados."],
-                            ]) as string
-                        }
-                        confirmButton={
-                            <SubmitButton
-                                label={
-                                    writeLang([
-                                        ["en", "Delete"],
-                                        ["pt", "Excluir"],
-                                    ]) as string
-                                }
-                                className={buttonVariants({ variant: "destructive" })}
-                                onSubmit={async () => {
-                                    const { onDone, onError } = await new HandleRequest().delete("https://jsonplaceholder.typicode.com/users");
-                                    onDone(() => {
-                                        toast({
-                                            variant: "success",
-                                            title: "Task removed successfully!",
-                                        });
-                                        navigate("/tasks");
-                                    });
-                                    onError(() =>
-                                        toast({
-                                            variant: "destructive",
-                                            title: "An error occured!",
-                                        }),
-                                    );
-                                }}
-                            />
-                        }
-                    />
-                </SectionHeader>
+                <SectionHeader
+                    title={
+                        writeLang([
+                            ["en", "Tasks"],
+                            ["pt", "Tarefas"],
+                        ]) as string
+                    }
+                    pathname={
+                        writeLang([
+                            ["en", "/tasks"],
+                            ["pt", "/tarefas"],
+                        ]) as string
+                    }
+                    tree={!!task ? [{ label: task.name }] : []}
+                ></SectionHeader>
             }
         >
             <div className="space-y-6 pb-40">
-                <div>
-                    <h3 className="text-lg font-medium">Edit Task</h3>
-                    <p className="text-sm text-muted-foreground">Some of this informations are public for other users</p>
-                </div>
-                <Separator />
                 <TaskForm task={task} />
             </div>
         </Page>

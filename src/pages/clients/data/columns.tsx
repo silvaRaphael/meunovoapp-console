@@ -20,11 +20,10 @@ export const clientColumns = (writeLang: (texts: [string, React.ReactNode][]) =>
                             ["pt", "Empresa"],
                         ]) as string
                     }
-                    noDislocate
                 />
             ),
             cell: ({ row }) => {
-                return <ClientInfo logotipo={row.original?.logotipo} company={row.original?.company} />;
+                return <ClientInfo id={row.original.id} logotipo={row.original.logotipo} company={row.original.company} />;
             },
         },
         {

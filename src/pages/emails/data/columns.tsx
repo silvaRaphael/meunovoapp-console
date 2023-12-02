@@ -19,7 +19,6 @@ export const emailsColumns = (writeLang: (texts: [string, React.ReactNode][]) =>
                             ["pt", "Nome"],
                         ]) as string
                     }
-                    noDislocate
                 />
             ),
             cell: ({ row }) => {

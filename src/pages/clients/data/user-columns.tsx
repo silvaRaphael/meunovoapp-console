@@ -17,7 +17,6 @@ export const userColumns = (writeLang: (texts: [string, React.ReactNode][]) => R
                             ["pt", "Nome"],
                         ]) as string
                     }
-                    noDislocate
                 />
             ),
             cell: ({ row }) => {

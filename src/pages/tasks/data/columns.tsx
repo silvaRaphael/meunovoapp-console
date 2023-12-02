@@ -2,16 +2,35 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Actions } from "../../../components/shared/actions";
 import { DataTableColumnHeader } from "../../../components/ui/data-table/data-table-column-header";
 import { Status, statusesColors, statusesIcons } from "../../projects/data/status";
-import { Project } from "../../projects/data/project";
 import { Link } from "react-router-dom";
 import { Task } from "./task";
 import { cn } from "lib/utils";
+import { ClientInfo } from "components/shared/client-info";
 
 export const taskColumns = (writeLang: (texts: [string, React.ReactNode][]) => React.ReactNode): ColumnDef<Task>[] => {
     return [
         {
-            accessorKey: "project",
-            enableHiding: true,
+            accessorKey: "project.client.name",
+            id: "client",
+            header: ({ column }) => (
+                <DataTableColumnHeader
+                    column={column}
+                    title={
+                        writeLang([
+                            ["en", "Client"],
+                            ["pt", "Cliente"],
+                        ]) as string
+                    }
+                />
+            ),
+            cell: ({ row }) => {
+                console.log(row.original);
+                if (!row.original.project.client) return <></>;
+                return <ClientInfo id={row.original.project.client.id} logotipo={row.original.project.client.logotipo} company={row.original.project.client.company} />;
+            },
+        },
+        {
+            accessorKey: "project.name",
             id: "project",
             header: ({ column }) => (
                 <DataTableColumnHeader
@@ -22,12 +41,9 @@ export const taskColumns = (writeLang: (texts: [string, React.ReactNode][]) => R
                             ["pt", "Projeto"],
                         ]) as string
                     }
-                    noDislocate
                 />
             ),
             cell: ({ row }) => {
-                const project: Project = row.getValue("project");
-
                 return (
                     <Link
                         to={
@@ -38,7 +54,7 @@ export const taskColumns = (writeLang: (texts: [string, React.ReactNode][]) => R
                         }
                     >
                         <div className="flex item-center space-x-1">
-                            <div className="text-left font-medium truncate max-w-[240px]">{project.name}</div>
+                            <div className="text-left font-medium truncate max-w-[240px]">{row.original.project.name}</div>
                         </div>
                     </Link>
                 );
@@ -58,7 +74,18 @@ export const taskColumns = (writeLang: (texts: [string, React.ReactNode][]) => R
                 />
             ),
             cell: ({ row }) => {
-                return <div className="text-left font-medium truncate max-w-[240px]">{row.getValue("name")}</div>;
+                return (
+                    <Link
+                        to={
+                            writeLang([
+                                ["en", `/tasks/${row.original.id}`],
+                                ["pt", `/tarefas/${row.original.id}`],
+                            ]) as string
+                        }
+                    >
+                        <div className="text-left font-medium truncate max-w-[240px]">{row.getValue("name")}</div>
+                    </Link>
+                );
             },
         },
         {
@@ -66,6 +93,7 @@ export const taskColumns = (writeLang: (texts: [string, React.ReactNode][]) => R
             header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
             cell: ({ row }) => {
                 const status: Status = row.getValue("status");
+
                 return (
                     <div className={cn("flex items-center space-x-1", statusesColors[status])}>
                         {statusesIcons[status]}

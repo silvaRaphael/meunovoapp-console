@@ -10,46 +10,13 @@ import { ClientInfo } from "components/shared/client-info";
 import { languages } from "config/languages";
 import { Language } from "components/shared/language-provider";
 import { Status, statusesColors, statusesIcons } from "./status";
+import { Link } from "react-router-dom";
 
 export const projectColumns = (
     language: Pick<Language, "lang" | "locale" | "currency">,
     writeLang: (texts: [string, React.ReactNode][]) => React.ReactNode,
 ): ColumnDef<Project>[] => {
     return [
-        {
-            accessorKey: "name",
-            header: ({ column }) => (
-                <DataTableColumnHeader
-                    column={column}
-                    title={
-                        writeLang([
-                            ["en", "Project"],
-                            ["pt", "Projeto"],
-                        ]) as string
-                    }
-                    noDislocate
-                />
-            ),
-            cell: ({ row }) => {
-                const date: Date = row.original.due;
-
-                const isLate = new Date(date) < new Date() && !["completed", "cancelled"].includes(row.original.status);
-
-                return (
-                    <div className="text-left font-medium truncate max-w-[240px]">
-                        {isLate && (
-                            <Badge variant="outline" className="me-1">
-                                {writeLang([
-                                    ["en", "overdue"],
-                                    ["pt", "atrasado"],
-                                ])}
-                            </Badge>
-                        )}
-                        {row.getValue("name")}
-                    </div>
-                );
-            },
-        },
         {
             accessorKey: "client.company",
             id: "client",
@@ -66,7 +33,51 @@ export const projectColumns = (
             ),
             cell: ({ row }) => {
                 if (!row.original.client) return <></>;
-                return <ClientInfo logotipo={row.original.client.logotipo} company={row.original.client.company} />;
+                return <ClientInfo id={row.original.client.id} logotipo={row.original.client.logotipo} company={row.original.client.company} />;
+            },
+        },
+        {
+            accessorKey: "name",
+            header: ({ column }) => (
+                <DataTableColumnHeader
+                    column={column}
+                    title={
+                        writeLang([
+                            ["en", "Project"],
+                            ["pt", "Projeto"],
+                        ]) as string
+                    }
+                />
+            ),
+            cell: ({ row }) => {
+                const date: Date = row.original.due;
+
+                const isLate = new Date(date) < new Date() && !["completed", "cancelled"].includes(row.original.status);
+
+                return (
+                    <Link
+                        to={
+                            writeLang([
+                                ["en", `/projects/${row.original.id}`],
+                                ["pt", `/projetos/${row.original.id}`],
+                            ]) as string
+                        }
+                    >
+                        <div className="flex item-center space-x-1">
+                            <div className="text-left font-medium truncate max-w-[240px]">
+                                {isLate && (
+                                    <Badge variant="outline" className="me-1">
+                                        {writeLang([
+                                            ["en", "overdue"],
+                                            ["pt", "atrasado"],
+                                        ])}
+                                    </Badge>
+                                )}
+                                {row.original.name}
+                            </div>
+                        </div>
+                    </Link>
+                );
             },
         },
         {
@@ -98,10 +109,10 @@ export const projectColumns = (
                 />
             ),
             cell: ({ row }) => {
-                const totalTasks = row.original.tasks.length;
-                const doneTasks = row.original.tasks.filter((item) => ["completed", "cancelled"].includes(item.status)).length;
+                const totalTasks = row.original.tasks.filter((item) => !["cancelled"].includes(item.status)).length;
+                const doneTasks = row.original.tasks.filter((item) => ["completed"].includes(item.status)).length;
 
-                return <Progress value={(doneTasks / totalTasks) * 100} />;
+                return <Progress value={row.original.status === "cancelled" ? 0 : (doneTasks / totalTasks || 1) * 100} />;
             },
         },
         {

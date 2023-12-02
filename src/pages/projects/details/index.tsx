@@ -10,7 +10,8 @@ import { useLanguage } from "../../../components/shared/language-provider";
 import { useAuth } from "components/shared/auth-provider";
 import { errorToast } from "components/shared/error-toast";
 import { BASE_API } from "config/constants";
-import { Button } from "components/ui/button";
+import { ProjectTasks } from "./tasks";
+import { CreateTaskForm } from "pages/tasks/forms/create";
 
 export function ProjectDetails() {
     const { writeLang } = useLanguage();
@@ -73,24 +74,16 @@ export function ProjectDetails() {
                     tree={!!project ? [{ label: project.name }] : []}
                 >
                     {tab === "tasks" && !["completed", "cancelled"].includes(project.status) && (
-                        // <CreateProjectForm
-                        //     label={
-                        //         writeLang([
-                        //             ["en", "Create project"],
-                        //             ["pt", "Novo projeto"],
-                        //         ]) as string
-                        //     }
-                        //     client_id={client.id}
-                        //     onCreated={() => getClient(id)}
-                        // />
-                        <Button>
-                            {
+                        <CreateTaskForm
+                            label={
                                 writeLang([
                                     ["en", "Create task"],
                                     ["pt", "Nova tarefa"],
                                 ]) as string
                             }
-                        </Button>
+                            project_id={project.id}
+                            onCreated={() => getProject(id)}
+                        />
                     )}
                 </SectionHeader>
             }
@@ -115,7 +108,7 @@ export function ProjectDetails() {
                         <ProjectForm project={project} />
                     </TabsContent>
                     <TabsContent value="tasks" className="pt-3">
-                        {/* <ProjectTasks project={project} /> */}
+                        <ProjectTasks project={project} />
                     </TabsContent>
                 </Tabs>
             </div>
