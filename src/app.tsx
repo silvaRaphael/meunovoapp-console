@@ -175,7 +175,7 @@ export function App() {
                                             ["pt", "/suporte"],
                                         ]) as string
                                     }
-                                    element={<NotFound />}
+                                    element={<CommingSoon />}
                                 />
                                 <Route path="*" element={<NotFound />} />
                             </Route>

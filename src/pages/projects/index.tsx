@@ -11,6 +11,7 @@ import { BASE_API } from "config/constants";
 import { useAuth } from "components/shared/auth-provider";
 import { CreateProjectForm } from "./forms/create";
 import { Client } from "pages/clients/data/client";
+import { HandlePermission } from "lib/handle-permission";
 
 export function Projects() {
     const { auth } = useAuth();
@@ -83,7 +84,7 @@ export function Projects() {
                         ]) as string
                     }
                 >
-                    <CreateProjectForm clients={clients} onCreated={getProjects} />
+                    {HandlePermission(<CreateProjectForm clients={clients} onCreated={getProjects} />)}
                 </SectionHeader>
             }
         >

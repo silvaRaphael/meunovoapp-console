@@ -17,12 +17,13 @@ import { BASE_API } from "config/constants";
 import { errorToast } from "components/shared/error-toast";
 import { Separator } from "components/ui/separator";
 import { statuses, statusesColors, statusesIcons } from "pages/projects/data/status";
+import { HandlePermission, hasPermission } from "lib/handle-permission";
 
 export function TaskForm({ task }: { task: Task }) {
     const { writeLang } = useLanguage();
     const { auth } = useAuth();
 
-    const isEditable = !["completed", "cancelled"].includes(task.status);
+    const isEditable = hasPermission(auth) && !["completed", "cancelled"].includes(task.status);
 
     const form = useForm<CreateTaskSchema>({
         resolver: zodResolver(createTaskSchema),
@@ -155,17 +156,19 @@ export function TaskForm({ task }: { task: Task }) {
                     </div>
                 </div>
                 <Separator />
-                {isEditable && (
-                    <SubmitButton
-                        label={
-                            writeLang([
-                                ["en", "Update Task"],
-                                ["pt", "Atualizar Tarefa"],
-                            ]) as string
-                        }
-                        type="submit"
-                        state={form.formState.isSubmitting ? "loading" : "initial"}
-                    />
+                {HandlePermission(
+                    isEditable && (
+                        <SubmitButton
+                            label={
+                                writeLang([
+                                    ["en", "Update Task"],
+                                    ["pt", "Atualizar Tarefa"],
+                                ]) as string
+                            }
+                            type="submit"
+                            state={form.formState.isSubmitting ? "loading" : "initial"}
+                        />
+                    ),
                 )}
             </form>
         </Form>

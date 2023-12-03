@@ -11,6 +11,7 @@ import { BASE_API } from "config/constants";
 import { useAuth } from "components/shared/auth-provider";
 import { CreateTaskForm } from "./forms/create";
 import { Project } from "pages/projects/data/project";
+import { HandlePermission } from "lib/handle-permission";
 
 export function Tasks() {
     const { auth } = useAuth();
@@ -83,7 +84,7 @@ export function Tasks() {
                         ]) as string
                     }
                 >
-                    <CreateTaskForm projects={projects} onCreated={getTasks} />
+                    {HandlePermission(<CreateTaskForm projects={projects} onCreated={getTasks} />)}
                 </SectionHeader>
             }
         >

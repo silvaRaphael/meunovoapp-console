@@ -12,10 +12,11 @@ import { errorToast } from "components/shared/error-toast";
 import { BASE_API } from "config/constants";
 import { ProjectTasks } from "./tasks";
 import { CreateTaskForm } from "pages/tasks/forms/create";
+import { HandlePermission } from "lib/handle-permission";
 
 export function ProjectDetails() {
-    const { writeLang } = useLanguage();
     const { auth } = useAuth();
+    const { writeLang } = useLanguage();
     const { id } = useParams();
 
     const [project, setProject] = useState<Project>();
@@ -73,18 +74,20 @@ export function ProjectDetails() {
                     }
                     tree={!!project ? [{ label: project.name }] : []}
                 >
-                    {tab === "tasks" && !["completed", "cancelled"].includes(project.status) && (
-                        <CreateTaskForm
-                            label={
-                                writeLang([
-                                    ["en", "Create task"],
-                                    ["pt", "Nova tarefa"],
-                                ]) as string
-                            }
-                            project_id={project.id}
-                            onCreated={() => getProject(id)}
-                        />
-                    )}
+                    {tab === "tasks" &&
+                        !["completed", "cancelled"].includes(project.status) &&
+                        HandlePermission(
+                            <CreateTaskForm
+                                label={
+                                    writeLang([
+                                        ["en", "Create task"],
+                                        ["pt", "Nova tarefa"],
+                                    ]) as string
+                                }
+                                project_id={project.id}
+                                onCreated={() => getProject(id)}
+                            />,
+                        )}
                 </SectionHeader>
             }
         >

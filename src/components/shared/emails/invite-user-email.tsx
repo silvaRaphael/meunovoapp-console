@@ -1,40 +1,45 @@
 import { Button, Link, Text } from "@react-email/components";
 import { EmailBase } from "./email-base";
-import { buttonVariants } from "components/ui/button";
-import { cn } from "lib/utils";
 
 export function InviteUserEmail({ userId }: { userId: string }) {
     return (
         <EmailBase title="Você recebeu um convite">
-            <Text className="text-lg">Olá</Text>
+            <Text style={{ fontSize: 18 }}>Olá</Text>
             <Text>
                 É com grande prazer que o recebemos na MeuNovoApp! Estamos entusiasmados por tê-lo(a) como parte da nossa comunidade e estamos ansiosos para ajudá-lo(a) a explorar
                 todas as possibilidades que oferecemos.
             </Text>
-            <Text className="text-lg">O que você encontrará em nossa plataforma:</Text>
+            <Text style={{ fontSize: 18 }}>O que você encontrará em nossa plataforma:</Text>
             <Text>
-                <span className="font-semibold">Recursos Personalizados: </span>
+                <span style={{ fontWeight: 600 }}>Recursos Personalizados: </span>
                 Oferecemos uma variedade de recursos projetados para atender às suas necessidades específicas. Estamos aqui para simplificar sua experiência.
             </Text>
             <Text>
-                <span className="font-semibold">Acompanhamento de Projeto: </span>
+                <span style={{ fontWeight: 600 }}>Acompanhamento de Projeto: </span>
                 Na plataforma você poderá acompanhar o andamento do seu projeto.
             </Text>
 
             <Button
-                className={cn(buttonVariants(), "bg-slate-800 text-slate-100 dark:bg-slate-300 dark:text-slate-900")}
+                style={{
+                    padding: 12,
+                    borderRadius: 12,
+                    backgroundColor: "hsl(240 5.9% 10%)",
+                    color: "hsl(240 4.8% 95.9%)",
+                    fontSize: 14,
+                    fontWeight: 600,
+                }}
                 href={`https://console.meunovoapp.com.br/comecar?u=${userId}`}
             >
                 Criar Conta
             </Button>
 
-            <Text className="text-lg">Próximos Passos:</Text>
+            <Text style={{ fontSize: 18 }}>Próximos Passos:</Text>
             <Text>
-                <span className="font-semibold">Configuração do Perfil: </span>
+                <span style={{ fontWeight: 600 }}>Configuração do Perfil: </span>
                 Personalize o seu perfil.
             </Text>
             <Text>
-                <span className="font-semibold">Explorando a Plataforma: </span>
+                <span style={{ fontWeight: 600 }}>Explorando a Plataforma: </span>
                 <Link href="https://console.meunovoapp.com.br" target="_blank">
                     Acesse
                 </Link>{" "}

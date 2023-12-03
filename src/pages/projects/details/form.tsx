@@ -23,13 +23,14 @@ import { CreateProjectSchema, createProjectSchema } from "adapters/project";
 import { toast } from "components/ui/toast/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "components/ui/select";
 import { statuses, statusesColors, statusesIcons } from "../data/status";
+import { HandlePermission, hasPermission } from "lib/handle-permission";
 
 export function ProjectForm({ project }: { project: Project }) {
     const { language, writeLang } = useLanguage();
     const { auth } = useAuth();
 
     const locale = languages.find((item) => item.lang === language.lang)?.dateLocale;
-    const isEditable = !["completed", "cancelled"].includes(project.status);
+    const isEditable = hasPermission(auth) && !["completed", "cancelled"].includes(project.status);
 
     const form = useForm<CreateProjectSchema>({
         resolver: zodResolver(createProjectSchema),
@@ -213,17 +214,19 @@ export function ProjectForm({ project }: { project: Project }) {
                     </div>
                 </div>
                 <Separator />
-                {isEditable && (
-                    <SubmitButton
-                        label={
-                            writeLang([
-                                ["en", "Update Project"],
-                                ["pt", "Atualizar Projeto"],
-                            ]) as string
-                        }
-                        type="submit"
-                        state={form.formState.isSubmitting ? "loading" : "initial"}
-                    />
+                {HandlePermission(
+                    isEditable && (
+                        <SubmitButton
+                            label={
+                                writeLang([
+                                    ["en", "Update Project"],
+                                    ["pt", "Atualizar Projeto"],
+                                ]) as string
+                            }
+                            type="submit"
+                            state={form.formState.isSubmitting ? "loading" : "initial"}
+                        />
+                    ),
                 )}
             </form>
         </Form>

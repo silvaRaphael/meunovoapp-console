@@ -1,6 +1,5 @@
-import { Calendar, ClipboardList, HelpCircle, LayoutDashboard, ListTodo, Mail, Settings2, User, Users } from "lucide-react";
+import { ClipboardList, HelpCircle, LayoutDashboard, ListTodo, Mail, Settings2, User, Users } from "lucide-react";
 import { Role } from "./roles";
-import { Plan } from "../pages/pricing/data/plan";
 import { ReactNode } from "react";
 import { Auth } from "components/shared/auth-provider";
 
@@ -265,5 +264,3 @@ export const MenuItems = ({ auth, writeLang }: { auth: Auth; writeLang: (texts: 
 
     return menuItems;
 };
-
-export const activePlan: Pick<Plan, "id"> = { id: "123" };
