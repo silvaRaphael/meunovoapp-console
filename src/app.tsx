@@ -17,6 +17,7 @@ import { useAuth } from "components/shared/auth-provider";
 import { Emails } from "pages/emails";
 import { EmailDetails } from "pages/emails/details";
 import { CompleteProfile } from "pages/complete-profile";
+import { CommingSoon } from "pages/comming-soon";
 
 export function App() {
     const { writeLang } = useLanguage();
@@ -109,7 +110,7 @@ export function App() {
                                             ["pt", "/suporte"],
                                         ]) as string
                                     }
-                                    element={<NotFound />}
+                                    element={<CommingSoon />}
                                 />
                                 <Route path="*" element={<NotFound />} />
                             </Route>

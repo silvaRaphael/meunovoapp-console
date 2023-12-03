@@ -47,6 +47,7 @@ export function CreateTaskForm({ label, project_id, projects, onCreated }: { lab
                 project_id: "",
                 name: "",
             });
+            form.clearErrors();
 
             setOpen(false);
             onCreated();
