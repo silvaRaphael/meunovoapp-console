@@ -18,8 +18,8 @@ export const createClientSchema = z.object({
         })
         .optional()
         .refine((arg) => !arg || (arg && arg.replace(/[^0-9]+/g, "").length === 14), "Digite um CNPJ válido."),
-    // logotipo: z.string().optional(),
-    logotipo: typeof window === "undefined" ? z.string() : z.record(z.any()).nullable().optional(),
+    logotipoName: z.string().optional(),
+    logotipo: z.string().optional(),
 });
 export type CreateClientSchema = z.infer<typeof createClientSchema>;
 
