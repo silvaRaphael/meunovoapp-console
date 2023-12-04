@@ -112,7 +112,7 @@ export const projectColumns = (
                 const totalTasks = row.original.tasks.filter((item) => !["cancelled"].includes(item.status)).length;
                 const doneTasks = row.original.tasks.filter((item) => ["completed"].includes(item.status)).length;
 
-                return <Progress value={row.original.status === "cancelled" ? 0 : (doneTasks / totalTasks || 1) * 100} />;
+                return <Progress value={row.original.status === "cancelled" ? 0 : (doneTasks / totalTasks) * 100} />;
             },
         },
         {

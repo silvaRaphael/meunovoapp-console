@@ -1,3 +1,4 @@
+import { Client } from "pages/clients/data/client";
 import { Role } from "./roles";
 
 export interface User {
@@ -7,4 +8,5 @@ export interface User {
     is_manager: boolean;
     avatar?: string;
     role: Role;
+    client?: Client;
 }
