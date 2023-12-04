@@ -23,7 +23,8 @@ export function ClientForm({ client }: { client: Client }) {
     const { writeLang } = useLanguage();
     const { auth } = useAuth();
 
-    const [logotipo, setLogotipo] = useState<string | null>(client.logotipo ? `${BASE_FILES}${client.logotipo}` : null);
+    const [logotipo, setLogotipo] = useState<string | null>(client.logotipo ? `${BASE_FILES}/${client.logotipo}` : null);
+    const [logotipoBase64, setLogotipoBase64] = useState<string | null>(null);
 
     const form = useForm<CreateClientSchema>({
         resolver: zodResolver(createClientSchema),
@@ -39,7 +40,7 @@ export function ClientForm({ client }: { client: Client }) {
         const reader = new FileReader();
 
         reader.onloadend = () => {
-            setLogotipo(reader.result?.toString() || null);
+            setLogotipoBase64(reader.result?.toString() || null);
         };
 
         reader.readAsDataURL(file);
@@ -48,7 +49,8 @@ export function ClientForm({ client }: { client: Client }) {
     async function onSubmit(data: CreateClientSchema) {
         const request = await new HandleRequest({
             ...data,
-            logotipo: logotipo || "",
+            logotipoName: logotipo ? client.logotipo || "" : "",
+            logotipo: logotipoBase64 || "",
         }).put(`${BASE_API}/clients/${client.id}`, {
             token: auth?.token,
         });
@@ -182,55 +184,49 @@ export function ClientForm({ client }: { client: Client }) {
                         </p>
                     </div>
                     <div className="col-span-6 space-y-4">
-                        <FormField
-                            control={form.control}
-                            name="logotipo"
-                            render={({ field }) => (
-                                <div className="flex flex-col items-center space-y-3">
-                                    <label htmlFor="logotipo-input">
-                                        <Avatar className="w-32 h-32 p-0 aspect-square border cursor-pointer">
-                                            <AvatarImage src={logotipo || undefined} />
-                                            <AvatarFallback className="bg-muted/50 hover:bg-accent/60 group">
-                                                <UploadCloudIcon className="text-muted-foreground/50 group-hover:text-primary/40" />
-                                            </AvatarFallback>
-                                        </Avatar>
-                                    </label>
-                                    <FormDescription>
-                                        {writeLang([
-                                            ["en", "Upload company logotipo"],
-                                            ["pt", "Envie o logotipo da empresa"],
-                                        ])}
-                                    </FormDescription>
-                                    {logotipo && (
-                                        <Button
-                                            variant="destructive"
-                                            onClick={() => {
-                                                field.value = "";
-                                                setLogotipo(null);
-                                            }}
-                                        >
-                                            {writeLang([
-                                                ["en", "Remove Image"],
-                                                ["pt", "Excluir Imagem"],
-                                            ])}
-                                        </Button>
-                                    )}
-                                    <FormItem className="flex flex-col">
-                                        <FormControl>
-                                            <Input
-                                                id="logotipo-input"
-                                                type="file"
-                                                onChange={(event) => {
-                                                    if (event.target.files?.length) convertToBase64(event.target.files[0]);
-                                                }}
-                                                className="hidden"
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                </div>
+                        <div className="flex flex-col items-center space-y-3">
+                            <label htmlFor="logotipo-input">
+                                <Avatar className="w-32 h-32 p-0 aspect-square border cursor-pointer">
+                                    <AvatarImage src={logotipoBase64 ? logotipoBase64 : logotipo || undefined} />
+                                    <AvatarFallback className="bg-muted/50 hover:bg-accent/60 group">
+                                        <UploadCloudIcon className="text-muted-foreground/50 group-hover:text-primary/40" />
+                                    </AvatarFallback>
+                                </Avatar>
+                            </label>
+                            <FormDescription>
+                                {writeLang([
+                                    ["en", "Upload company logotipo"],
+                                    ["pt", "Envie o logotipo da empresa"],
+                                ])}
+                            </FormDescription>
+                            {(logotipo || logotipoBase64) && (
+                                <Button
+                                    variant="destructive"
+                                    onClick={() => {
+                                        setLogotipo(null);
+                                        setLogotipoBase64(null);
+                                    }}
+                                >
+                                    {writeLang([
+                                        ["en", "Remove Image"],
+                                        ["pt", "Excluir Imagem"],
+                                    ])}
+                                </Button>
                             )}
-                        />
+                            <FormItem className="flex flex-col">
+                                <FormControl>
+                                    <Input
+                                        id="logotipo-input"
+                                        type="file"
+                                        onChange={(event) => {
+                                            if (event.target.files?.length) convertToBase64(event.target.files[0]);
+                                        }}
+                                        className="hidden"
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        </div>
                     </div>
                 </div>
                 <Separator />
