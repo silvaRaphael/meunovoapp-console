@@ -6,6 +6,7 @@ import { Client } from "./client";
 import { ClientInfo } from "components/shared/client-info";
 import { Button } from "components/ui/button";
 import { Badge } from "components/ui/badge";
+import { BASE_FILES } from "config/constants";
 
 export const clientColumns = (writeLang: (texts: [string, React.ReactNode][]) => React.ReactNode): ColumnDef<Client>[] => {
     return [
@@ -59,7 +60,7 @@ export const clientColumns = (writeLang: (texts: [string, React.ReactNode][]) =>
                                 ])}
                             </Badge>
                         )}
-                        <MemberInfo avatar={row.original.users[0].avatar} email={row.original.users[0].email} name={row.original.users[0].name} />
+                        <MemberInfo avatar={`${BASE_FILES}/${row.original.users[0].avatar}`} email={row.original.users[0].email} name={row.original.users[0].name} />
                     </div>
                 );
             },
