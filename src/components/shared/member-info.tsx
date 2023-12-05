@@ -15,7 +15,7 @@ export function MemberInfo({ avatar, name, email }: Props) {
     return (
         <div className="flex items-center space-x-2">
             <Avatar className="h-8 w-8 border">
-                <AvatarImage src={avatar} alt={`${name}`} />
+                <AvatarImage src={avatar} alt={`${name}`} className="object-cover" />
                 <AvatarFallback>{nameInitials}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col items-start">

@@ -89,7 +89,7 @@ export function Profile() {
                         </TabsList>
                     )}
                     <TabsContent value="profile" className="pt-3">
-                        <ProfileForm />
+                        <ProfileForm user={profile} />
                     </TabsContent>
                     {profile.client && (
                         <TabsContent value="client" className="pt-3">

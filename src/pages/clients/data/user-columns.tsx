@@ -3,6 +3,7 @@ import { DataTableColumnHeader } from "../../../components/ui/data-table/data-ta
 import { MemberInfo } from "../../../components/shared/member-info";
 import { User } from "config/user";
 import { Badge } from "components/ui/badge";
+import { BASE_FILES } from "config/constants";
 
 export const userColumns = (writeLang: (texts: [string, React.ReactNode][]) => React.ReactNode): ColumnDef<User>[] => {
     return [
@@ -30,7 +31,7 @@ export const userColumns = (writeLang: (texts: [string, React.ReactNode][]) => R
                                 ])}
                             </Badge>
                         )}
-                        <MemberInfo name={row.original.name} email={row.original.email} />
+                        <MemberInfo avatar={`${BASE_FILES}/${row.original.avatar}`} email={row.original.email} name={row.original.name} />
                     </div>
                 );
             },

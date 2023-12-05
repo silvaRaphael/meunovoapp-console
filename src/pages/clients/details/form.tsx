@@ -18,6 +18,7 @@ import { useState } from "react";
 import { Button } from "components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "components/ui/avatar";
 import { UploadCloudIcon } from "lucide-react";
+import { convertToBase64 } from "lib/helper";
 
 export function ClientForm({ client }: { client: Client }) {
     const { writeLang } = useLanguage();
@@ -35,16 +36,6 @@ export function ClientForm({ client }: { client: Client }) {
         },
         mode: "onChange",
     });
-
-    async function convertToBase64(file: File) {
-        const reader = new FileReader();
-
-        reader.onloadend = () => {
-            setLogotipoBase64(reader.result?.toString() || null);
-        };
-
-        reader.readAsDataURL(file);
-    }
 
     async function onSubmit(data: CreateClientSchema) {
         const request = await new HandleRequest({
@@ -187,7 +178,7 @@ export function ClientForm({ client }: { client: Client }) {
                         <div className="flex flex-col items-center space-y-3">
                             <label htmlFor="logotipo-input">
                                 <Avatar className="w-32 h-32 p-0 aspect-square border cursor-pointer">
-                                    <AvatarImage src={logotipoBase64 ? logotipoBase64 : logotipo || undefined} />
+                                    <AvatarImage src={logotipoBase64 ? logotipoBase64 : logotipo || undefined} className="object-cover" />
                                     <AvatarFallback className="bg-muted/50 hover:bg-accent/60 group">
                                         <UploadCloudIcon className="text-muted-foreground/50 group-hover:text-primary/40" />
                                     </AvatarFallback>
@@ -218,8 +209,28 @@ export function ClientForm({ client }: { client: Client }) {
                                     <Input
                                         id="logotipo-input"
                                         type="file"
+                                        accept=".jpg, .jpeg, .png, .gif"
                                         onChange={(event) => {
-                                            if (event.target.files?.length) convertToBase64(event.target.files[0]);
+                                            if (!event.target) return;
+                                            const { target } = event;
+
+                                            if (!target.files?.length) return;
+
+                                            const maxSizeInBytes = 1024 * 1024 * 1; // 1MB
+                                            const fileSize = target.files[0].size;
+
+                                            if (fileSize > maxSizeInBytes) {
+                                                toast({
+                                                    title: "Erro ao subir arquivo!",
+                                                    description: "O tamanho do arquivo é maior que o limite (1MB).",
+                                                    variant: "destructive",
+                                                });
+                                                target.value = "";
+
+                                                return;
+                                            }
+
+                                            convertToBase64(target.files[0], (result) => setLogotipoBase64(result?.toString() || null));
                                         }}
                                         className="hidden"
                                     />

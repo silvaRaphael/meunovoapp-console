@@ -7,6 +7,7 @@ export interface Auth {
     name: string;
     email: string;
     role: Role;
+    avatar?: string;
     token: string;
 }
 

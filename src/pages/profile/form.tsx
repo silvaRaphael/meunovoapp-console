@@ -10,25 +10,31 @@ import { Separator } from "../../components/ui/separator";
 import { errorToast } from "components/shared/error-toast";
 import { useLanguage } from "components/shared/language-provider";
 import { useAuth } from "components/shared/auth-provider";
-import { BASE_API } from "config/constants";
+import { BASE_API, BASE_FILES } from "config/constants";
 import { useState } from "react";
 import { Button } from "components/ui/button";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, UploadCloudIcon } from "lucide-react";
 import { UpdateUserSchema, updateUserSchema } from "adapters/user";
+import { Avatar, AvatarFallback, AvatarImage } from "components/ui/avatar";
+import { convertToBase64 } from "lib/helper";
+import { User } from "config/user";
 
 let usernameTimeout: any;
 
-export function ProfileForm() {
+export function ProfileForm({ user }: { user: User }) {
     const { auth, setAuth } = useAuth();
     const { writeLang } = useLanguage();
 
     const [passwordVisible, setPasswordVisible] = useState<boolean[]>([false, false]);
 
+    const [avatar, setAvatar] = useState<string | null>(user.avatar ? `${BASE_FILES}/${user.avatar}` : null);
+    const [avatarBase64, setAvatarBase64] = useState<string | null>(null);
+
     const form = useForm<UpdateUserSchema>({
         resolver: zodResolver(updateUserSchema),
         defaultValues: {
-            name: auth?.name,
-            email: auth?.email,
+            name: user?.name,
+            email: user?.email,
         },
         mode: "onChange",
     });
@@ -55,15 +61,20 @@ export function ProfileForm() {
     async function onSubmit(data: UpdateUserSchema) {
         if (!auth) return;
 
-        const request = await new HandleRequest(data).put(`${BASE_API}/users`, {
+        const request = await new HandleRequest({
+            ...data,
+            avatarName: avatar ? auth.avatar || "" : "",
+            avatar: avatarBase64 || "",
+        }).put(`${BASE_API}/users`, {
             token: auth?.token,
         });
 
-        request.onDone(() => {
+        request.onDone((reponse) => {
             setAuth({
                 name: data.name,
                 email: data.email,
                 role: auth?.role,
+                avatar: reponse.avatar,
                 token: auth?.token,
             });
 
@@ -184,6 +195,83 @@ export function ProfileForm() {
                                 </FormItem>
                             )}
                         />
+                    </div>
+                </div>
+                <Separator />
+                <div className="grid grid-cols-12">
+                    <div className="col-span-3">
+                        <h3 className="font-semibold leading-4">Avatar</h3>
+                        <p className="text-sm text-muted-foreground">
+                            {writeLang([
+                                ["en", "Change your avatar"],
+                                ["pt", "Altere o seu avatar"],
+                            ])}
+                        </p>
+                    </div>
+                    <div className="col-span-6 space-y-4">
+                        <div className="flex flex-col items-center space-y-3">
+                            <label htmlFor="avatar-input">
+                                <Avatar className="w-32 h-32 p-0 aspect-square border cursor-pointer">
+                                    <AvatarImage src={avatarBase64 ? avatarBase64 : avatar || undefined} className="object-cover" />
+                                    <AvatarFallback className="bg-muted/50 hover:bg-accent/60 group">
+                                        <UploadCloudIcon className="text-muted-foreground/50 group-hover:text-primary/40" />
+                                    </AvatarFallback>
+                                </Avatar>
+                            </label>
+                            <FormDescription>
+                                {writeLang([
+                                    ["en", "Upload your avatar"],
+                                    ["pt", "Envie o seu avatar"],
+                                ])}
+                            </FormDescription>
+                            {(avatar || avatarBase64) && (
+                                <Button
+                                    variant="destructive"
+                                    onClick={() => {
+                                        setAvatar(null);
+                                        setAvatarBase64(null);
+                                    }}
+                                >
+                                    {writeLang([
+                                        ["en", "Remove Image"],
+                                        ["pt", "Excluir Imagem"],
+                                    ])}
+                                </Button>
+                            )}
+                            <FormItem className="flex flex-col">
+                                <FormControl>
+                                    <Input
+                                        id="avatar-input"
+                                        type="file"
+                                        accept=".jpg, .jpeg, .png, .gif"
+                                        onChange={(event) => {
+                                            if (!event.target) return;
+                                            const { target } = event;
+
+                                            if (!target.files?.length) return;
+
+                                            const maxSizeInBytes = 1024 * 1024 * 1; // 1MB
+                                            const fileSize = target.files[0].size;
+
+                                            if (fileSize > maxSizeInBytes) {
+                                                toast({
+                                                    title: "Erro ao subir arquivo!",
+                                                    description: "O tamanho do arquivo é maior que o limite (1MB).",
+                                                    variant: "destructive",
+                                                });
+                                                target.value = "";
+
+                                                return;
+                                            }
+
+                                            convertToBase64(target.files[0], (result) => setAvatarBase64(result?.toString() || null));
+                                        }}
+                                        className="hidden"
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        </div>
                     </div>
                 </div>
                 <Separator />
