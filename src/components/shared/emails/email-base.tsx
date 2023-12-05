@@ -1,114 +1,118 @@
-import { Button, Column, Container, Head, Heading, Html, Preview, Row, Section, Tailwind, Text } from "@react-email/components";
+import { Body, Button, Column, Container, Head, Heading, Html, Preview, Row, Section, Text } from "@react-email/components";
 import { ReactNode } from "react";
 
 export function EmailBase({ title, children }: { title: string; children?: ReactNode }) {
     return (
         <Html
             style={{
-                backgroundColor: "hsl(240 4.8% 95.9%)",
+                backgroundColor: "#f4f4f5",
             }}
         >
             <Head>
                 <Preview>{title}</Preview>
             </Head>
-            <Section
-                style={{
-                    color: "hsl(240 5.9% 10%)",
-                }}
-            >
-                <Container
+            <Body>
+                <Section
                     style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
+                        color: "#18181b",
+                        backgroundColor: "#f4f4f5",
                     }}
                 >
-                    <Row>
-                        <Column>
-                            <Text
-                                style={{
-                                    fontWeight: 600,
-                                    fontSize: 20,
-                                    width: "min-content",
-                                }}
-                            >
-                                Meu
-                            </Text>
-                        </Column>
-                        <Column>
-                            <Text
-                                style={{
-                                    fontWeight: 600,
-                                    fontSize: 20,
-                                    width: "min-content",
-                                    color: "rgb(239 68 68)",
-                                }}
-                            >
-                                Novo
-                            </Text>
-                        </Column>
-                        <Column>
-                            <Text
-                                style={{
-                                    fontWeight: 600,
-                                    fontSize: 20,
-                                    width: "min-content",
-                                }}
-                            >
-                                App
-                            </Text>
-                        </Column>
-                    </Row>
-                </Container>
-                <Container
-                    style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        backgroundColor: "hsl(240 5.9% 10%)",
-                        color: "hsl(240 4.8% 95.9%)",
-                        padding: 32,
-                    }}
-                >
-                    <Heading
+                    <Container
                         style={{
-                            fontSize: 20,
-                            fontWeight: 700,
+                            textAlign: "center",
                         }}
                     >
-                        {title}
-                    </Heading>
-                </Container>
-                <Container
-                    style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        width: "100%",
-                        padding: 32,
-                        backgroundColor: "hsl(var(240 5.9% 10%) / 0.5)",
-                    }}
-                >
-                    {children}
-                </Container>
-                <Container
-                    style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        padding: 16,
-                        backgroundColor: "hsl(240 5.9% 10%)",
-                        color: "hsl(240 4.8% 95.9%)",
-                    }}
-                >
-                    <Button
+                        <Row
+                            style={{
+                                width: "min-content",
+                            }}
+                        >
+                            <Column>
+                                <Text
+                                    style={{
+                                        fontWeight: 600,
+                                        fontSize: 20,
+                                        width: "min-content",
+                                    }}
+                                >
+                                    Meu
+                                </Text>
+                            </Column>
+                            <Column>
+                                <Text
+                                    style={{
+                                        fontWeight: 600,
+                                        fontSize: 20,
+                                        width: "min-content",
+                                        color: "rgb(239, 68, 68)",
+                                    }}
+                                >
+                                    Novo
+                                </Text>
+                            </Column>
+                            <Column>
+                                <Text
+                                    style={{
+                                        fontWeight: 600,
+                                        fontSize: 20,
+                                        width: "min-content",
+                                    }}
+                                >
+                                    App
+                                </Text>
+                            </Column>
+                        </Row>
+                    </Container>
+                    <Container
                         style={{
-                            fontSize: 14,
-                            fontWeight: 500,
+                            textAlign: "center",
+                            height: 80,
+                            backgroundColor: "#18181b",
                         }}
-                        href="https://meunovoapp.com.br"
                     >
-                        Ir para o site
-                    </Button>
-                </Container>
-            </Section>
+                        <Row>
+                            <Heading
+                                style={{
+                                    fontSize: 20,
+                                    fontWeight: 700,
+                                    margin: 20,
+                                    color: "#f4f4f5",
+                                }}
+                            >
+                                {title}
+                            </Heading>
+                        </Row>
+                    </Container>
+                    <Container
+                        style={{
+                            display: "block",
+                            padding: 20,
+                            backgroundColor: "#fff",
+                        }}
+                    >
+                        {children}
+                    </Container>
+                    <Container
+                        style={{
+                            textAlign: "center",
+                            backgroundColor: "#18181b",
+                        }}
+                    >
+                        <Button
+                            style={{
+                                fontSize: 14,
+                                fontWeight: 500,
+                                margin: 16,
+                                color: "#f4f4f5",
+                            }}
+                            href="https://meunovoapp.com.br"
+                        >
+                            Ir para o site
+                        </Button>
+                    </Container>
+                </Section>
+            </Body>
         </Html>
     );
 }

@@ -38,7 +38,7 @@ export function ReplyMessageEmail({
             <Text style={{ fontSize: 18 }}>Proposta Personalizada:</Text>
             <Text style={{ fontSize: 16, fontWeight: 600 }}>Detalhes do Projeto:</Text>
             <div
-                className="text-sm"
+                style={{ fontSize: 14 }}
                 dangerouslySetInnerHTML={{
                     __html: projectDetails.replace(/\n/g, "<br />"),
                 }}
@@ -46,9 +46,9 @@ export function ReplyMessageEmail({
             <Text style={{ fontSize: 16, fontWeight: 600 }}>Escopo do Projeto:</Text>
             {projectScope.map((item, i) => (
                 <Fragment key={i}>
-                    <Text className="text-md">{item.title}</Text>
+                    <Text style={{ fontWeight: 600, marginBottom: 0 }}>{item.title}</Text>
                     <div
-                        className="text-sm"
+                        style={{ fontSize: 14 }}
                         dangerouslySetInnerHTML={{
                             __html: item.value.replace(/\n/g, "<br />"),
                         }}
@@ -60,7 +60,7 @@ export function ReplyMessageEmail({
                 <span style={{ fontWeight: 600 }}>Início do Projeto: </span>
                 {format(addDays(new Date(), 7), "PPP", { locale: ptBR })}
             </Text>
-            <Text>
+            <Text style={{ marginBottom: -16 }}>
                 <span style={{ fontWeight: 600 }}>Conclusão do Desenvolvimento: </span>
             </Text>
             <Text>
@@ -68,17 +68,16 @@ export function ReplyMessageEmail({
                     locale: ptBR,
                 })}
             </Text>
-            <Text style={{ fontSize: 16, fontWeight: 600 }}>Estrutura de Preços:</Text>
+            <Text style={{ fontSize: 16, fontWeight: 600, marginBottom: 0 }}>Estrutura de Preços:</Text>
             <div
-                className="text-sm"
+                style={{ fontSize: 14 }}
                 dangerouslySetInnerHTML={{
                     __html: projectPayment.replace(/\n/g, "<br />"),
                 }}
             />
-            <br />
-            <Text style={{ fontSize: 16, fontWeight: 600 }}>Benefícios Adicionais:</Text>
+            <Text style={{ fontSize: 16, fontWeight: 600, marginBottom: 0 }}>Benefícios Adicionais:</Text>
             <div
-                className="text-sm"
+                style={{ fontSize: 14 }}
                 dangerouslySetInnerHTML={{
                     __html: projectBenefits.replace(/\n/g, "<br />"),
                 }}

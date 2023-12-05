@@ -1,4 +1,4 @@
-import { ClipboardList, HelpCircle, LayoutDashboard, ListTodo, Mail, Settings2, User, Users } from "lucide-react";
+import { ClipboardList, FileCode, HelpCircle, LayoutDashboard, ListTodo, Mail, Settings2, User, Users } from "lucide-react";
 import { Role } from "./roles";
 import { ReactNode } from "react";
 import { Auth } from "components/shared/auth-provider";
@@ -32,6 +32,14 @@ export const SideMenu = ({ writeLang }: { writeLang: (texts: [string, React.Reac
                             path: "/",
                             icon: <LayoutDashboard className="mr-1" size={14} />,
                         },
+                    ],
+                },
+                {
+                    title: writeLang([
+                        ["en", "Management"],
+                        ["pt", "Gestão"],
+                    ]) as string,
+                    menu: [
                         {
                             label: writeLang([
                                 ["en", "Emails"],
@@ -50,6 +58,17 @@ export const SideMenu = ({ writeLang }: { writeLang: (texts: [string, React.Reac
                                 ["pt", "/clientes"],
                             ]) as string,
                             icon: <Users className="mr-1" size={14} />,
+                        },
+                        {
+                            label: writeLang([
+                                ["en", "Templates"],
+                                ["pt", "Modelos"],
+                            ]) as string,
+                            path: writeLang([
+                                ["en", "/templates"],
+                                ["pt", "/modelos"],
+                            ]) as string,
+                            icon: <FileCode className="mr-1" size={14} />,
                         },
                     ],
                 },

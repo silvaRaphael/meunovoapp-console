@@ -18,6 +18,8 @@ import { Emails } from "pages/emails";
 import { EmailDetails } from "pages/emails/details";
 import { CompleteProfile } from "pages/complete-profile";
 import { CommingSoon } from "pages/comming-soon";
+import { Templates } from "pages/templates";
+import { TemplateDetails } from "pages/templates/details";
 
 export function App() {
     const { writeLang } = useLanguage();
@@ -35,7 +37,7 @@ export function App() {
                 }
                 {!!auth?.token && (
                     <Route>
-                        {["master", "admin"].includes(auth.role) && (
+                        {["master"].includes(auth.role) && (
                             <Route path="/">
                                 <Route path="" element={<Console />} />
                                 <Route path="emails">
@@ -52,6 +54,17 @@ export function App() {
                                 >
                                     <Route path="" element={<Clients />} />
                                     <Route path=":id" element={<ClientDetails />} />
+                                </Route>
+                                <Route
+                                    path={
+                                        writeLang([
+                                            ["en", "/templates"],
+                                            ["pt", "/modelos"],
+                                        ]) as string
+                                    }
+                                >
+                                    <Route path="" element={<Templates />} />
+                                    <Route path=":id" element={<TemplateDetails />} />
                                 </Route>
                                 <Route
                                     path={
@@ -115,7 +128,7 @@ export function App() {
                                 <Route path="*" element={<NotFound />} />
                             </Route>
                         )}
-                        {["client"].includes(auth.role) && (
+                        {["client", "admin"].includes(auth.role) && (
                             <Route path="/">
                                 <Route path="" element={<Console />} />
                                 <Route

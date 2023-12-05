@@ -52,7 +52,7 @@ export function Projects() {
         const controller = new AbortController();
 
         getProjects();
-        getClients();
+        if (auth && auth.role === "master") getClients();
 
         return () => {
             controller.abort();

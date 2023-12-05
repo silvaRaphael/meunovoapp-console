@@ -3,7 +3,7 @@ import { Auth, useAuth } from "components/shared/auth-provider";
 export const HandlePermission = (callback?: any) => {
     const { auth } = useAuth();
 
-    if (!auth || auth.role !== "master") return <></>;
+    if (!auth || auth.role !== "master") return null;
     return callback;
 };
 

@@ -23,8 +23,8 @@ export function InviteUserEmail({ userId }: { userId: string }) {
                 style={{
                     padding: 12,
                     borderRadius: 12,
-                    backgroundColor: "hsl(240 5.9% 10%)",
-                    color: "hsl(240 4.8% 95.9%)",
+                    backgroundColor: "#18181b",
+                    color: "#f4f4f5",
                     fontSize: 14,
                     fontWeight: 600,
                 }}
