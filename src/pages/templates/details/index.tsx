@@ -10,6 +10,7 @@ import { useState } from "react";
 import { SubmitButton } from "components/shared/submit-button";
 import { errorToast } from "components/shared/error-toast";
 import { toast } from "components/ui/toast/use-toast";
+import { Input } from "components/ui/input";
 
 export function TemplateDetails() {
     const { auth } = useAuth();
@@ -103,6 +104,7 @@ export function TemplateDetails() {
                     }}
                 />
             </div>
+            <Input className="mt-4" value={template.component} />
         </Page>
     );
 }
