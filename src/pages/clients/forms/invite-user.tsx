@@ -13,8 +13,6 @@ import { Input } from "components/ui/input";
 import { SubmitButton } from "components/shared/submit-button";
 import { ContentAlert } from "components/shared/content-alert";
 import { Client } from "../data/client";
-import { InviteUserEmail } from "components/shared/emails/invite-user-email";
-import { render } from "@react-email/components";
 import { Button } from "components/ui/button";
 
 export function InviteUserForm({ client, open, setOpen }: { client: Client; open: boolean; setOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
@@ -52,13 +50,11 @@ export function InviteUserForm({ client, open, setOpen }: { client: Client; open
             setOpen(false);
 
             new HandleRequest({
-                name: "",
                 from: SENDER_EMAIL,
                 to: [data.email],
                 subject: `Você recebeu um convite para se juntar à MeuNovoApp`,
-                html: render(<InviteUserEmail userId={response.id} />),
-                no_save: true,
-            }).post(`${BASE_API}/emails`, {
+                userId: response.id,
+            }).post(`${BASE_API}/emails/user-invite`, {
                 token: auth?.token,
             });
         });

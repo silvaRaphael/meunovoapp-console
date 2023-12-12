@@ -1,10 +1,10 @@
 import { format } from "date-fns";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
 import { Separator } from "components/ui/separator";
-import { EmailReply } from "./reply-form";
 import { Email } from "../data/email";
 import { useLanguage } from "components/shared/language-provider";
 import { languages } from "config/languages";
+import { EmailReplyBudget } from "./reply-budget-form";
 
 export function EmailSearch({ email }: { email: Email }) {
     const { language, writeLang } = useLanguage();
@@ -56,17 +56,23 @@ export function EmailSearch({ email }: { email: Email }) {
                     <Separator />
                     <div className="flex">
                         <Tabs defaultValue="email" className="w-full">
-                            <TabsList className="w-[400px] flex mx-auto">
+                            <TabsList className="w-[500px] flex mx-auto">
                                 <TabsTrigger value="email" className="w-full">
                                     {writeLang([
                                         ["en", "Email"],
                                         ["pt", "E-mail"],
                                     ])}
                                 </TabsTrigger>
-                                <TabsTrigger value="reply" className="w-full">
+                                <TabsTrigger value="reply-message" className="w-full">
                                     {writeLang([
-                                        ["en", "Reply"],
-                                        ["pt", "Responder"],
+                                        ["en", "Reply Message"],
+                                        ["pt", "Responder Mensagem"],
+                                    ])}
+                                </TabsTrigger>
+                                <TabsTrigger value="reply-budget" className="w-full">
+                                    {writeLang([
+                                        ["en", "Reply Budget"],
+                                        ["pt", "Responder Orçamento"],
                                     ])}
                                 </TabsTrigger>
                             </TabsList>
@@ -78,8 +84,9 @@ export function EmailSearch({ email }: { email: Email }) {
                                     }}
                                 />
                             </TabsContent>
-                            <TabsContent value="reply">
-                                <EmailReply email={email} />
+                            <TabsContent value="reply-message">{/* <EmailReplyBudget email={email} /> */}</TabsContent>
+                            <TabsContent value="reply-budget">
+                                <EmailReplyBudget email={email} />
                             </TabsContent>
                         </Tabs>
                     </div>

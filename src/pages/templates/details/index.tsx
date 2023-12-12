@@ -103,8 +103,8 @@ export function TemplateDetails() {
                         __html: template.component?.replace(/\n/g, "<br />"),
                     }}
                 />
+                <Input className="mt-4" value={template.component} />
             </div>
-            <Input className="mt-4" value={template.component} />
         </Page>
     );
 }

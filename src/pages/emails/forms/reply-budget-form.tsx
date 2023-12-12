@@ -15,12 +15,12 @@ import { EmailSchema, emailSchema } from "adapters/email";
 import { errorToast } from "components/shared/error-toast";
 import { HandleRequest } from "lib/handle-request";
 import { useLanguage } from "components/shared/language-provider";
-import { render } from "@react-email/components";
-import { ReplyMessageEmail } from "components/shared/emails/reply-message-email";
+import { addDays, format } from "date-fns";
+import { languages } from "config/languages";
 
-export function EmailReply({ email }: { email: Email }) {
+export function EmailReplyBudget({ email }: { email: Email }) {
     const { auth } = useAuth();
-    const { writeLang } = useLanguage();
+    const { language, writeLang } = useLanguage();
 
     const [replySent, setReplySent] = useState<"not-sent" | "sending" | "sent">(email.has_reply ? "sent" : "not-sent");
 
@@ -56,12 +56,22 @@ export function EmailReply({ email }: { email: Email }) {
         setReplySent("sending");
 
         const request = await new HandleRequest({
+            title: "Resposta Contato - MeuNovoApp",
             name: data.name,
             from: SENDER_EMAIL,
             to: Array.isArray(email.to) ? email.to.flat() : email.to,
             subject: data.subject,
-            html: render(<ReplyMessageEmail title="Resposta Contato - MeuNovoApp" {...data} />),
-        }).post(`${BASE_API}/emails/${email.id}`, {
+            projectDetails: data.projectDetails,
+            projectScope: data.projectScope,
+            projectStartDate: format(addDays(new Date(), 7), "PPP", {
+                locale: languages.find((item) => item.lang === language.lang)?.dateLocale,
+            }),
+            projectEndDate: format(addDays(new Date(), 7 + Number(data.projectDueDays ?? 0)), "PPP", {
+                locale: languages.find((item) => item.lang === language.lang)?.dateLocale,
+            }),
+            projectPayment: data.projectPayment,
+            projectBenefits: data.projectBenefits,
+        }).post(`${BASE_API}/emails/reply-budget-message`, {
             token: auth?.token,
         });
 

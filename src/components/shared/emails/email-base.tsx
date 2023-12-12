@@ -108,7 +108,7 @@ export function EmailBase({ title, children }: { title: string; children?: React
                             }}
                             href="https://meunovoapp.com.br"
                         >
-                            Ir para o site
+                            {new Date().getFullYear()} © MeuNovoApp
                         </Button>
                     </Container>
                 </Section>
