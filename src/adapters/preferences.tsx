@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const preferencesSchema = z.object({
-    emailNotification: z.boolean(),
+    emailNotification: z.boolean().optional(),
     themeMode: z.enum(["system", "light", "dark"]).optional(),
 });
 

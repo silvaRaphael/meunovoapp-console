@@ -10,7 +10,7 @@ export function Preferences() {
     // const { auth } = useAuth();
     const { writeLang } = useLanguage();
 
-    const [preferences, setPreferences] = useState<PreferencesSchema>({ emailNotification: false });
+    const [preferences] = useState<PreferencesSchema>({ emailNotification: false });
 
     // async function getPreferences() {
     //     const request = await new HandleRequest().get(`${BASE_API}/preferences`, {

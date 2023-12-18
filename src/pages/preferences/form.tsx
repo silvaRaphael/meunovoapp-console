@@ -12,9 +12,9 @@ import { Laptop, MoonIcon, SunIcon } from "lucide-react";
 import { useLanguage } from "components/shared/language-provider";
 import { Switch } from "components/ui/switch";
 import { PreferencesSchema, preferencesSchema } from "adapters/preferences";
-import { HandleRequest } from "lib/handle-request";
-import { BASE_API } from "config/constants";
-import { errorToast } from "components/shared/error-toast";
+// import { HandleRequest } from "lib/handle-request";
+// import { BASE_API } from "config/constants";
+// import { errorToast } from "components/shared/error-toast";
 import { useAuth } from "components/shared/auth-provider";
 
 export function PreferencesForm({ preferences }: { preferences: PreferencesSchema }) {
@@ -25,7 +25,8 @@ export function PreferencesForm({ preferences }: { preferences: PreferencesSchem
     const form = useForm<PreferencesSchema>({
         resolver: zodResolver(preferencesSchema),
         defaultValues: {
-            emailNotification: preferences.emailNotification,
+            // emailNotification: preferences.emailNotification,
+            emailNotification: false,
             themeMode: theme,
         },
         mode: "onChange",
@@ -34,25 +35,25 @@ export function PreferencesForm({ preferences }: { preferences: PreferencesSchem
     async function onSubmit(data: PreferencesSchema) {
         if (!auth) return;
 
-        const request = await new HandleRequest({
-            email_notification: data.emailNotification,
-        }).put(`${BASE_API}/preferences`, {
-            token: auth?.token,
+        // const request = await new HandleRequest({
+        //     email_notification: data.emailNotification,
+        // }).put(`${BASE_API}/preferences`, {
+        //     token: auth?.token,
+        // });
+
+        // request.onDone(() => {
+        setTheme(data.themeMode!);
+
+        toast({
+            variant: "success",
+            title: writeLang([
+                ["en", "Preferences updated successfully!"],
+                ["pt", "Preferências atualizadas com sucesso!"],
+            ]) as string,
         });
+        // });
 
-        request.onDone(() => {
-            setTheme(data.themeMode!);
-
-            toast({
-                variant: "success",
-                title: writeLang([
-                    ["en", "Preferences updated successfully!"],
-                    ["pt", "Preferências atualizadas com sucesso!"],
-                ]) as string,
-            });
-        });
-
-        request.onError((error) => errorToast(error));
+        // request.onError((error) => errorToast(error));
     }
 
     return (
@@ -77,6 +78,7 @@ export function PreferencesForm({ preferences }: { preferences: PreferencesSchem
                         <FormField
                             control={form.control}
                             name="emailNotification"
+                            disabled
                             render={({ field }) => (
                                 <FormItem className="flex flex-col">
                                     <FormControl>
@@ -87,6 +89,7 @@ export function PreferencesForm({ preferences }: { preferences: PreferencesSchem
                                                 name={field.name}
                                                 ref={field.ref}
                                                 onCheckedChange={field.onChange}
+                                                disabled
                                             />
                                             <Label htmlFor="emailNotifications">
                                                 <FormDescription>
