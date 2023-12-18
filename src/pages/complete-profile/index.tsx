@@ -40,7 +40,7 @@ export function CompleteProfile() {
 
     return (
         <div className="flex min-h-screen items-center w-full">
-            <Section size="tiny" className="space-y-10">
+            <Section size="sm" className="space-y-10">
                 <div className="space-y-3 w-full">
                     <Logo className="justify-center" />
                     <h4 className="text-muted-foreground leading-5 text-center mx-auto">Complete seu perfil</h4>

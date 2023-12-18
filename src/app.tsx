@@ -9,7 +9,6 @@ import { Projects } from "pages/projects";
 import { Tasks } from "pages/tasks";
 import { ProjectDetails } from "pages/projects/details";
 import { TaskDetails } from "pages/tasks/details";
-import { Schedule } from "pages/schedule";
 import { Profile } from "pages/profile";
 import { Preferences } from "pages/preferences";
 import { useLanguage } from "components/shared/language-provider";
@@ -92,16 +91,6 @@ export function App() {
                                 <Route
                                     path={
                                         writeLang([
-                                            ["en", "/schedule"],
-                                            ["pt", "/calendario"],
-                                        ]) as string
-                                    }
-                                >
-                                    <Route path="" element={<Schedule />} />
-                                </Route>
-                                <Route
-                                    path={
-                                        writeLang([
                                             ["en", "/profile"],
                                             ["pt", "/perfil"],
                                         ]) as string
@@ -153,16 +142,6 @@ export function App() {
                                 >
                                     <Route path="" element={<Tasks />} />
                                     <Route path=":id" element={<TaskDetails />} />
-                                </Route>
-                                <Route
-                                    path={
-                                        writeLang([
-                                            ["en", "/schedule"],
-                                            ["pt", "/calendario"],
-                                        ]) as string
-                                    }
-                                >
-                                    <Route path="" element={<Schedule />} />
                                 </Route>
                                 <Route
                                     path={

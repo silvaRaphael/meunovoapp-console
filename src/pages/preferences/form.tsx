@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
 
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from "../../components/ui/form";
 import { SubmitButton } from "../../components/shared/submit-button";
@@ -11,56 +10,68 @@ import { useTheme } from "../../components/shared/theme-provider";
 import { RadioGroup, RadioGroupItem } from "../../components/ui/radio-group";
 import { Laptop, MoonIcon, SunIcon } from "lucide-react";
 import { useLanguage } from "components/shared/language-provider";
+import { Switch } from "components/ui/switch";
+import { PreferencesSchema, preferencesSchema } from "adapters/preferences";
+import { HandleRequest } from "lib/handle-request";
+import { BASE_API } from "config/constants";
+import { errorToast } from "components/shared/error-toast";
+import { useAuth } from "components/shared/auth-provider";
 
-const preferencesFormSchema = z.object({
-    // emailNotification: z.boolean(),
-    // mobileNotification: z.boolean(),
-    themeMode: z.enum(["system", "light", "dark"]),
-});
-
-type PreferencesFormValues = z.infer<typeof preferencesFormSchema>;
-
-export function PreferencesForm() {
+export function PreferencesForm({ preferences }: { preferences: PreferencesSchema }) {
     const { theme, setTheme } = useTheme();
+    const { auth } = useAuth();
     const { writeLang } = useLanguage();
 
-    const form = useForm<PreferencesFormValues>({
-        resolver: zodResolver(preferencesFormSchema),
+    const form = useForm<PreferencesSchema>({
+        resolver: zodResolver(preferencesSchema),
         defaultValues: {
-            // emailNotification: true,
-            // mobileNotification: false,
+            emailNotification: preferences.emailNotification,
             themeMode: theme,
         },
         mode: "onChange",
     });
 
-    async function onSubmit(data: PreferencesFormValues) {
-        // const { onDone, onError } = await new HandleRequest(data).post("https://jsonplaceholder.typicode.com/users");
-        // onDone(() => {
-        toast({
-            variant: "success",
-            title: writeLang([
-                ["en", "Preferences updated successfully!"],
-                ["pt", "Preferências atualizadas com sucesso!"],
-            ]) as string,
+    async function onSubmit(data: PreferencesSchema) {
+        if (!auth) return;
+
+        const request = await new HandleRequest({
+            email_notification: data.emailNotification,
+        }).put(`${BASE_API}/preferences`, {
+            token: auth?.token,
         });
-        setTheme(data.themeMode);
-        // });
-        // onError(() =>
-        //     toast({
-        //         variant: "destructive",
-        //         title: "An error occured!",
-        //     }),
-        // );
+
+        request.onDone(() => {
+            setTheme(data.themeMode!);
+
+            toast({
+                variant: "success",
+                title: writeLang([
+                    ["en", "Preferences updated successfully!"],
+                    ["pt", "Preferências atualizadas com sucesso!"],
+                ]) as string,
+            });
+        });
+
+        request.onError((error) => errorToast(error));
     }
 
     return (
         <Form {...form}>
             <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
-                {/* <div className="grid grid-cols-12">
+                <div className="grid grid-cols-12">
                     <div className="col-span-3">
-                        <h3 className="font-semibold leading-4">Notification</h3>
-                        <p className="text-sm text-muted-foreground">Change notification preferences</p>
+                        <h3 className="font-semibold leading-4">
+                            {writeLang([
+                                ["en", "Notifications"],
+                                ["pt", "Notificações"],
+                            ])}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">
+                            {writeLang([
+                                ["en", "Change your notification preferences"],
+                                ["pt", "Altere suas preferências de notificações"],
+                            ])}
+                        </p>
                     </div>
                     <div className="col-span-6 space-y-4">
                         <FormField
@@ -70,26 +81,31 @@ export function PreferencesForm() {
                                 <FormItem className="flex flex-col">
                                     <FormControl>
                                         <div className="flex items-center space-x-2">
-                                            <Switch id="emailNotifications" checked={field.value} name={field.name} ref={field.ref} onCheckedChange={field.onChange} />
+                                            <Switch
+                                                id="emailNotifications"
+                                                checked={field.value}
+                                                name={field.name}
+                                                ref={field.ref}
+                                                onCheckedChange={field.onChange}
+                                            />
                                             <Label htmlFor="emailNotifications">
-                                                <FormDescription>{field.value ? "Disable" : "Enable"} email notifications</FormDescription>
-                                            </Label>
-                                        </div>
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="mobileNotification"
-                            render={({ field }) => (
-                                <FormItem className="flex flex-col">
-                                    <FormControl>
-                                        <div className="flex items-center space-x-2">
-                                            <Switch id="mobileNotifications" checked={field.value} name={field.name} ref={field.ref} onCheckedChange={field.onChange} />
-                                            <Label htmlFor="mobileNotifications">
-                                                <FormDescription>{field.value ? "Disable" : "Enable"} mobile notifications</FormDescription>
+                                                <FormDescription>
+                                                    {writeLang([
+                                                        [
+                                                            "en",
+                                                            <>
+                                                                {field.value ? "Disable" : "Enable"} email notifications
+                                                            </>,
+                                                        ],
+                                                        [
+                                                            "pt",
+                                                            <>
+                                                                {field.value ? "Desabilitar" : "Habilitar"} notificações
+                                                                de e-mail
+                                                            </>,
+                                                        ],
+                                                    ])}
+                                                </FormDescription>
                                             </Label>
                                         </div>
                                     </FormControl>
@@ -99,7 +115,7 @@ export function PreferencesForm() {
                         />
                     </div>
                 </div>
-                <Separator /> */}
+                <Separator />
                 <div className="grid grid-cols-12">
                     <div className="col-span-3">
                         <h3 className="font-semibold leading-4">
@@ -122,7 +138,13 @@ export function PreferencesForm() {
                             render={({ field }) => (
                                 <FormItem className="flex flex-col">
                                     <FormControl>
-                                        <RadioGroup ref={field.ref} name={field.name} onChange={field.onChange} defaultValue={field.value} className="grid grid-cols-4 gap-4">
+                                        <RadioGroup
+                                            ref={field.ref}
+                                            name={field.name}
+                                            onChange={field.onChange}
+                                            defaultValue={field.value}
+                                            className="grid grid-cols-4 gap-4"
+                                        >
                                             <div>
                                                 <RadioGroupItem value="system" id="system" className="peer sr-only" />
                                                 <Label

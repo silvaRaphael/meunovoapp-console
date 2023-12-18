@@ -19,7 +19,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "components/ui/avatar";
 import { convertToBase64 } from "lib/helper";
 import { User } from "config/user";
 
-let usernameTimeout: any;
+let emailTimeout: any;
 
 export function ProfileForm({ user }: { user: User }) {
     const { auth, setAuth } = useAuth();
@@ -180,10 +180,11 @@ export function ProfileForm({ user }: { user: User }) {
                                                 ]) as string
                                             }
                                             onChange={(e) => {
-                                                if (e.target.value.includes(" ")) e.target.value = e.target.value.replaceAll(" ", "");
+                                                if (e.target.value.includes(" "))
+                                                    e.target.value = e.target.value.replaceAll(" ", "");
                                                 field.onChange(e);
-                                                clearTimeout(usernameTimeout);
-                                                usernameTimeout = setTimeout(() => checkEmailAvailability(e), 1000);
+                                                clearTimeout(emailTimeout);
+                                                emailTimeout = setTimeout(() => checkEmailAvailability(e), 1000);
                                             }}
                                             name={field.name}
                                             value={field.value}
@@ -212,7 +213,10 @@ export function ProfileForm({ user }: { user: User }) {
                         <div className="flex flex-col items-center space-y-3">
                             <label htmlFor="avatar-input">
                                 <Avatar className="w-32 h-32 p-0 aspect-square border cursor-pointer">
-                                    <AvatarImage src={avatarBase64 ? avatarBase64 : avatar || undefined} className="object-cover" />
+                                    <AvatarImage
+                                        src={avatarBase64 ? avatarBase64 : avatar || undefined}
+                                        className="object-cover"
+                                    />
                                     <AvatarFallback className="bg-muted/50 hover:bg-accent/60 group">
                                         <UploadCloudIcon className="text-muted-foreground/50 group-hover:text-primary/40" />
                                     </AvatarFallback>
@@ -264,7 +268,9 @@ export function ProfileForm({ user }: { user: User }) {
                                                 return;
                                             }
 
-                                            convertToBase64(target.files[0], (result) => setAvatarBase64(result?.toString() || null));
+                                            convertToBase64(target.files[0], (result) =>
+                                                setAvatarBase64(result?.toString() || null),
+                                            );
                                         }}
                                         className="hidden"
                                     />
@@ -314,7 +320,9 @@ export function ProfileForm({ user }: { user: User }) {
                                                 type="button"
                                                 variant="outline"
                                                 className="bg-muted/80"
-                                                onClick={() => setPasswordVisible([!passwordVisible[0], passwordVisible[1]])}
+                                                onClick={() =>
+                                                    setPasswordVisible([!passwordVisible[0], passwordVisible[1]])
+                                                }
                                             >
                                                 {!passwordVisible[0] ? <Eye size={14} /> : <EyeOff size={14} />}
                                             </Button>
@@ -349,7 +357,9 @@ export function ProfileForm({ user }: { user: User }) {
                                                 type="button"
                                                 variant="outline"
                                                 className="bg-muted/80"
-                                                onClick={() => setPasswordVisible([passwordVisible[0], !passwordVisible[1]])}
+                                                onClick={() =>
+                                                    setPasswordVisible([passwordVisible[0], !passwordVisible[1]])
+                                                }
                                             >
                                                 {!passwordVisible[1] ? <Eye size={14} /> : <EyeOff size={14} />}
                                             </Button>

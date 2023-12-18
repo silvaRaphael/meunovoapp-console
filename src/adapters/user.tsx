@@ -37,12 +37,13 @@ export const completeUserSchema = z
                 required_error: "E-mail é necessário.",
             })
             .email({ message: "Digite um e-mail válido" }),
-        password: z.string({ required_error: "Senha é necessária." }).min(5, { message: "Digite uma senha maior." }).max(20, { message: "Digite uma senha menor." }),
-        confirm_password: z
-            .string({
-                required_error: "Confirme sua senha.",
-            })
-            .optional(),
+        password: z
+            .string({ required_error: "Senha é necessária." })
+            .min(5, { message: "Digite uma senha maior." })
+            .max(20, { message: "Digite uma senha menor." }),
+        confirm_password: z.string({
+            required_error: "Confirme sua senha.",
+        }),
     })
     .refine((data) => data.password === data.confirm_password, {
         message: "As senhas devem ser iguais.",
