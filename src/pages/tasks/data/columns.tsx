@@ -6,8 +6,14 @@ import { Link } from "react-router-dom";
 import { Task } from "./task";
 import { cn } from "lib/utils";
 import { ClientInfo } from "components/shared/client-info";
+import { format } from "date-fns";
+import { languages } from "config/languages";
+import { Language } from "components/shared/language-provider";
 
-export const taskColumns = (writeLang: (texts: [string, React.ReactNode][]) => React.ReactNode): ColumnDef<Task>[] => {
+export const taskColumns = (
+    language: Pick<Language, "lang" | "locale" | "currency">,
+    writeLang: (texts: [string, React.ReactNode][]) => React.ReactNode,
+): ColumnDef<Task>[] => {
     return [
         {
             accessorKey: "project.client.name",
@@ -26,7 +32,13 @@ export const taskColumns = (writeLang: (texts: [string, React.ReactNode][]) => R
             cell: ({ row }) => {
                 console.log(row.original);
                 if (!row.original.project.client) return <></>;
-                return <ClientInfo id={row.original.project.client.id} logotipo={row.original.project.client.logotipo} company={row.original.project.client.company} />;
+                return (
+                    <ClientInfo
+                        id={row.original.project.client.id}
+                        logotipo={row.original.project.client.logotipo}
+                        company={row.original.project.client.company}
+                    />
+                );
             },
         },
         {
@@ -54,7 +66,9 @@ export const taskColumns = (writeLang: (texts: [string, React.ReactNode][]) => R
                         }
                     >
                         <div className="flex item-center space-x-1">
-                            <div className="text-left font-medium truncate max-w-[240px]">{row.original.project.name}</div>
+                            <div className="text-left font-medium truncate max-w-[240px]">
+                                {row.original.project.name}
+                            </div>
                         </div>
                     </Link>
                 );
@@ -105,6 +119,56 @@ export const taskColumns = (writeLang: (texts: [string, React.ReactNode][]) => R
             },
         },
         {
+            accessorKey: "startDate",
+            header: ({ column }) => (
+                <DataTableColumnHeader
+                    column={column}
+                    title={
+                        writeLang([
+                            ["en", "Start Date"],
+                            ["pt", "Início"],
+                        ]) as string
+                    }
+                />
+            ),
+            cell: ({ row }) => {
+                const date: string = row.getValue("startDate");
+                const formatted = date
+                    ? format(new Date(date), "PPP", {
+                          locale: languages.find((item) => item.lang === language.lang)?.dateLocale,
+                      })
+                    : "";
+
+                return <div className="text-left font-medium">{formatted}</div>;
+            },
+        },
+        {
+            accessorKey: "endDate",
+            header: ({ column }) => (
+                <DataTableColumnHeader
+                    column={column}
+                    title={
+                        writeLang([
+                            ["en", "End Date"],
+                            ["pt", "Término"],
+                        ]) as string
+                    }
+                />
+            ),
+            cell: ({ row }) => {
+                const date: string = row.getValue("endDate");
+                const formatted = date
+                    ? format(new Date(date), "PPP", {
+                          locale: languages.find((item) => item.lang === language.lang)?.dateLocale,
+                      })
+                    : "";
+
+                const isLate = new Date(date) < new Date() && !["completed", "cancelled"].includes(row.original.status);
+
+                return <div className={cn("text-left font-medium", isLate ? "text-red-600" : "")}>{formatted}</div>;
+            },
+        },
+        {
             id: "actions",
             cell: ({ row }) => {
                 return (
@@ -117,7 +181,9 @@ export const taskColumns = (writeLang: (texts: [string, React.ReactNode][]) => R
                                 ]) as string
                             }
                         />
-                        {(row.original as any).deleteAction && <Actions.Delete onClick={() => (row.original as any).deleteAction(row.original)} />}
+                        {(row.original as any).deleteAction && (
+                            <Actions.Delete onClick={() => (row.original as any).deleteAction(row.original)} />
+                        )}
                     </div>
                 );
             },

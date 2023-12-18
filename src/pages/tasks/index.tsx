@@ -15,7 +15,7 @@ import { HandlePermission } from "lib/handle-permission";
 
 export function Tasks() {
     const { auth } = useAuth();
-    const { writeLang } = useLanguage();
+    const { language, writeLang } = useLanguage();
 
     const [tasks, setTasks] = useState<Task[]>([]);
     const [projects, setProjects] = useState<Project[]>([]);
@@ -88,7 +88,7 @@ export function Tasks() {
                 </SectionHeader>
             }
         >
-            <DataTable columns={taskColumns(writeLang)} data={tasks} />
+            <DataTable columns={taskColumns(language, writeLang)} data={tasks} />
         </Page>
     );
 }

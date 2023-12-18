@@ -4,7 +4,14 @@ import { Project } from "../data/project";
 import { taskColumns } from "pages/tasks/data/columns";
 
 export function ProjectTasks({ project }: { project: Project }) {
-    const { writeLang } = useLanguage();
+    const { language, writeLang } = useLanguage();
 
-    return <DataTable columns={taskColumns(writeLang).filter((column) => !["client", "project"].includes(column.id ?? ""))} data={project.tasks ?? []} />;
+    return (
+        <DataTable
+            columns={taskColumns(language, writeLang).filter(
+                (column) => !["client", "project"].includes(column.id ?? ""),
+            )}
+            data={project.tasks ?? []}
+        />
+    );
 }

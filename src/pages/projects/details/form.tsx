@@ -24,13 +24,16 @@ import { toast } from "components/ui/toast/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "components/ui/select";
 import { GetStatus, statuses, statusesColors, statusesIcons } from "../data/status";
 import { HandlePermission, hasPermission } from "lib/handle-permission";
+import { useState } from "react";
 
 export function ProjectForm({ project }: { project: Project }) {
     const { language, writeLang } = useLanguage();
     const { auth } = useAuth();
 
     const locale = languages.find((item) => item.lang === language.lang)?.dateLocale;
-    const isEditable = hasPermission(auth) && !["completed", "cancelled"].includes(project.status);
+    const [isEditable, setIsEditable] = useState<boolean>(
+        hasPermission(auth) && !["completed", "cancelled"].includes(project.status),
+    );
 
     const form = useForm<CreateProjectSchema>({
         resolver: zodResolver(createProjectSchema),
@@ -56,6 +59,8 @@ export function ProjectForm({ project }: { project: Project }) {
                     ["pt", "Projeto foi atualizado com sucesso!"],
                 ]) as string,
             });
+
+            if ((["completed", "cancelled"] as any).includes(data.status)) setIsEditable(false);
         });
 
         request.onError((error) => errorToast(error));
@@ -123,7 +128,10 @@ export function ProjectForm({ project }: { project: Project }) {
                                             <FormControl>
                                                 <Button
                                                     variant={"outline"}
-                                                    className={cn("pl-3 text-left font-normal bg-muted/50", !field.value && "text-muted-foreground")}
+                                                    className={cn(
+                                                        "pl-3 text-left font-normal bg-muted/50",
+                                                        !field.value && "text-muted-foreground",
+                                                    )}
                                                     disabled={!isEditable}
                                                 >
                                                     {field.value ? (
@@ -164,13 +172,21 @@ export function ProjectForm({ project }: { project: Project }) {
                                 <FormItem className="flex flex-col">
                                     <FormDescription>Status</FormDescription>
                                     <Select value={field.value} onValueChange={field.onChange}>
-                                        <SelectTrigger className={!field.value ? "text-muted-foreground" : ""} disabled={!isEditable}>
+                                        <SelectTrigger
+                                            className={!field.value ? "text-muted-foreground" : ""}
+                                            disabled={!isEditable}
+                                        >
                                             <SelectValue placeholder="Select a status" />
                                         </SelectTrigger>
                                         <SelectContent side="top">
                                             {statuses.map((status, i) => (
                                                 <SelectItem key={i} value={status}>
-                                                    <div className={cn("flex items-center space-x-1", statusesColors[status])}>
+                                                    <div
+                                                        className={cn(
+                                                            "flex items-center space-x-1",
+                                                            statusesColors[status],
+                                                        )}
+                                                    >
                                                         {statusesIcons[status]}
                                                         <span className="whitespace-nowrap">
                                                             <GetStatus status={status} />

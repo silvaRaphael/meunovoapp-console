@@ -14,8 +14,19 @@ import { SubmitButton } from "components/shared/submit-button";
 import { ContentAlert } from "components/shared/content-alert";
 import { Client } from "../data/client";
 import { Button } from "components/ui/button";
+import { User } from "config/user";
 
-export function InviteUserForm({ client, open, setOpen }: { client: Client; open: boolean; setOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
+export function InviteUserForm({
+    client,
+    setClient,
+    open,
+    setOpen,
+}: {
+    client: Client;
+    setClient: React.Dispatch<React.SetStateAction<Client | undefined>>;
+    open: boolean;
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
     const { auth } = useAuth();
     const { writeLang } = useLanguage();
 
@@ -48,6 +59,15 @@ export function InviteUserForm({ client, open, setOpen }: { client: Client; open
             });
 
             setOpen(false);
+            setClient({
+                ...client,
+                users: [
+                    ...(client.users || []),
+                    {
+                        email: data.email,
+                    } as User,
+                ],
+            });
 
             new HandleRequest({
                 from: SENDER_EMAIL,

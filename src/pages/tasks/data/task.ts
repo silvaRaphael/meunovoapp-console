@@ -7,4 +7,6 @@ export interface Task {
     description: string;
     project: Project;
     status: Status;
+    startDate?: Date;
+    endDate?: Date;
 }

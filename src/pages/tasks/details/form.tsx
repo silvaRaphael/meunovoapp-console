@@ -18,12 +18,17 @@ import { errorToast } from "components/shared/error-toast";
 import { Separator } from "components/ui/separator";
 import { GetStatus, statuses, statusesColors, statusesIcons } from "pages/projects/data/status";
 import { HandlePermission, hasPermission } from "lib/handle-permission";
+import { useState } from "react";
 
 export function TaskForm({ task }: { task: Task }) {
     const { writeLang } = useLanguage();
     const { auth } = useAuth();
 
-    const isEditable = hasPermission(auth) && !["completed", "cancelled"].includes(task.status);
+    const [isEditable, setIsEditable] = useState<boolean>(
+        hasPermission(auth) &&
+            !["completed", "cancelled"].includes(task.status) &&
+            !["completed", "cancelled"].includes(task.project.status),
+    );
 
     const form = useForm<CreateTaskSchema>({
         resolver: zodResolver(createTaskSchema),
@@ -32,6 +37,7 @@ export function TaskForm({ task }: { task: Task }) {
             description: task.description ?? "",
             project_id: task.project.id,
             status: task.status,
+            startDate: task.startDate || undefined,
         },
         mode: "onChange",
     });
@@ -48,6 +54,8 @@ export function TaskForm({ task }: { task: Task }) {
                     ["pt", "Tarefa foi atualizada com sucesso!"],
                 ]) as string,
             });
+
+            if ((["completed", "cancelled"] as any).includes(data.status)) setIsEditable(false);
         });
 
         request.onError((error) => errorToast(error));
@@ -106,13 +114,21 @@ export function TaskForm({ task }: { task: Task }) {
                                 <FormItem className="flex flex-col">
                                     <FormDescription>Status</FormDescription>
                                     <Select value={field.value} onValueChange={field.onChange}>
-                                        <SelectTrigger className={!field.value ? "text-muted-foreground" : ""} disabled={!isEditable}>
+                                        <SelectTrigger
+                                            className={!field.value ? "text-muted-foreground" : ""}
+                                            disabled={!isEditable}
+                                        >
                                             <SelectValue placeholder="Select a status" />
                                         </SelectTrigger>
                                         <SelectContent side="top">
                                             {statuses.map((status, i) => (
                                                 <SelectItem key={i} value={status}>
-                                                    <div className={cn("flex items-center space-x-1", statusesColors[status])}>
+                                                    <div
+                                                        className={cn(
+                                                            "flex items-center space-x-1",
+                                                            statusesColors[status],
+                                                        )}
+                                                    >
                                                         {statusesIcons[status]}
                                                         <span className="whitespace-nowrap">
                                                             <GetStatus status={status} />
