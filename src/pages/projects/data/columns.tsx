@@ -9,7 +9,7 @@ import { cn } from "../../../lib/utils";
 import { ClientInfo } from "components/shared/client-info";
 import { languages } from "config/languages";
 import { Language } from "components/shared/language-provider";
-import { Status, statusesColors, statusesIcons } from "./status";
+import { GetStatus, Status, statusesColors, statusesIcons } from "./status";
 import { Link } from "react-router-dom";
 
 export const projectColumns = (
@@ -88,7 +88,9 @@ export const projectColumns = (
                 return (
                     <div className={cn("flex items-center space-x-1", statusesColors[status])}>
                         {statusesIcons[status]}
-                        <span className="whitespace-nowrap">{status}</span>
+                        <span className="whitespace-nowrap">
+                            <GetStatus status={status} />
+                        </span>
                     </div>
                 );
             },

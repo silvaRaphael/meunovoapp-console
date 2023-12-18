@@ -16,7 +16,7 @@ import { useLanguage } from "components/shared/language-provider";
 import { BASE_API } from "config/constants";
 import { errorToast } from "components/shared/error-toast";
 import { Separator } from "components/ui/separator";
-import { statuses, statusesColors, statusesIcons } from "pages/projects/data/status";
+import { GetStatus, statuses, statusesColors, statusesIcons } from "pages/projects/data/status";
 import { HandlePermission, hasPermission } from "lib/handle-permission";
 
 export function TaskForm({ task }: { task: Task }) {
@@ -114,7 +114,9 @@ export function TaskForm({ task }: { task: Task }) {
                                                 <SelectItem key={i} value={status}>
                                                     <div className={cn("flex items-center space-x-1", statusesColors[status])}>
                                                         {statusesIcons[status]}
-                                                        <span className="whitespace-nowrap">{status}</span>
+                                                        <span className="whitespace-nowrap">
+                                                            <GetStatus status={status} />
+                                                        </span>
                                                     </div>
                                                 </SelectItem>
                                             ))}

@@ -1,7 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Actions } from "../../../components/shared/actions";
 import { DataTableColumnHeader } from "../../../components/ui/data-table/data-table-column-header";
-import { Status, statusesColors, statusesIcons } from "../../projects/data/status";
+import { GetStatus, Status, statusesColors, statusesIcons } from "../../projects/data/status";
 import { Link } from "react-router-dom";
 import { Task } from "./task";
 import { cn } from "lib/utils";
@@ -97,7 +97,9 @@ export const taskColumns = (writeLang: (texts: [string, React.ReactNode][]) => R
                 return (
                     <div className={cn("flex items-center space-x-1", statusesColors[status])}>
                         {statusesIcons[status]}
-                        <span className="whitespace-nowrap">{status}</span>
+                        <span className="whitespace-nowrap">
+                            <GetStatus status={status} />
+                        </span>
                     </div>
                 );
             },

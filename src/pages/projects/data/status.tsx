@@ -1,4 +1,5 @@
 import { ArrowRightCircle, CheckCircle2, Circle, XCircle } from "lucide-react";
+import { useLanguage } from "components/shared/language-provider";
 
 export type Status = "waiting" | "in progress" | "completed" | "cancelled";
 
@@ -17,3 +18,28 @@ export const statusesColors = {
     completed: "text-green-400",
     cancelled: "text-red-600",
 };
+
+export function GetStatus({ status }: { status: Status }) {
+    const { writeLang } = useLanguage();
+
+    const translatedStatus = {
+        waiting: writeLang([
+            ["en", "waiting"],
+            ["pt", "aguardando"],
+        ]),
+        "in progress": writeLang([
+            ["en", "in progress"],
+            ["pt", "em progresso"],
+        ]),
+        completed: writeLang([
+            ["en", "completed"],
+            ["pt", "finalizado"],
+        ]),
+        cancelled: writeLang([
+            ["en", "cancelled"],
+            ["pt", "cancelado"],
+        ]),
+    }[status];
+
+    return <>{translatedStatus}</>;
+}

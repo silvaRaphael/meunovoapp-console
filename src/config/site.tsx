@@ -42,14 +42,6 @@ export const SideMenu = ({ writeLang }: { writeLang: (texts: [string, React.Reac
                     menu: [
                         {
                             label: writeLang([
-                                ["en", "Emails"],
-                                ["pt", "E-mails"],
-                            ]) as string,
-                            path: "/emails",
-                            icon: <Mail className="mr-1" size={14} />,
-                        },
-                        {
-                            label: writeLang([
                                 ["en", "Clients"],
                                 ["pt", "Clientes"],
                             ]) as string,
@@ -58,6 +50,14 @@ export const SideMenu = ({ writeLang }: { writeLang: (texts: [string, React.Reac
                                 ["pt", "/clientes"],
                             ]) as string,
                             icon: <Users className="mr-1" size={14} />,
+                        },
+                        {
+                            label: writeLang([
+                                ["en", "Emails"],
+                                ["pt", "E-mails"],
+                            ]) as string,
+                            path: "/emails",
+                            icon: <Mail className="mr-1" size={14} />,
                         },
                         {
                             label: writeLang([

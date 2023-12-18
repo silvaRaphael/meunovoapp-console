@@ -40,10 +40,6 @@ export function App() {
                         {["master"].includes(auth.role) && (
                             <Route path="/">
                                 <Route path="" element={<Console />} />
-                                <Route path="emails">
-                                    <Route path="" element={<Emails />} />
-                                    <Route path=":id" element={<EmailDetails />} />
-                                </Route>
                                 <Route
                                     path={
                                         writeLang([
@@ -55,6 +51,11 @@ export function App() {
                                     <Route path="" element={<Clients />} />
                                     <Route path=":id" element={<ClientDetails />} />
                                 </Route>
+                                <Route path="emails">
+                                    <Route path="" element={<Emails />} />
+                                    <Route path=":id" element={<EmailDetails />} />
+                                </Route>
+
                                 <Route
                                     path={
                                         writeLang([

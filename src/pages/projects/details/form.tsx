@@ -22,7 +22,7 @@ import { errorToast } from "components/shared/error-toast";
 import { CreateProjectSchema, createProjectSchema } from "adapters/project";
 import { toast } from "components/ui/toast/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "components/ui/select";
-import { statuses, statusesColors, statusesIcons } from "../data/status";
+import { GetStatus, statuses, statusesColors, statusesIcons } from "../data/status";
 import { HandlePermission, hasPermission } from "lib/handle-permission";
 
 export function ProjectForm({ project }: { project: Project }) {
@@ -172,7 +172,9 @@ export function ProjectForm({ project }: { project: Project }) {
                                                 <SelectItem key={i} value={status}>
                                                     <div className={cn("flex items-center space-x-1", statusesColors[status])}>
                                                         {statusesIcons[status]}
-                                                        <span className="whitespace-nowrap">{status}</span>
+                                                        <span className="whitespace-nowrap">
+                                                            <GetStatus status={status} />
+                                                        </span>
                                                     </div>
                                                 </SelectItem>
                                             ))}
