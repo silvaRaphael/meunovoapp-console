@@ -1,45 +1,130 @@
-import { Link } from "react-router-dom";
-import { Button } from "../ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import { Button, buttonVariants } from "../ui/button";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 import { Bell } from "lucide-react";
-import { Notification, notifications } from "../../config/notifications";
+import { Notification, notificationsIcons } from "../../config/notifications";
 import { format } from "date-fns";
+import { useLanguage } from "./language-provider";
+import { languages } from "config/languages";
+import { cn } from "lib/utils";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-export function Notifications() {
-    const notificationsLength = notifications.length;
+export function Notifications({ notifications }: { notifications: Notification[] }) {
+    const { language, writeLang } = useLanguage();
+
+    const [open, onOpenChange] = useState<boolean>(false);
+    const [time, setTime] = useState<Date | null>(null);
+
+    useEffect(() => {
+        const controller = new AbortController();
+
+        let currentTime: any;
+
+        if (open) {
+            currentTime = setInterval(() => {
+                setTime(new Date());
+            }, 1000);
+        }
+
+        return () => {
+            clearInterval(currentTime);
+            setTime(null);
+
+            controller.abort();
+        };
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [open]);
+
+    const notificationsLength = notifications?.length ?? 0;
 
     return (
-        <DropdownMenu>
+        <DropdownMenu open={open} onOpenChange={onOpenChange}>
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="relative p-2">
                     <Bell size={16} />
-                    {notificationsLength && <div className="absolute top-[4px] right-[6px] w-[5px] h-[5px] rounded-full bg-neutral-950 dark:bg-neutral-50"></div>}
+                    {notificationsLength > 0 && (
+                        <div className="absolute top-[4px] right-[6px] w-[5px] h-[5px] rounded-full bg-neutral-950 dark:bg-neutral-50"></div>
+                    )}
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-60" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">Welcome, {format(new Date(), "p")} now</p>
+                        <p className="text-sm font-medium leading-none">
+                            {writeLang([
+                                [
+                                    "en",
+                                    `Welcome, ${format(time ?? new Date(), "pp", {
+                                        locale: languages.find((item) => item.lang === language.lang)?.dateLocale,
+                                    })} now`,
+                                ],
+                                [
+                                    "pt",
+                                    `Bem-vindo, ${format(time ?? new Date(), "pp", {
+                                        locale: languages.find((item) => item.lang === language.lang)?.dateLocale,
+                                    })} agora`,
+                                ],
+                            ])}
+                        </p>
                         <p className="text-xs leading-none text-muted-foreground">
-                            {!notificationsLength ? "You don't have any notifications" : `You have ${notificationsLength} notifications`}
+                            {!notificationsLength
+                                ? writeLang([
+                                      ["en", "You don't have any notifications"],
+                                      ["pt", "Você não tem nenhuma notificação"],
+                                  ])
+                                : writeLang([
+                                      ["en", `You have ${notificationsLength} notifications`],
+                                      ["pt", `Você tem ${notificationsLength} notificações`],
+                                  ])}
                         </p>
                     </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup className="max-h-60 overflow-y-auto vertical-scrollbar">
                     {!notificationsLength ? (
-                        <p className="text-xs font-medium text-muted-foreground p-2 py-3">No notifications yet</p>
+                        <p className="text-xs font-medium text-muted-foreground p-2 py-3">
+                            {writeLang([
+                                ["en", "No notifications yet"],
+                                ["pt", "Nenhuma notificação ainda"],
+                            ])}
+                        </p>
                     ) : (
-                        notifications.map((item: Notification, i) => {
+                        notifications?.map((item: Notification, i) => {
                             const child = (
-                                <div className="flex flex-col space-y-1">
-                                    <span className="text-sm font-medium leading-none">{item.title}</span>
-                                    <p className="text-xs leading-none text-muted-foreground">{item.subtitle}</p>
+                                <div className="flex items-center space-x-2 group">
+                                    <div
+                                        className={cn(
+                                            buttonVariants({ variant: "secondary" }),
+                                            "p-0 aspect-square group-hover:bg-background",
+                                        )}
+                                    >
+                                        {notificationsIcons[item.type]}
+                                    </div>
+                                    <div className="flex flex-col space-y-1">
+                                        <span className="text-sm font-medium leading-none">{item.title}</span>
+                                        <p className="text-xs leading-none text-muted-foreground">{item.description}</p>
+                                    </div>
                                 </div>
                             );
+
                             return (
-                                <DropdownMenuItem key={i} className="cursor-pointer" asChild>
-                                    {item.link ? <Link to={item.link}>{child}</Link> : <div>{child}</div>}
+                                <DropdownMenuItem key={i} asChild>
+                                    {item.link ? (
+                                        <Link to={item.link} className="cursor-pointer">
+                                            {child}
+                                        </Link>
+                                    ) : (
+                                        child
+                                    )}
                                 </DropdownMenuItem>
                             );
                         })

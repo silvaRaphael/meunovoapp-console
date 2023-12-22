@@ -1,21 +1,21 @@
-import { faker } from "@faker-js/faker";
+import { ArrowRightCircle, CheckCircle2, Circle, AlertCircle } from "lucide-react";
+
+export type NotificationType = "pending" | "error" | "started" | "done";
+
+export const notificationsIcons = {
+    pending: <Circle size={16} />,
+    started: <ArrowRightCircle size={16} />,
+    done: <CheckCircle2 size={16} />,
+    error: <AlertCircle size={16} />,
+};
 
 export interface Notification {
     id: string;
+    user_id: string;
+    type: NotificationType;
     title: string;
-    subtitle?: string;
+    description?: string;
     link?: string;
-    createdAt: Date;
+    read: boolean;
+    created_at?: Date;
 }
-
-export const notifications: Notification[] = Array.from(new Array(10)).map(
-    () => {
-        return {
-            id: faker.string.uuid(),
-            title: faker.lorem.sentence({ min: 2, max: 4 }),
-            subtitle: faker.lorem.sentence({ min: 5, max: 8 }),
-            link: "/",
-            createdAt: faker.date.past(),
-        };
-    },
-);

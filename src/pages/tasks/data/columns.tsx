@@ -30,7 +30,6 @@ export const taskColumns = (
                 />
             ),
             cell: ({ row }) => {
-                console.log(row.original);
                 if (!row.original.project.client) return <></>;
                 return (
                     <ClientInfo

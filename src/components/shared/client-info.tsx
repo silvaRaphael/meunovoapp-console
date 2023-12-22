@@ -17,7 +17,9 @@ export function ClientInfo({ id, company, logotipo }: Props) {
     const companySplitted = company.split(" ");
     const companyInitials = [
         companySplitted[0][0],
-        companySplitted.length === 1 ? companySplitted[0][companySplitted[0].length - 1] : companySplitted[companySplitted.length - 1][0],
+        companySplitted.length === 1
+            ? companySplitted[0][companySplitted[0].length - 1]
+            : companySplitted[companySplitted.length - 1][0],
     ]
         .join("")
         .toUpperCase();
@@ -25,7 +27,11 @@ export function ClientInfo({ id, company, logotipo }: Props) {
     const content = (
         <div className="flex items-center space-x-2">
             <Avatar className="h-8 w-8 border">
-                <AvatarImage src={`${BASE_FILES}/${logotipo}`} alt={`${company}`} className="object-cover" />
+                <AvatarImage
+                    src={logotipo ? `${BASE_FILES}/${logotipo}` : ""}
+                    alt={`${company}`}
+                    className="object-cover"
+                />
                 <AvatarFallback>{companyInitials}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col items-start">

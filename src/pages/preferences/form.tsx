@@ -12,9 +12,9 @@ import { Laptop, MoonIcon, SunIcon } from "lucide-react";
 import { useLanguage } from "components/shared/language-provider";
 import { Switch } from "components/ui/switch";
 import { PreferencesSchema, preferencesSchema } from "adapters/preferences";
-// import { HandleRequest } from "lib/handle-request";
-// import { BASE_API } from "config/constants";
-// import { errorToast } from "components/shared/error-toast";
+import { HandleRequest } from "lib/handle-request";
+import { BASE_API } from "config/constants";
+import { errorToast } from "components/shared/error-toast";
 import { useAuth } from "components/shared/auth-provider";
 
 export function PreferencesForm({ preferences }: { preferences: PreferencesSchema }) {
@@ -25,8 +25,8 @@ export function PreferencesForm({ preferences }: { preferences: PreferencesSchem
     const form = useForm<PreferencesSchema>({
         resolver: zodResolver(preferencesSchema),
         defaultValues: {
-            // emailNotification: preferences.emailNotification,
-            emailNotification: false,
+            email_notification: preferences.email_notification,
+            console_notification: preferences.console_notification,
             themeMode: theme,
         },
         mode: "onChange",
@@ -35,25 +35,26 @@ export function PreferencesForm({ preferences }: { preferences: PreferencesSchem
     async function onSubmit(data: PreferencesSchema) {
         if (!auth) return;
 
-        // const request = await new HandleRequest({
-        //     email_notification: data.emailNotification,
-        // }).put(`${BASE_API}/preferences`, {
-        //     token: auth?.token,
-        // });
-
-        // request.onDone(() => {
-        setTheme(data.themeMode!);
-
-        toast({
-            variant: "success",
-            title: writeLang([
-                ["en", "Preferences updated successfully!"],
-                ["pt", "Preferências atualizadas com sucesso!"],
-            ]) as string,
+        const request = await new HandleRequest({
+            email_notification: data.email_notification,
+            console_notification: data.console_notification,
+        }).put(`${BASE_API}/preferences`, {
+            token: auth?.token,
         });
-        // });
 
-        // request.onError((error) => errorToast(error));
+        request.onDone(() => {
+            setTheme(data.themeMode!);
+
+            toast({
+                variant: "success",
+                title: writeLang([
+                    ["en", "Preferences updated successfully!"],
+                    ["pt", "Preferências atualizadas com sucesso!"],
+                ]) as string,
+            });
+        });
+
+        request.onError((error) => errorToast(error));
     }
 
     return (
@@ -77,21 +78,21 @@ export function PreferencesForm({ preferences }: { preferences: PreferencesSchem
                     <div className="col-span-6 space-y-4">
                         <FormField
                             control={form.control}
-                            name="emailNotification"
+                            name="email_notification"
                             disabled
                             render={({ field }) => (
                                 <FormItem className="flex flex-col">
                                     <FormControl>
                                         <div className="flex items-center space-x-2">
                                             <Switch
-                                                id="emailNotifications"
+                                                id="email_notification"
                                                 checked={field.value}
                                                 name={field.name}
                                                 ref={field.ref}
                                                 onCheckedChange={field.onChange}
                                                 disabled
                                             />
-                                            <Label htmlFor="emailNotifications">
+                                            <Label htmlFor="email_notification">
                                                 <FormDescription>
                                                     {writeLang([
                                                         [
@@ -104,7 +105,47 @@ export function PreferencesForm({ preferences }: { preferences: PreferencesSchem
                                                             "pt",
                                                             <>
                                                                 {field.value ? "Desabilitar" : "Habilitar"} notificações
-                                                                de e-mail
+                                                                por e-mail
+                                                            </>,
+                                                        ],
+                                                    ])}
+                                                </FormDescription>
+                                            </Label>
+                                        </div>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="console_notification"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-col">
+                                    <FormControl>
+                                        <div className="flex items-center space-x-2">
+                                            <Switch
+                                                id="console_notifications"
+                                                checked={field.value}
+                                                name={field.name}
+                                                ref={field.ref}
+                                                onCheckedChange={field.onChange}
+                                            />
+                                            <Label htmlFor="console_notifications">
+                                                <FormDescription>
+                                                    {writeLang([
+                                                        [
+                                                            "en",
+                                                            <>
+                                                                {field.value ? "Disable" : "Enable"} console
+                                                                notifications
+                                                            </>,
+                                                        ],
+                                                        [
+                                                            "pt",
+                                                            <>
+                                                                {field.value ? "Desabilitar" : "Habilitar"} notificações
+                                                                pelo console
                                                             </>,
                                                         ],
                                                     ])}
