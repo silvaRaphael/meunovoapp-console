@@ -103,7 +103,7 @@ export function TemplateDetails() {
                         __html: template.component?.replace(/\n/g, "<br />"),
                     }}
                 />
-                <Input className="mt-4" value={template.component} />
+                <Input className="mt-4" defaultValue={template.component} />
             </div>
         </Page>
     );

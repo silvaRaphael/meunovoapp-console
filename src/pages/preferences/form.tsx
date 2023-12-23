@@ -79,7 +79,6 @@ export function PreferencesForm({ preferences }: { preferences: PreferencesSchem
                         <FormField
                             control={form.control}
                             name="email_notification"
-                            disabled
                             render={({ field }) => (
                                 <FormItem className="flex flex-col">
                                     <FormControl>
@@ -90,7 +89,6 @@ export function PreferencesForm({ preferences }: { preferences: PreferencesSchem
                                                 name={field.name}
                                                 ref={field.ref}
                                                 onCheckedChange={field.onChange}
-                                                disabled
                                             />
                                             <Label htmlFor="email_notification">
                                                 <FormDescription>

@@ -5,6 +5,7 @@ import { render } from "@react-email/components";
 import { ContactEmail } from "components/shared/emails/contact-email";
 import { BudgetEmail } from "components/shared/emails/budget-email";
 import { ReplyBudgetEmail } from "components/shared/emails/reply-budget-email";
+import { NotificationMessageEmail } from "components/shared/emails/notification-message-email";
 
 export const templates: Template[] = [
     {
@@ -37,7 +38,9 @@ export const templates: Template[] = [
     {
         id: "reply-message",
         name: "Responder Mensagem de Contato",
-        component: render(<ReplyMessageEmail name="[name]" title="[title]" receivedMessage="[receivedMessage]" message="[message]" />),
+        component: render(
+            <ReplyMessageEmail name="[name]" title="[title]" receivedMessage="[receivedMessage]" message="[message]" />,
+        ),
     },
     {
         id: "reply-budget",
@@ -52,6 +55,18 @@ export const templates: Template[] = [
                 projectEndDate="[projectEndDate]"
                 projectBenefits="[projectBenefits]"
                 projectPayment="[projectPayment]"
+            />,
+        ),
+    },
+    {
+        id: "notification-message",
+        name: "Notificação de Atualização",
+        component: render(
+            <NotificationMessageEmail
+                title="[title]"
+                name="[name]"
+                projectName="[projectName]"
+                description="[description]"
             />,
         ),
     },
