@@ -24,7 +24,9 @@ export function ClientForm({ client }: { client: Client }) {
     const { writeLang } = useLanguage();
     const { auth } = useAuth();
 
-    const [logotipo, setLogotipo] = useState<string | null>(client.logotipo ? `${BASE_FILES}/${client.logotipo}` : null);
+    const [logotipo, setLogotipo] = useState<string | null>(
+        client.logotipo ? `${BASE_FILES}/${client.logotipo}` : null,
+    );
     const [logotipoBase64, setLogotipoBase64] = useState<string | null>(null);
 
     const form = useForm<CreateClientSchema>({
@@ -178,7 +180,10 @@ export function ClientForm({ client }: { client: Client }) {
                         <div className="flex flex-col items-center space-y-3">
                             <label htmlFor="logotipo-input">
                                 <Avatar className="w-32 h-32 p-0 aspect-square border cursor-pointer">
-                                    <AvatarImage src={logotipoBase64 ? logotipoBase64 : logotipo || undefined} className="object-cover" />
+                                    <AvatarImage
+                                        src={logotipoBase64 ? logotipoBase64 : logotipo || undefined}
+                                        className="object-cover"
+                                    />
                                     <AvatarFallback className="bg-muted/50 hover:bg-accent/60 group">
                                         <UploadCloudIcon className="text-muted-foreground/50 group-hover:text-primary/40" />
                                     </AvatarFallback>
@@ -230,7 +235,9 @@ export function ClientForm({ client }: { client: Client }) {
                                                 return;
                                             }
 
-                                            convertToBase64(target.files[0], (result) => setLogotipoBase64(result?.toString() || null));
+                                            convertToBase64(target.files[0], (result) =>
+                                                setLogotipoBase64(result?.toString() || null),
+                                            );
                                         }}
                                         className="hidden"
                                     />

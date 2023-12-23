@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { SectionHeader } from "../../../components/shared/section-header";
 import { Page } from "../../../components/shared/page";
 import { useLanguage } from "../../../components/shared/language-provider";
@@ -15,6 +15,7 @@ import { Input } from "components/ui/input";
 export function TemplateDetails() {
     const { auth } = useAuth();
     const { writeLang } = useLanguage();
+    const navigate = useNavigate();
     const { id } = useParams();
 
     const template = templates.find((item) => item.id === id);
@@ -52,6 +53,7 @@ export function TemplateDetails() {
 
         request.onError((error) => {
             errorToast(error);
+            if (error.redirect) navigate(error.redirect);
         });
 
         setStatus("initial");

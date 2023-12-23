@@ -3,7 +3,7 @@ import { InviteUserSchema, inviteUserSchema } from "adapters/client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HandleRequest } from "lib/handle-request";
-import { BASE_API, SENDER_EMAIL } from "config/constants";
+import { BASE_API } from "config/constants";
 import { useAuth } from "components/shared/auth-provider";
 import { useLanguage } from "components/shared/language-provider";
 import { toast } from "components/ui/toast/use-toast";
@@ -46,7 +46,7 @@ export function InviteUserForm({
             token: auth?.token,
         });
 
-        request.onDone((response) => {
+        request.onDone(() => {
             toast({
                 title: writeLang([
                     ["en", "User has been invited successfully!"],
@@ -67,15 +67,6 @@ export function InviteUserForm({
                         email: data.email,
                     } as User,
                 ],
-            });
-
-            new HandleRequest({
-                from: SENDER_EMAIL,
-                to: [data.email],
-                subject: `Você recebeu um convite para se juntar à MeuNovoApp`,
-                userId: response.id,
-            }).post(`${BASE_API}/emails/user-invite`, {
-                token: auth?.token,
             });
         });
 

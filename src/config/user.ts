@@ -9,4 +9,6 @@ export interface User {
     avatar?: string;
     role: Role;
     client?: Client;
+    invited_at?: Date;
+    activated_at?: Date;
 }

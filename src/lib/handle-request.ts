@@ -1,6 +1,6 @@
 import { Language } from "../components/shared/language-provider";
 
-export interface RequestOptionsI {
+export interface IRequestOptions {
     token?: string;
     language?: Language;
 }
@@ -14,7 +14,7 @@ export class HandleRequest {
         this.data = data;
     }
 
-    async get(url: string, option?: RequestOptionsI) {
+    async get(url: string, option?: IRequestOptions) {
         try {
             const response = await fetch(url, {
                 method: "get",
@@ -25,20 +25,22 @@ export class HandleRequest {
                 }),
             });
 
-            if (!response.ok) throw (await response.json()).error;
+            if (!response.ok) throw await response.json();
 
-            this.response = response.headers.get("Content-Type")?.includes("application/json") ? await response.json() : null;
+            this.response = response.headers.get("Content-Type")?.includes("application/json")
+                ? await response.json()
+                : null;
         } catch (error: any) {
             this.error = error;
         }
 
         return {
             onDone: (fn: (response: any) => any) => this.onDone(fn),
-            onError: (fn: (error: any) => any) => this.onError(fn),
+            onError: (fn: (error: { error: { message: string }[]; redirect?: string }) => any) => this.onError(fn),
         };
     }
 
-    async post(url: string, option?: RequestOptionsI) {
+    async post(url: string, option?: IRequestOptions) {
         try {
             if (!this.data) throw new Error("Data is not defined");
 
@@ -52,20 +54,22 @@ export class HandleRequest {
                 body: JSON.stringify(this.data),
             });
 
-            if (!response.ok) throw (await response.json()).error;
+            if (!response.ok) throw await response.json();
 
-            this.response = response.headers.get("Content-Type")?.includes("application/json") ? await response.json() : null;
+            this.response = response.headers.get("Content-Type")?.includes("application/json")
+                ? await response.json()
+                : null;
         } catch (error: any) {
             this.error = error;
         }
 
         return {
             onDone: (fn: (response: any) => any) => this.onDone(fn),
-            onError: (fn: (error: any) => any) => this.onError(fn),
+            onError: (fn: (error: { error: { message: string }[]; redirect?: string }) => any) => this.onError(fn),
         };
     }
 
-    async put(url: string, option?: RequestOptionsI) {
+    async put(url: string, option?: IRequestOptions) {
         try {
             if (!this.data) throw new Error("Data is not defined");
 
@@ -79,20 +83,22 @@ export class HandleRequest {
                 body: JSON.stringify(this.data),
             });
 
-            if (!response.ok) throw (await response.json()).error;
+            if (!response.ok) throw await response.json();
 
-            this.response = response.headers.get("Content-Type")?.includes("application/json") ? await response.json() : null;
+            this.response = response.headers.get("Content-Type")?.includes("application/json")
+                ? await response.json()
+                : null;
         } catch (error: any) {
             this.error = error;
         }
 
         return {
             onDone: (fn: (response: any) => any) => this.onDone(fn),
-            onError: (fn: (error: any) => any) => this.onError(fn),
+            onError: (fn: (error: { error: { message: string }[]; redirect?: string }) => any) => this.onError(fn),
         };
     }
 
-    async delete(url: string, option?: RequestOptionsI) {
+    async delete(url: string, option?: IRequestOptions) {
         try {
             const response = await fetch(url, {
                 method: "delete",
@@ -103,16 +109,18 @@ export class HandleRequest {
                 }),
             });
 
-            if (!response.ok) throw (await response.json()).error;
+            if (!response.ok) throw await response.json();
 
-            this.response = response.headers.get("Content-Type")?.includes("application/json") ? await response.json() : null;
+            this.response = response.headers.get("Content-Type")?.includes("application/json")
+                ? await response.json()
+                : null;
         } catch (error: any) {
             this.error = error;
         }
 
         return {
             onDone: (fn: (response: any) => any) => this.onDone(fn),
-            onError: (fn: (error: any) => any) => this.onError(fn),
+            onError: (fn: (error: { error: { message: string }[]; redirect?: string }) => any) => this.onError(fn),
         };
     }
 
@@ -121,7 +129,7 @@ export class HandleRequest {
         return fn(this.response);
     }
 
-    private onError(fn: (error: any) => any) {
+    private onError(fn: (error: { error: { message: string }[]; redirect?: string }) => any) {
         if (!this.error) return;
         return fn(this.error);
     }

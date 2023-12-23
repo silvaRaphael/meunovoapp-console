@@ -354,8 +354,8 @@ export function CompleteProfileForm({ id, email }: { id: string; email: string }
                 <SubmitButton
                     label={
                         writeLang([
-                            ["en", "Update Profile"],
-                            ["pt", "Atualizar Perfil"],
+                            ["en", "Complete Registration"],
+                            ["pt", "Completar Cadastro"],
                         ]) as string
                     }
                     type="submit"

@@ -6,9 +6,10 @@ import { Client } from "./client";
 import { ClientInfo } from "components/shared/client-info";
 import { Button } from "components/ui/button";
 import { Badge } from "components/ui/badge";
-import { BASE_FILES } from "config/constants";
 
-export const clientColumns = (writeLang: (texts: [string, React.ReactNode][]) => React.ReactNode): ColumnDef<Client>[] => {
+export const clientColumns = (
+    writeLang: (texts: [string, React.ReactNode][]) => React.ReactNode,
+): ColumnDef<Client>[] => {
     return [
         {
             accessorKey: "company",
@@ -17,14 +18,16 @@ export const clientColumns = (writeLang: (texts: [string, React.ReactNode][]) =>
                     column={column}
                     title={
                         writeLang([
-                            ["en", "Company"],
-                            ["pt", "Empresa"],
+                            ["en", "Client"],
+                            ["pt", "Cliente"],
                         ]) as string
                     }
                 />
             ),
             cell: ({ row }) => {
-                return <ClientInfo id={row.original.id} logotipo={row.original.logotipo} company={row.original.company} />;
+                return (
+                    <ClientInfo id={row.original.id} logotipo={row.original.logotipo} company={row.original.company} />
+                );
             },
         },
         {
@@ -43,7 +46,11 @@ export const clientColumns = (writeLang: (texts: [string, React.ReactNode][]) =>
             cell: ({ row }) => {
                 if (!row.original.users?.length)
                     return (
-                        <Button variant="outline" size="sm" onClick={() => (row.original as any).inviteAction(row.original)}>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => (row.original as any).inviteAction(row.original)}
+                        >
                             {writeLang([
                                 ["en", "Invite"],
                                 ["pt", "Convidar"],
@@ -60,7 +67,11 @@ export const clientColumns = (writeLang: (texts: [string, React.ReactNode][]) =>
                                 ])}
                             </Badge>
                         )}
-                        <MemberInfo avatar={`${BASE_FILES}/${row.original.users[0].avatar}`} email={row.original.users[0].email} name={row.original.users[0].name} />
+                        <MemberInfo
+                            avatar={row.original.users[0].avatar}
+                            email={row.original.users[0].email}
+                            name={row.original.users[0].name}
+                        />
                     </div>
                 );
             },

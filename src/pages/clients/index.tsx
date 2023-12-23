@@ -11,6 +11,7 @@ import { useAuth } from "components/shared/auth-provider";
 import { errorToast } from "components/shared/error-toast";
 import { BASE_API } from "config/constants";
 import { InviteManagerForm } from "./forms/invite-manager";
+import { useNavigate } from "react-router-dom";
 
 export interface ClientRow extends Client {
     inviteAction?: (props: Client) => any;
@@ -19,6 +20,7 @@ export interface ClientRow extends Client {
 export function Clients() {
     const { auth } = useAuth();
     const { writeLang } = useLanguage();
+    const navigate = useNavigate();
 
     const [clients, setClients] = useState<ClientRow[]>([]);
     const [client, setClient] = useState<Client | null>(null);
@@ -43,6 +45,7 @@ export function Clients() {
 
         request.onError((error) => {
             errorToast(error);
+            if (error.redirect) navigate(error.redirect);
         });
     }
 

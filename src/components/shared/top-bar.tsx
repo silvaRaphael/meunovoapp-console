@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { sideBarWidth } from "./side-bar";
 import { MainNav } from "./main-nav";
@@ -17,6 +17,7 @@ import { useAuth } from "./auth-provider";
 
 export function TopBar({ pathname, toggleSideBar, isOpen }: { pathname: string; toggleSideBar: any; isOpen: boolean }) {
     const { auth } = useAuth();
+    const navigate = useNavigate();
 
     const [notifications, setNotifications] = useState<Notification[] | null>(null);
 
@@ -29,8 +30,9 @@ export function TopBar({ pathname, toggleSideBar, isOpen }: { pathname: string; 
             setNotifications(response);
         });
 
-        request.onError(() => {
+        request.onError((error) => {
             setNotifications(null);
+            if (error.redirect) navigate(error.redirect);
         });
     }
 

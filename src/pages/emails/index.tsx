@@ -9,10 +9,12 @@ import { BASE_API } from "config/constants";
 import { useAuth } from "components/shared/auth-provider";
 import { HandleRequest } from "lib/handle-request";
 import { errorToast } from "components/shared/error-toast";
+import { useNavigate } from "react-router-dom";
 
 export function Emails() {
     const { auth } = useAuth();
     const { writeLang } = useLanguage();
+    const navigate = useNavigate();
 
     const [emails, setEmails] = useState<Email[]>([]);
 
@@ -27,6 +29,7 @@ export function Emails() {
 
         request.onError((error) => {
             errorToast(error);
+            if (error.redirect) navigate(error.redirect);
         });
     }
 

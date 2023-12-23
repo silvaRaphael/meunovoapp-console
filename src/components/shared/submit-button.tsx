@@ -10,6 +10,7 @@ export function SubmitButton({
     onSuccess,
     state = "initial",
     className,
+    disabled,
 }: {
     type?: "button" | "submit";
     label: string;
@@ -18,6 +19,7 @@ export function SubmitButton({
     onSuccess?: () => void;
     state?: "initial" | "loading";
     className?: string;
+    disabled?: boolean;
 }) {
     const [status, setStatus] = useState<"initial" | "loading">("initial");
 
@@ -33,7 +35,12 @@ export function SubmitButton({
     }
 
     return (
-        <Button type={type} onClick={type === "button" ? _onSubmit : () => null} disabled={status !== "initial" || state !== "initial"} className={className}>
+        <Button
+            type={type}
+            onClick={type === "button" ? _onSubmit : () => null}
+            disabled={disabled || status !== "initial" || state !== "initial"}
+            className={className}
+        >
             {(status === "loading" || state === "loading") && <Loader size={16} className="animate-spin me-1" />}
             {label}
         </Button>

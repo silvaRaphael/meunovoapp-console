@@ -50,6 +50,7 @@ export function ProfileForm({ user }: { user: User }) {
 
         request.onError(() => {
             form.setError("email", {
+                type: "validate",
                 message: writeLang([
                     ["en", "Email not available"],
                     ["pt", "E-mail não disponível"],
@@ -383,6 +384,7 @@ export function ProfileForm({ user }: { user: User }) {
                     }
                     type="submit"
                     state={form.formState.isSubmitting ? "loading" : "initial"}
+                    disabled={form.formState.errors.email != null}
                 />
             </form>
         </Form>
