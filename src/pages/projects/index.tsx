@@ -7,23 +7,20 @@ import { HandleRequest } from "lib/handle-request";
 import { Project } from "./data/project";
 import { projectColumns } from "./data/columns";
 import { errorToast } from "components/shared/error-toast";
-import { BASE_API } from "config/constants";
-import { useAuth } from "components/shared/auth-provider";
+import { useUserData } from "components/shared/user-data-provider";
 import { CreateProjectForm } from "./forms/create";
 import { Client } from "pages/clients/data/client";
 import { HandlePermission } from "lib/handle-permission";
 
 export function Projects() {
-    const { auth } = useAuth();
+    const { userData } = useUserData();
     const { language, writeLang } = useLanguage();
 
     const [projects, setProjects] = useState<Project[]>([]);
     const [clients, setClients] = useState<Client[]>([]);
 
     async function getProjects() {
-        const request = await new HandleRequest().get(`${BASE_API}/projects`, {
-            token: auth?.token,
-        });
+        const request = await new HandleRequest().get(`/projects`);
 
         request.onDone((response) => {
             setProjects(response);
@@ -35,9 +32,7 @@ export function Projects() {
     }
 
     async function getClients() {
-        const request = await new HandleRequest().get(`${BASE_API}/clients`, {
-            token: auth?.token,
-        });
+        const request = await new HandleRequest().get(`/clients`);
 
         request.onDone((response) => {
             setClients(response);
@@ -52,7 +47,7 @@ export function Projects() {
         const controller = new AbortController();
 
         getProjects();
-        if (auth && auth.role === "master") getClients();
+        if (userData && userData.role === "master") getClients();
 
         return () => {
             controller.abort();

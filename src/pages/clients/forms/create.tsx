@@ -2,8 +2,6 @@ import { CreateClientSchema, createClientSchema } from "adapters/client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HandleRequest } from "lib/handle-request";
-import { BASE_API } from "config/constants";
-import { useAuth } from "components/shared/auth-provider";
 import { useLanguage } from "components/shared/language-provider";
 import { toast } from "components/ui/toast/use-toast";
 import { errorToast } from "components/shared/error-toast";
@@ -15,7 +13,6 @@ import { Button } from "components/ui/button";
 import { useState } from "react";
 
 export function CreateClientForm({ onCreated }: { onCreated: Function }) {
-    const { auth } = useAuth();
     const { writeLang } = useLanguage();
 
     const [open, setOpen] = useState<boolean>(false);
@@ -27,9 +24,7 @@ export function CreateClientForm({ onCreated }: { onCreated: Function }) {
     });
 
     async function onSubmit(data: CreateClientSchema) {
-        const request = await new HandleRequest(data).post(`${BASE_API}/clients`, {
-            token: auth?.token,
-        });
+        const request = await new HandleRequest(data).post(`/clients`);
 
         request.onDone(() => {
             toast({

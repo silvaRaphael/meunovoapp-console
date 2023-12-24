@@ -5,22 +5,17 @@ import { Page } from "../../../components/shared/page";
 import { HandleRequest } from "../../../lib/handle-request";
 import { useLanguage } from "../../../components/shared/language-provider";
 import { Email } from "../data/email";
-import { useAuth } from "components/shared/auth-provider";
-import { BASE_API } from "config/constants";
 import { EmailSearch } from "../forms/search-form";
 import { errorToast } from "components/shared/error-toast";
 
 export function EmailDetails() {
-    const { auth } = useAuth();
     const { writeLang } = useLanguage();
 
     const { id } = useParams();
     const [email, setEmail] = useState<Email>();
 
     async function getEmail(id?: string) {
-        const request = await new HandleRequest().get(`${BASE_API}/emails/${id}`, {
-            token: auth?.token,
-        });
+        const request = await new HandleRequest().get(`/emails/${id}`);
 
         request.onDone((response) => {
             setEmail(response as unknown as Email);

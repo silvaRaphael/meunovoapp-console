@@ -2,40 +2,24 @@ import { useEffect, useState } from "react";
 import { DataTable } from "../../components/ui/data-table/data-table";
 import { SectionHeader } from "../../components/shared/section-header";
 import { Page } from "../../components/shared/page";
-import { Client } from "./data/client";
-import { clientColumns } from "./data/columns";
 import { HandleRequest } from "../../lib/handle-request";
 import { useLanguage } from "../../components/shared/language-provider";
-import { CreateClientForm } from "./forms/create";
 import { errorToast } from "components/shared/error-toast";
-import { InviteManagerForm } from "./forms/invite-manager";
 import { useNavigate } from "react-router-dom";
+import { userColumns } from "./data/columns";
+import { User } from "./data/user";
 
-export interface ClientRow extends Client {
-    inviteAction?: (props: Client) => any;
-}
-
-export function Clients() {
-    const { writeLang } = useLanguage();
+export function Users() {
+    const { language, writeLang } = useLanguage();
     const navigate = useNavigate();
 
-    const [clients, setClients] = useState<ClientRow[]>([]);
-    const [client, setClient] = useState<Client | null>(null);
+    const [users, setUsers] = useState<User[]>([]);
 
-    async function getClients() {
-        const request = await new HandleRequest().get(`/clients`);
+    async function getUsers() {
+        const request = await new HandleRequest().get(`/users`);
 
         request.onDone((response) => {
-            setClients(
-                (response as any).map(
-                    (item: Client): ClientRow => ({
-                        ...item,
-                        inviteAction(item) {
-                            setClient(item);
-                        },
-                    }),
-                ),
-            );
+            setUsers(response);
         });
 
         request.onError((error) => {
@@ -47,7 +31,7 @@ export function Clients() {
     useEffect(() => {
         const controller = new AbortController();
 
-        getClients();
+        getUsers();
 
         return () => {
             controller.abort();
@@ -60,31 +44,31 @@ export function Clients() {
         <Page
             pathname={
                 writeLang([
-                    ["en", "/clients"],
-                    ["pt", "/clientes"],
+                    ["en", "/users"],
+                    ["pt", "/usuarios"],
                 ]) as string
             }
             header={
                 <SectionHeader
                     title={
                         writeLang([
-                            ["en", `Clients (${clients.length})`],
-                            ["pt", `Clientes (${clients.length})`],
+                            ["en", `Users (${users.length})`],
+                            ["pt", `Usuários (${users.length})`],
                         ]) as string
                     }
                     pathname={
                         writeLang([
-                            ["en", "/clients"],
-                            ["pt", "/clientes"],
+                            ["en", "/users"],
+                            ["pt", "/usuarios"],
                         ]) as string
                     }
                 >
-                    <CreateClientForm onCreated={getClients} />
+                    {/* <CreateUserForm onCreated={getUsers} /> */}
                 </SectionHeader>
             }
         >
-            <DataTable columns={clientColumns(writeLang)} data={clients} />
-            <InviteManagerForm client={client} setClient={setClient} />
+            <DataTable columns={userColumns(language, writeLang)} data={users} />
+            {/* <InviteManagerForm user={user} setUser={setUser} /> */}
         </Page>
     );
 }

@@ -16,8 +16,7 @@ import { Separator } from "../../../components/ui/separator";
 import { useLanguage } from "../../../components/shared/language-provider";
 import { languages } from "../../../config/languages";
 import { HandleRequest } from "lib/handle-request";
-import { BASE_API } from "config/constants";
-import { useAuth } from "components/shared/auth-provider";
+import { useUserData } from "components/shared/user-data-provider";
 import { errorToast } from "components/shared/error-toast";
 import { CreateProjectSchema, createProjectSchema } from "adapters/project";
 import { toast } from "components/ui/toast/use-toast";
@@ -28,11 +27,11 @@ import { useState } from "react";
 
 export function ProjectForm({ project }: { project: Project }) {
     const { language, writeLang } = useLanguage();
-    const { auth } = useAuth();
+    const { userData } = useUserData();
 
     const locale = languages.find((item) => item.lang === language.lang)?.dateLocale;
     const [isEditable, setIsEditable] = useState<boolean>(
-        hasPermission(auth) && !["completed", "cancelled"].includes(project.status),
+        hasPermission(userData) && !["completed", "cancelled"].includes(project.status),
     );
 
     const form = useForm<CreateProjectSchema>({
@@ -48,9 +47,7 @@ export function ProjectForm({ project }: { project: Project }) {
     });
 
     async function onSubmit(data: CreateProjectSchema) {
-        const request = await new HandleRequest(data).put(`${BASE_API}/projects/${project.id}`, {
-            token: auth?.token,
-        });
+        const request = await new HandleRequest(data).put(`/projects/${project.id}`);
 
         request.onDone(() => {
             toast({

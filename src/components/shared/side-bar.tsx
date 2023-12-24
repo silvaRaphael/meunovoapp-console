@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Hash, LogOutIcon } from "lucide-react";
 
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
@@ -6,16 +6,33 @@ import { Badge } from "../ui/badge";
 import { SideMenu } from "config/site";
 import { cn } from "lib/utils";
 import { useLanguage } from "./language-provider";
-import { useAuth } from "./auth-provider";
+import { useUserData } from "./user-data-provider";
+import { HandleRequest } from "lib/handle-request";
+import { toast } from "components/ui/toast/use-toast";
 
 export const sideBarWidth = 200;
 export const sideBarWidthCollapsed = 48;
 
 export function SideBar({ pathname, isOpen }: { pathname: string; isOpen: boolean }) {
+    const navigate = useNavigate();
     const { writeLang } = useLanguage();
-    const { auth, removeAuth } = useAuth();
+    const { userData, removeUserData } = useUserData();
 
-    const menu = SideMenu({ writeLang }).find((item) => item.role.includes(auth?.role || "client"))?.menu ?? [];
+    const menu = SideMenu({ writeLang }).find((item) => item.role.includes(userData?.role || "client"))?.menu ?? [];
+
+    async function handleLogout() {
+        const request = await new HandleRequest().get(`/auth/sign-out`);
+
+        request.onDone(() => {
+            removeUserData();
+
+            toast({
+                title: "Você saiu do console!",
+            });
+
+            return navigate("/");
+        });
+    }
 
     return (
         <div
@@ -35,7 +52,9 @@ export function SideBar({ pathname, isOpen }: { pathname: string; isOpen: boolea
                     {menu.map((item, i) => (
                         <div className="flex flex-col justify-start pb-2" key={i}>
                             <div className="text-xs font-semibold px-4 py-3">
-                                {isOpen ? item.title : item.title && <DotsHorizontalIcon width={14} className="-ms-[2px] -mt-1 mb-1" />}
+                                {isOpen
+                                    ? item.title
+                                    : item.title && <DotsHorizontalIcon width={14} className="-ms-[2px] -mt-1 mb-1" />}
                             </div>
                             <div className={cn(isOpen ? "px-4 space-y-2" : "px-0 space-y-2")}>
                                 {item.menu.map((item, i) => {
@@ -47,12 +66,20 @@ export function SideBar({ pathname, isOpen }: { pathname: string; isOpen: boolea
                                                 "flex items-center text-sm h-6 font-medium transition-colors hover:text-primary border-l-2 border-l-transparent group",
                                                 pathname !== item.path ? "text-muted-foreground" : "",
                                                 !isOpen ? "justify-center" : "",
-                                                !isOpen && pathname === item.path ? "border-l-neutral-800 dark:border-l-neutral-200" : "",
+                                                !isOpen && pathname === item.path
+                                                    ? "border-l-neutral-800 dark:border-l-neutral-200"
+                                                    : "",
                                             )}
                                         >
-                                            {<div className={`${!isOpen && "scale-125"}`}>{item?.icon}</div> ?? <Hash className="mr-1" size={14} />}
+                                            {<div className={`${!isOpen && "scale-125"}`}>{item?.icon}</div> ?? (
+                                                <Hash className="mr-1" size={14} />
+                                            )}
                                             {isOpen && item.label}
-                                            {!isOpen && <Badge className="z-50 hidden group-hover:flex absolute top-2 left-14 whitespace-nowrap">{item.label}</Badge>}
+                                            {!isOpen && (
+                                                <Badge className="z-50 hidden group-hover:flex absolute top-2 left-14 whitespace-nowrap">
+                                                    {item.label}
+                                                </Badge>
+                                            )}
                                         </Link>
                                     );
                                 })}
@@ -60,7 +87,10 @@ export function SideBar({ pathname, isOpen }: { pathname: string; isOpen: boolea
                         </div>
                     ))}
                 </nav>
-                <div className="flex items-center text-xs font-medium px-4 border-t h-10 text-muted-foreground hover:text-primary cursor-pointer" onClick={removeAuth}>
+                <div
+                    className="flex items-center text-xs font-medium px-4 border-t h-10 text-muted-foreground hover:text-primary cursor-pointer"
+                    onClick={handleLogout}
+                >
                     <LogOutIcon className="me-1" size={12} />
                     {isOpen &&
                         writeLang([

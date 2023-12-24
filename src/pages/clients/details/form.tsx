@@ -9,10 +9,9 @@ import { toast } from "../../../components/ui/toast/use-toast";
 import { HandleRequest } from "../../../lib/handle-request";
 import { CreateClientSchema, createClientSchema } from "adapters/client";
 import { errorToast } from "components/shared/error-toast";
-import { BASE_API, BASE_FILES } from "config/constants";
+import { BASE_FILES } from "config/constants";
 import { useLanguage } from "components/shared/language-provider";
 import { Separator } from "components/ui/separator";
-import { useAuth } from "components/shared/auth-provider";
 import { MaskedInput } from "components/shared/masked-input";
 import { useState } from "react";
 import { Button } from "components/ui/button";
@@ -22,7 +21,6 @@ import { convertToBase64 } from "lib/helper";
 
 export function ClientForm({ client }: { client: Client }) {
     const { writeLang } = useLanguage();
-    const { auth } = useAuth();
 
     const [logotipo, setLogotipo] = useState<string | null>(
         client.logotipo ? `${BASE_FILES}/${client.logotipo}` : null,
@@ -44,9 +42,7 @@ export function ClientForm({ client }: { client: Client }) {
             ...data,
             logotipoName: logotipo ? client.logotipo || "" : "",
             logotipo: logotipoBase64 || "",
-        }).put(`${BASE_API}/clients/${client.id}`, {
-            token: auth?.token,
-        });
+        }).put(`/clients/${client.id}`);
 
         request.onDone(() => {
             toast({

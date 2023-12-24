@@ -17,7 +17,7 @@ export function CompleteProfile() {
     const [userEmail, setUserEmail] = useState<string>("");
 
     async function canUpdate() {
-        const request = await new HandleRequest().get(`${BASE_API}/users/can-update/${id}`);
+        const request = await new HandleRequest().get(`/users/can-update/${id}`);
 
         request.onDone((response) => {
             setUserEmail(response.email);

@@ -1,7 +1,7 @@
+import { Role } from "config/roles";
 import { Client } from "pages/clients/data/client";
-import { Role } from "./roles";
 
-export interface UserProfile {
+export interface User {
     id: string;
     name: string;
     email: string;
@@ -9,4 +9,6 @@ export interface UserProfile {
     avatar?: string;
     role: Role;
     client?: Client;
+    invited_at?: Date;
+    activated_at?: Date;
 }

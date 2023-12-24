@@ -55,7 +55,7 @@
         "@types/node": "^16.18.64",
         "@types/react": "^18.2.25",
         "@types/react-dom": "^18.2.11",
-        "axios": "^1.5.1",
+        "axios": "^1.6.2",
         "class-variance-authority": "^0.7.0",
         "clsx": "^2.0.0",
         "cmdk": "^0.2.0",

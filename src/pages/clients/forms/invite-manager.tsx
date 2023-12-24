@@ -3,8 +3,7 @@ import { InviteUserSchema, inviteUserSchema } from "adapters/client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HandleRequest } from "lib/handle-request";
-import { BASE_API, SENDER_EMAIL } from "config/constants";
-import { useAuth } from "components/shared/auth-provider";
+import { SENDER_EMAIL } from "config/constants";
 import { useLanguage } from "components/shared/language-provider";
 import { toast } from "components/ui/toast/use-toast";
 import { errorToast } from "components/shared/error-toast";
@@ -16,8 +15,13 @@ import { Client } from "../data/client";
 import { InviteUserEmail } from "components/shared/emails/invite-user-email";
 import { render } from "@react-email/components";
 
-export function InviteManagerForm({ client, setClient }: { client: Client | null; setClient: React.Dispatch<React.SetStateAction<Client | null>> }) {
-    const { auth } = useAuth();
+export function InviteManagerForm({
+    client,
+    setClient,
+}: {
+    client: Client | null;
+    setClient: React.Dispatch<React.SetStateAction<Client | null>>;
+}) {
     const { writeLang } = useLanguage();
 
     const form = useForm<InviteUserSchema>({
@@ -33,9 +37,7 @@ export function InviteManagerForm({ client, setClient }: { client: Client | null
             email: data.email,
             client_id: client.id,
             is_manager: true,
-        }).post(`${BASE_API}/users`, {
-            token: auth?.token,
-        });
+        }).post(`/users`);
 
         request.onDone((response) => {
             toast({
@@ -58,9 +60,7 @@ export function InviteManagerForm({ client, setClient }: { client: Client | null
                 subject: `Você recebeu um convite para se juntar à MeuNovoApp`,
                 html: render(<InviteUserEmail userId={response.id} />),
                 no_save: true,
-            }).post(`${BASE_API}/emails`, {
-                token: auth?.token,
-            });
+            }).post(`/emails`);
         });
 
         request.onError((error) => {

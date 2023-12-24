@@ -11,9 +11,8 @@ import { toast } from "../../../components/ui/toast/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../../components/ui/select";
 import { HandleRequest } from "../../../lib/handle-request";
 import { CreateTaskSchema, createTaskSchema } from "adapters/task";
-import { useAuth } from "components/shared/auth-provider";
+import { useUserData } from "components/shared/user-data-provider";
 import { useLanguage } from "components/shared/language-provider";
-import { BASE_API } from "config/constants";
 import { errorToast } from "components/shared/error-toast";
 import { Separator } from "components/ui/separator";
 import { GetStatus, statuses, statusesColors, statusesIcons } from "pages/projects/data/status";
@@ -22,10 +21,10 @@ import { useState } from "react";
 
 export function TaskForm({ task }: { task: Task }) {
     const { writeLang } = useLanguage();
-    const { auth } = useAuth();
+    const { userData } = useUserData();
 
     const [isEditable, setIsEditable] = useState<boolean>(
-        hasPermission(auth) &&
+        hasPermission(userData) &&
             !["completed", "cancelled"].includes(task.status) &&
             !["completed", "cancelled"].includes(task.project.status),
     );
@@ -43,9 +42,7 @@ export function TaskForm({ task }: { task: Task }) {
     });
 
     async function onSubmit(data: CreateTaskSchema) {
-        const request = await new HandleRequest(data).put(`${BASE_API}/tasks/${task.id}`, {
-            token: auth?.token,
-        });
+        const request = await new HandleRequest(data).put(`/tasks/${task.id}`);
 
         request.onDone(() => {
             toast({

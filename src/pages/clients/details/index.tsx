@@ -6,8 +6,6 @@ import { Client } from "../data/client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
 import { HandleRequest } from "../../../lib/handle-request";
 import { useLanguage } from "../../../components/shared/language-provider";
-import { BASE_API } from "config/constants";
-import { useAuth } from "components/shared/auth-provider";
 import { errorToast } from "components/shared/error-toast";
 import { ClientForm } from "./form";
 import { ClientUsers } from "./users";
@@ -17,7 +15,6 @@ import { CreateProjectForm } from "pages/projects/forms/create";
 
 export function ClientDetails() {
     const { writeLang } = useLanguage();
-    const { auth } = useAuth();
     const { id } = useParams();
 
     const [client, setClient] = useState<Client>();
@@ -25,9 +22,7 @@ export function ClientDetails() {
     const [inviteUserOpen, setInviteUserOpen] = useState<boolean>(false);
 
     async function getClient(id?: string) {
-        const request = await new HandleRequest().get(`${BASE_API}/clients/${id}`, {
-            token: auth?.token,
-        });
+        const request = await new HandleRequest().get(`/clients/${id}`);
 
         request.onDone((response) => {
             setClient(response);

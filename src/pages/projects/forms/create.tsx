@@ -2,8 +2,6 @@ import { CreateProjectSchema, createProjectSchema } from "adapters/project";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HandleRequest } from "lib/handle-request";
-import { BASE_API } from "config/constants";
-import { useAuth } from "components/shared/auth-provider";
 import { useLanguage } from "components/shared/language-provider";
 import { toast } from "components/ui/toast/use-toast";
 import { errorToast } from "components/shared/error-toast";
@@ -22,8 +20,17 @@ import { format } from "date-fns";
 import { cn } from "lib/utils";
 import { languages } from "config/languages";
 
-export function CreateProjectForm({ label, client_id, clients, onCreated }: { label?: string; client_id?: string; clients?: Client[]; onCreated: Function }) {
-    const { auth } = useAuth();
+export function CreateProjectForm({
+    label,
+    client_id,
+    clients,
+    onCreated,
+}: {
+    label?: string;
+    client_id?: string;
+    clients?: Client[];
+    onCreated: Function;
+}) {
     const { language, writeLang } = useLanguage();
 
     const [open, setOpen] = useState<boolean>(false);
@@ -39,9 +46,7 @@ export function CreateProjectForm({ label, client_id, clients, onCreated }: { la
     });
 
     async function onSubmit(data: CreateProjectSchema) {
-        const request = await new HandleRequest(data).post(`${BASE_API}/projects`, {
-            token: auth?.token,
-        });
+        const request = await new HandleRequest(data).post(`/projects`);
 
         request.onDone(() => {
             toast({
@@ -128,7 +133,13 @@ export function CreateProjectForm({ label, client_id, clients, onCreated }: { la
                                     <Popover>
                                         <PopoverTrigger asChild>
                                             <FormControl>
-                                                <Button variant="outline" className={cn("pl-3 text-left font-normal bg-muted/50", !field.value && "text-muted-foreground")}>
+                                                <Button
+                                                    variant="outline"
+                                                    className={cn(
+                                                        "pl-3 text-left font-normal bg-muted/50",
+                                                        !field.value && "text-muted-foreground",
+                                                    )}
+                                                >
                                                     {field.value ? (
                                                         format(new Date(field.value), "PPP", {
                                                             locale,

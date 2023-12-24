@@ -1,7 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "../../../components/ui/data-table/data-table-column-header";
 import { MemberInfo } from "../../../components/shared/member-info";
-import { User } from "config/user";
 import { Badge } from "components/ui/badge";
 import { buttonVariants } from "components/ui/button";
 import { formatDistance } from "date-fns";
@@ -9,6 +8,9 @@ import { languages } from "config/languages";
 import { Language } from "components/shared/language-provider";
 import { SubmitButton } from "components/shared/submit-button";
 import { cn } from "lib/utils";
+import { User } from "pages/users/data/user";
+import { Link } from "react-router-dom";
+import { Actions } from "components/shared/actions";
 
 export const userColumns = (
     language: Pick<Language, "lang" | "locale" | "currency">,
@@ -29,7 +31,7 @@ export const userColumns = (
                 />
             ),
             cell: ({ row }) => {
-                return (
+                const child = (
                     <div className="flex items-center space-x-4">
                         <MemberInfo avatar={row.original.avatar} email={row.original.email} name={row.original.name} />
                         {row.original.is_manager && (
@@ -42,6 +44,21 @@ export const userColumns = (
                         )}
                     </div>
                 );
+
+                const link = (
+                    <Link
+                        to={
+                            writeLang([
+                                ["en", `/users/${row.original.id}`],
+                                ["pt", `/usuarios/${row.original.id}`],
+                            ]) as string
+                        }
+                    >
+                        {child}
+                    </Link>
+                );
+
+                return row.original.activated_at ? link : child;
             },
         },
         {
@@ -84,7 +101,24 @@ export const userColumns = (
                                     ["pt", `Reconvidar usuário`],
                                 ]) as string
                             }
-                            onSubmit={() => (row.original as any).reinvite(row.original)}
+                            onSubmit={() => (row.original as any).inviteAction(row.original)}
+                        />
+                    </div>
+                );
+            },
+        },
+        {
+            id: "actions",
+            cell: ({ row }) => {
+                return (
+                    <div className="text-right">
+                        <Actions.Edit
+                            to={
+                                writeLang([
+                                    ["en", `/users/${row.original.id}`],
+                                    ["pt", `/usuarios/${row.original.id}`],
+                                ]) as string
+                            }
                         />
                     </div>
                 );

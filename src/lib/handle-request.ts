@@ -1,7 +1,7 @@
 import { Language } from "../components/shared/language-provider";
+import { BASE_API } from "config/constants";
 
 export interface IRequestOptions {
-    token?: string;
     language?: Language;
 }
 
@@ -16,10 +16,10 @@ export class HandleRequest {
 
     async get(url: string, option?: IRequestOptions) {
         try {
-            const response = await fetch(url, {
+            const response = await fetch(`${BASE_API}${url}`, {
                 method: "get",
+                credentials: "include",
                 headers: new Headers({
-                    Authorization: "Bearer " + option?.token,
                     "Content-Type": "application/json",
                     "Content-Language": option?.language?.locale ?? "",
                 }),
@@ -44,10 +44,10 @@ export class HandleRequest {
         try {
             if (!this.data) throw new Error("Data is not defined");
 
-            const response = await fetch(url, {
+            const response = await fetch(`${BASE_API}${url}`, {
                 method: "post",
+                credentials: "include",
                 headers: new Headers({
-                    Authorization: "Bearer " + option?.token,
                     "Content-Type": "application/json",
                     "Content-Language": option?.language?.locale ?? "",
                 }),
@@ -73,10 +73,10 @@ export class HandleRequest {
         try {
             if (!this.data) throw new Error("Data is not defined");
 
-            const response = await fetch(url, {
+            const response = await fetch(`${BASE_API}${url}`, {
                 method: "put",
+                credentials: "include",
                 headers: new Headers({
-                    Authorization: "Bearer " + option?.token,
                     "Content-Type": "application/json",
                     "Content-Language": option?.language?.locale ?? "",
                 }),
@@ -100,10 +100,10 @@ export class HandleRequest {
 
     async delete(url: string, option?: IRequestOptions) {
         try {
-            const response = await fetch(url, {
+            const response = await fetch(`${BASE_API}${url}`, {
                 method: "delete",
+                credentials: "include",
                 headers: new Headers({
-                    Authorization: "Bearer " + option?.token,
                     "Content-Type": "application/json",
                     "Content-Language": option?.language?.locale ?? "",
                 }),

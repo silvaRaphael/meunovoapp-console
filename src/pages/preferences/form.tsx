@@ -13,13 +13,12 @@ import { useLanguage } from "components/shared/language-provider";
 import { Switch } from "components/ui/switch";
 import { PreferencesSchema, preferencesSchema } from "adapters/preferences";
 import { HandleRequest } from "lib/handle-request";
-import { BASE_API } from "config/constants";
 import { errorToast } from "components/shared/error-toast";
-import { useAuth } from "components/shared/auth-provider";
+import { useUserData } from "components/shared/user-data-provider";
 
 export function PreferencesForm({ preferences }: { preferences: PreferencesSchema }) {
     const { theme, setTheme } = useTheme();
-    const { auth } = useAuth();
+    const { userData } = useUserData();
     const { writeLang } = useLanguage();
 
     const form = useForm<PreferencesSchema>({
@@ -33,14 +32,12 @@ export function PreferencesForm({ preferences }: { preferences: PreferencesSchem
     });
 
     async function onSubmit(data: PreferencesSchema) {
-        if (!auth) return;
+        if (!userData) return;
 
         const request = await new HandleRequest({
             email_notification: data.email_notification,
             console_notification: data.console_notification,
-        }).put(`${BASE_API}/preferences`, {
-            token: auth?.token,
-        });
+        }).put(`/preferences`);
 
         request.onDone(() => {
             setTheme(data.themeMode!);

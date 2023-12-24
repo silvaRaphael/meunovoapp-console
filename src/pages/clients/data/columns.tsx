@@ -6,13 +6,14 @@ import { Client } from "./client";
 import { ClientInfo } from "components/shared/client-info";
 import { Button } from "components/ui/button";
 import { Badge } from "components/ui/badge";
+import { Link } from "react-router-dom";
 
 export const clientColumns = (
     writeLang: (texts: [string, React.ReactNode][]) => React.ReactNode,
 ): ColumnDef<Client>[] => {
     return [
         {
-            accessorKey: "company",
+            accessorKey: "client",
             header: ({ column }) => (
                 <DataTableColumnHeader
                     column={column}
@@ -58,21 +59,30 @@ export const clientColumns = (
                         </Button>
                     );
                 return (
-                    <div className="flex items-center space-x-2">
-                        {!row.original.users[0].name && (
-                            <Badge variant="outline" className="h-min">
-                                {writeLang([
-                                    ["en", "Invited"],
-                                    ["pt", "Convidado"],
-                                ])}
-                            </Badge>
-                        )}
-                        <MemberInfo
-                            avatar={row.original.users[0].avatar}
-                            email={row.original.users[0].email}
-                            name={row.original.users[0].name}
-                        />
-                    </div>
+                    <Link
+                        to={
+                            writeLang([
+                                ["en", `/users/${row.original.users[0].id}`],
+                                ["pt", `/usuarios/${row.original.users[0].id}`],
+                            ]) as string
+                        }
+                    >
+                        <div className="flex items-center space-x-2">
+                            {!row.original.users[0].name && (
+                                <Badge variant="outline" className="h-min">
+                                    {writeLang([
+                                        ["en", "Invited"],
+                                        ["pt", "Convidado"],
+                                    ])}
+                                </Badge>
+                            )}
+                            <MemberInfo
+                                avatar={row.original.users[0].avatar}
+                                email={row.original.users[0].email}
+                                name={row.original.users[0].name}
+                            />
+                        </div>
+                    </Link>
                 );
             },
         },

@@ -9,8 +9,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { Textarea } from "components/ui/textarea";
 import { useState } from "react";
 import { Email } from "../data/email";
-import { BASE_API, SENDER_EMAIL } from "config/constants";
-import { useAuth } from "components/shared/auth-provider";
+import { SENDER_EMAIL } from "config/constants";
 import { EmailSchema, emailSchema } from "adapters/email";
 import { errorToast } from "components/shared/error-toast";
 import { HandleRequest } from "lib/handle-request";
@@ -19,7 +18,6 @@ import { addDays, format } from "date-fns";
 import { languages } from "config/languages";
 
 export function EmailReplyBudget({ email }: { email: Email }) {
-    const { auth } = useAuth();
     const { language, writeLang } = useLanguage();
 
     const [replySent, setReplySent] = useState<"not-sent" | "sending" | "sent">(email.has_reply ? "sent" : "not-sent");
@@ -30,7 +28,8 @@ export function EmailReplyBudget({ email }: { email: Email }) {
         defaultValues: {
             subject: "Sua Mensagem foi Respondida - MeuNovoApp",
             name: "",
-            projectDetails: "Nome do Projeto: [Nome do Projeto]\nDescrição: [Breve descrição do projeto e seus objetivos]",
+            projectDetails:
+                "Nome do Projeto: [Nome do Projeto]\nDescrição: [Breve descrição do projeto e seus objetivos]",
             projectScope: [
                 {
                     title: "Desenvolvimento de Aplicativo Móvel:",
@@ -42,8 +41,10 @@ export function EmailReplyBudget({ email }: { email: Email }) {
                 },
             ],
             projectDueDays: "60",
-            projectPayment: "Nossa proposta inclui um investimento total de [Valor], dividido da seguinte forma:\n\n[Detalhes da Estrutura de Pagamento]",
-            projectBenefits: "- Suporte contínuo pós-implantação.\n- Reuniões regulares de acompanhamento.\n- Garantia de qualidade e satisfação.\n",
+            projectPayment:
+                "Nossa proposta inclui um investimento total de [Valor], dividido da seguinte forma:\n\n[Detalhes da Estrutura de Pagamento]",
+            projectBenefits:
+                "- Suporte contínuo pós-implantação.\n- Reuniões regulares de acompanhamento.\n- Garantia de qualidade e satisfação.\n",
         },
     });
 
@@ -71,9 +72,7 @@ export function EmailReplyBudget({ email }: { email: Email }) {
             }),
             projectPayment: data.projectPayment,
             projectBenefits: data.projectBenefits,
-        }).post(`${BASE_API}/emails/reply-budget-message`, {
-            token: auth?.token,
-        });
+        }).post(`/emails/reply-budget-message`);
 
         request.onDone(() => {
             toast({
@@ -253,7 +252,12 @@ export function EmailReplyBudget({ email }: { email: Email }) {
                                     )}
                                 </div>
                                 {i === fields.length - 1 && i !== 0 && (
-                                    <Button type="button" variant="outline" className="w-full" onClick={() => append({ title: "", value: "" })}>
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        className="w-full"
+                                        onClick={() => append({ title: "", value: "" })}
+                                    >
                                         Adicionar Escopo
                                         {writeLang([
                                             ["en", "Add Scope"],

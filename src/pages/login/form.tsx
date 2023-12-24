@@ -8,14 +8,13 @@ import { toast } from "components/ui/toast/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { SignInSchema, signInSchema } from "adapters/auth";
-import { BASE_API } from "config/constants";
-import { Auth, useAuth } from "components/shared/auth-provider";
+import { UserData, useUserData } from "components/shared/user-data-provider";
 import { HandleRequest } from "lib/handle-request";
 import { errorToast } from "components/shared/error-toast";
 
 export function LoginInForm() {
     const navigate = useNavigate();
-    const { setAuth } = useAuth();
+    const { setUserData } = useUserData();
 
     const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
 
@@ -25,10 +24,10 @@ export function LoginInForm() {
     });
 
     async function onSubmit(data: SignInSchema) {
-        const request = await new HandleRequest(data).post(`${BASE_API}/auth/sign-in`);
+        const request = await new HandleRequest(data).post(`/auth/sign-in`);
 
         request.onDone((response) => {
-            setAuth(response as unknown as Auth);
+            setUserData(response as unknown as UserData);
 
             toast({
                 title: "Você acessou o console!",
@@ -58,7 +57,12 @@ export function LoginInForm() {
                             render={({ field }) => (
                                 <FormItem className="flex flex-col">
                                     <FormControl>
-                                        <Input type="email" placeholder="Seu e-mail" onChange={field.onChange} value={field.value || ""} />
+                                        <Input
+                                            type="email"
+                                            placeholder="Seu e-mail"
+                                            onChange={field.onChange}
+                                            value={field.value || ""}
+                                        />
                                     </FormControl>
                                     <div className="flex">
                                         <FormMessage />
@@ -82,7 +86,12 @@ export function LoginInForm() {
                                                 onChange={field.onChange}
                                                 value={field.value || ""}
                                             />
-                                            <Button type="button" variant="outline" className="bg-muted/80" onClick={() => setPasswordVisible(!passwordVisible)}>
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                className="bg-muted/80"
+                                                onClick={() => setPasswordVisible(!passwordVisible)}
+                                            >
                                                 {!passwordVisible ? <Eye size={14} /> : <EyeOff size={14} />}
                                             </Button>
                                         </div>

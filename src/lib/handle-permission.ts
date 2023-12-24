@@ -1,12 +1,12 @@
-import { Auth, useAuth } from "components/shared/auth-provider";
+import { UserData, useUserData } from "components/shared/user-data-provider";
 
 export const HandlePermission = (callback?: any) => {
-    const { auth } = useAuth();
+    const { userData } = useUserData();
 
-    if (!auth || auth.role !== "master") return null;
+    if (!userData || userData.role !== "master") return null;
     return callback;
 };
 
-export const hasPermission = (auth: Auth | null) => {
-    return auth?.role === "master";
+export const hasPermission = (userData: UserData | null) => {
+    return userData?.role === "master";
 };

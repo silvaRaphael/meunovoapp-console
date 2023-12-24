@@ -5,22 +5,17 @@ import { ProfileForm } from "./form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
 import { ClientForm } from "pages/clients/details/form";
 import { useEffect, useState } from "react";
-import { useAuth } from "components/shared/auth-provider";
 import { HandleRequest } from "lib/handle-request";
-import { BASE_API } from "config/constants";
 import { errorToast } from "components/shared/error-toast";
-import { User } from "config/user";
+import { UserProfile } from "config/user";
 
 export function Profile() {
-    const { auth } = useAuth();
     const { writeLang } = useLanguage();
 
-    const [profile, setProfile] = useState<User>();
+    const [profile, setProfile] = useState<UserProfile>();
 
     async function getProfile() {
-        const request = await new HandleRequest().get(`${BASE_API}/users/profile`, {
-            token: auth?.token,
-        });
+        const request = await new HandleRequest().get(`/users/profile`);
 
         request.onDone((response) => {
             setProfile(response);

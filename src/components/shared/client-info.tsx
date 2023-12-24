@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useLanguage } from "./language-provider";
-import { useAuth } from "./auth-provider";
+import { useUserData } from "./user-data-provider";
 import { BASE_FILES } from "config/constants";
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
 }
 
 export function ClientInfo({ id, company, logotipo }: Props) {
-    const { auth } = useAuth();
+    const { userData } = useUserData();
     const { writeLang } = useLanguage();
 
     const companySplitted = company.split(" ");
@@ -40,7 +40,7 @@ export function ClientInfo({ id, company, logotipo }: Props) {
         </div>
     );
 
-    if (auth?.role !== "master") return content;
+    if (userData?.role !== "master") return content;
 
     return (
         <Link

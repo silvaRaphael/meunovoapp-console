@@ -7,15 +7,12 @@ import { Project } from "../data/project";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
 import { HandleRequest } from "../../../lib/handle-request";
 import { useLanguage } from "../../../components/shared/language-provider";
-import { useAuth } from "components/shared/auth-provider";
 import { errorToast } from "components/shared/error-toast";
-import { BASE_API } from "config/constants";
 import { ProjectTasks } from "./tasks";
 import { CreateTaskForm } from "pages/tasks/forms/create";
 import { HandlePermission } from "lib/handle-permission";
 
 export function ProjectDetails() {
-    const { auth } = useAuth();
     const { writeLang } = useLanguage();
     const { id } = useParams();
 
@@ -23,9 +20,7 @@ export function ProjectDetails() {
     const [tab, setTab] = useState<string>();
 
     async function getProject(id?: string) {
-        const request = await new HandleRequest().get(`${BASE_API}/projects/${id}`, {
-            token: auth?.token,
-        });
+        const request = await new HandleRequest().get(`/projects/${id}`);
 
         request.onDone((response) => {
             setProject(response);

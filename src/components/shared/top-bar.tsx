@@ -12,19 +12,14 @@ import { Notifications } from "./notifications";
 import { useEffect, useState } from "react";
 import { Notification } from "config/notifications";
 import { HandleRequest } from "lib/handle-request";
-import { BASE_API } from "config/constants";
-import { useAuth } from "./auth-provider";
 
 export function TopBar({ pathname, toggleSideBar, isOpen }: { pathname: string; toggleSideBar: any; isOpen: boolean }) {
-    const { auth } = useAuth();
     const navigate = useNavigate();
 
     const [notifications, setNotifications] = useState<Notification[] | null>(null);
 
     async function getNotifications() {
-        const request = await new HandleRequest().get(`${BASE_API}/notifications`, {
-            token: auth?.token,
-        });
+        const request = await new HandleRequest().get(`/notifications`);
 
         request.onDone((response) => {
             setNotifications(response);
@@ -32,6 +27,7 @@ export function TopBar({ pathname, toggleSideBar, isOpen }: { pathname: string; 
 
         request.onError((error) => {
             setNotifications(null);
+            console.log(error);
             if (error.redirect) navigate(error.redirect);
         });
     }

@@ -3,22 +3,17 @@ import { useLanguage } from "components/shared/language-provider";
 import { Page } from "components/shared/page";
 import { PreferencesForm } from "./form";
 import { useEffect, useState } from "react";
-import { useAuth } from "components/shared/auth-provider";
 import { PreferencesSchema } from "adapters/preferences";
 import { HandleRequest } from "lib/handle-request";
-import { BASE_API } from "config/constants";
 import { errorToast } from "components/shared/error-toast";
 
 export function Preferences() {
-    const { auth } = useAuth();
     const { writeLang } = useLanguage();
 
     const [preferences, setPreferences] = useState<PreferencesSchema>();
 
     async function getPreferences() {
-        const request = await new HandleRequest().get(`${BASE_API}/preferences`, {
-            token: auth?.token,
-        });
+        const request = await new HandleRequest().get(`/preferences`);
 
         request.onDone((response) => {
             setPreferences(response);

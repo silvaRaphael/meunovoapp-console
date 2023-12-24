@@ -7,23 +7,18 @@ import { HandleRequest } from "lib/handle-request";
 import { Task } from "./data/task";
 import { taskColumns } from "./data/columns";
 import { errorToast } from "components/shared/error-toast";
-import { BASE_API } from "config/constants";
-import { useAuth } from "components/shared/auth-provider";
 import { CreateTaskForm } from "./forms/create";
 import { Project } from "pages/projects/data/project";
 import { HandlePermission } from "lib/handle-permission";
 
 export function Tasks() {
-    const { auth } = useAuth();
     const { language, writeLang } = useLanguage();
 
     const [tasks, setTasks] = useState<Task[]>([]);
     const [projects, setProjects] = useState<Project[]>([]);
 
     async function getTasks() {
-        const request = await new HandleRequest().get(`${BASE_API}/tasks`, {
-            token: auth?.token,
-        });
+        const request = await new HandleRequest().get(`/tasks`);
 
         request.onDone((response) => {
             setTasks(response);
@@ -35,9 +30,7 @@ export function Tasks() {
     }
 
     async function getProjects() {
-        const request = await new HandleRequest().get(`${BASE_API}/projects`, {
-            token: auth?.token,
-        });
+        const request = await new HandleRequest().get(`/projects`);
 
         request.onDone((response) => {
             setProjects(response.filter((item: Project) => !["completed", "cancelled"].includes(item.status)));

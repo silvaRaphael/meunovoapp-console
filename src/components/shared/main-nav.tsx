@@ -3,11 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { MenuItem, MenuItems } from "../../config/site";
 import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "./language-provider";
-import { useAuth } from "./auth-provider";
+import { useUserData } from "./user-data-provider";
 
 export function MainNav({ pathname }: { pathname: string }) {
     const { language, writeLang } = useLanguage();
-    const { auth } = useAuth();
+    const { userData } = useUserData();
     const navigate = useNavigate();
 
     const ref = useRef<HTMLElement>(null);
@@ -36,8 +36,8 @@ export function MainNav({ pathname }: { pathname: string }) {
 
         let _newActiveMenu: MenuItem[] = [];
         newActiveMenu.forEach((item) => {
-            if (!auth) return;
-            const _item = MenuItems({ auth, writeLang }).find((menu) => item === menu.path);
+            if (!userData) return;
+            const _item = MenuItems({ userData, writeLang }).find((menu) => item === menu.path);
             if (_item) _newActiveMenu.push(_item);
         });
 
@@ -70,9 +70,11 @@ export function MainNav({ pathname }: { pathname: string }) {
                 <Link
                     key={i}
                     to={item.path}
-                    className={`flex items-center text-sm font-medium h-11 transition-colors hover:text-primary group ${pathname !== item.path ? "text-muted-foreground" : ""}`}
+                    className={`flex items-center text-sm font-medium h-11 transition-colors hover:text-primary group ${
+                        pathname !== item.path ? "text-muted-foreground" : ""
+                    }`}
                 >
-                    <span className="flex items-center">
+                    <span className="flex items-center break-keep whitespace-nowrap">
                         {item?.icon ?? <Hash className="mr-1" size={14} />}
                         {item.label}
                     </span>

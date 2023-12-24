@@ -9,7 +9,7 @@ import { HandleRequest } from "../../lib/handle-request";
 import { Separator } from "../../components/ui/separator";
 import { errorToast } from "components/shared/error-toast";
 import { useLanguage } from "components/shared/language-provider";
-import { Auth, useAuth } from "components/shared/auth-provider";
+import { UserData, useUserData } from "components/shared/user-data-provider";
 import { BASE_API } from "config/constants";
 import { useState } from "react";
 import { Button } from "components/ui/button";
@@ -23,7 +23,7 @@ let emailTimeout: any;
 
 export function CompleteProfileForm({ id, email }: { id: string; email: string }) {
     const navigate = useNavigate();
-    const { setAuth } = useAuth();
+    const { setUserData } = useUserData();
     const { writeLang } = useLanguage();
 
     const [avatar, setAvatar] = useState<string | null>(null);
@@ -42,10 +42,10 @@ export function CompleteProfileForm({ id, email }: { id: string; email: string }
         const request = await new HandleRequest({
             ...data,
             avatar: avatarBase64 || "",
-        }).put(`${BASE_API}/users/complete/${id}`);
+        }).put(`/users/complete/${id}`);
 
         request.onDone((response) => {
-            setAuth(response as unknown as Auth);
+            setUserData(response as unknown as UserData);
 
             toast({
                 title: "Você finalizou seu cadastro!",
@@ -71,7 +71,7 @@ export function CompleteProfileForm({ id, email }: { id: string; email: string }
 
         if (!email.length) return;
 
-        const request = await new HandleRequest({ email }).post(`${BASE_API}/users/can-use-email/${id}`);
+        const request = await new HandleRequest({ email }).post(`/users/can-use-email/${id}`);
 
         request.onError(() => {
             form.setError("email", {

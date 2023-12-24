@@ -1,7 +1,18 @@
-import { ClipboardList, FileCode, HelpCircle, LayoutDashboard, ListTodo, Mail, Settings2, User, Users } from "lucide-react";
+import {
+    Building2,
+    ClipboardList,
+    FileCode,
+    HelpCircle,
+    LayoutDashboard,
+    ListTodo,
+    Mail,
+    Settings2,
+    User,
+    Users,
+} from "lucide-react";
 import { Role } from "./roles";
 import { ReactNode } from "react";
-import { Auth } from "components/shared/auth-provider";
+import { UserData } from "components/shared/user-data-provider";
 
 export interface MenuItem {
     path: string;
@@ -20,7 +31,11 @@ export interface SideBarMenuRole {
     menu: SideBarMenu[];
 }
 
-export const SideMenu = ({ writeLang }: { writeLang: (texts: [string, React.ReactNode][]) => ReactNode }): SideBarMenuRole[] => {
+export const SideMenu = ({
+    writeLang,
+}: {
+    writeLang: (texts: [string, React.ReactNode][]) => ReactNode;
+}): SideBarMenuRole[] => {
     return [
         {
             role: ["master"],
@@ -48,6 +63,17 @@ export const SideMenu = ({ writeLang }: { writeLang: (texts: [string, React.Reac
                             path: writeLang([
                                 ["en", "/clients"],
                                 ["pt", "/clientes"],
+                            ]) as string,
+                            icon: <Building2 className="mr-1" size={14} />,
+                        },
+                        {
+                            label: writeLang([
+                                ["en", "Users"],
+                                ["pt", "Usuários"],
+                            ]) as string,
+                            path: writeLang([
+                                ["en", "/users"],
+                                ["pt", "/usuarios"],
                             ]) as string,
                             icon: <Users className="mr-1" size={14} />,
                         },
@@ -271,11 +297,17 @@ export const SideMenu = ({ writeLang }: { writeLang: (texts: [string, React.Reac
     ];
 };
 
-export const MenuItems = ({ auth, writeLang }: { auth: Auth; writeLang: (texts: [string, React.ReactNode][]) => ReactNode }): MenuItem[] => {
+export const MenuItems = ({
+    userData,
+    writeLang,
+}: {
+    userData: UserData;
+    writeLang: (texts: [string, React.ReactNode][]) => ReactNode;
+}): MenuItem[] => {
     let menuItems: MenuItem[] = [];
 
     for (const item of SideMenu({ writeLang })) {
-        if (!item.role.includes(auth?.role)) continue;
+        if (!item.role.includes(userData?.role)) continue;
         for (const subItem of item.menu) {
             menuItems.push(...subItem.menu);
         }

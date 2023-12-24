@@ -1,24 +1,24 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { SectionHeader } from "../../../components/shared/section-header";
-import { TaskForm } from "./form";
 import { Page } from "../../../components/shared/page";
-import { Task } from "../data/task";
+import { User } from "../data/user";
 import { HandleRequest } from "../../../lib/handle-request";
 import { useLanguage } from "../../../components/shared/language-provider";
 import { errorToast } from "components/shared/error-toast";
+import { UserForm } from "./form";
 
-export function TaskDetails() {
+export function UserDetails() {
     const { writeLang } = useLanguage();
     const { id } = useParams();
 
-    const [task, setTask] = useState<Task>();
+    const [user, setUser] = useState<User>();
 
-    async function getTask(id?: string) {
-        const request = await new HandleRequest().get(`/tasks/${id}`);
+    async function getUser(id?: string) {
+        const request = await new HandleRequest().get(`/users/${id}`);
 
         request.onDone((response) => {
-            setTask(response);
+            setUser(response);
         });
 
         request.onError((error) => {
@@ -29,7 +29,7 @@ export function TaskDetails() {
     useEffect(() => {
         const controller = new AbortController();
 
-        getTask(id);
+        getUser(id);
 
         return () => {
             controller.abort();
@@ -38,37 +38,35 @@ export function TaskDetails() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
 
-    if (!task) return <></>;
+    if (!user) return <></>;
 
     return (
         <Page
             pathname={
                 writeLang([
-                    ["en", "/tasks"],
-                    ["pt", "/tarefas"],
+                    ["en", "/users"],
+                    ["pt", "/usuarios"],
                 ]) as string
             }
             header={
                 <SectionHeader
                     title={
                         writeLang([
-                            ["en", "Tasks"],
-                            ["pt", "Tarefas"],
+                            ["en", "Users"],
+                            ["pt", "Usuários"],
                         ]) as string
                     }
                     pathname={
                         writeLang([
-                            ["en", "/tasks"],
-                            ["pt", "/tarefas"],
+                            ["en", "/users"],
+                            ["pt", "/usuarios"],
                         ]) as string
                     }
-                    tree={!!task ? [{ label: task.name }] : []}
+                    tree={!!user ? [{ label: user.name }] : []}
                 ></SectionHeader>
             }
         >
-            <div className="space-y-6 pb-40">
-                <TaskForm task={task} />
-            </div>
+            <UserForm user={user} />
         </Page>
     );
 }

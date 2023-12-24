@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import {
@@ -11,14 +11,17 @@ import {
     DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { useLanguage } from "./language-provider";
-import { useAuth } from "./auth-provider";
+import { useUserData } from "./user-data-provider";
 import { BASE_FILES } from "config/constants";
+import { toast } from "components/ui/toast/use-toast";
+import { HandleRequest } from "lib/handle-request";
 
 export function UserNav() {
-    const { auth, removeAuth } = useAuth();
+    const navigate = useNavigate();
+    const { userData, removeUserData } = useUserData();
     const { writeLang } = useLanguage();
 
-    const nameSplitted = auth?.name.split(" ") ?? "";
+    const nameSplitted = userData?.name.split(" ") ?? "";
     const userInitials = [
         nameSplitted[0][0],
         nameSplitted.length === 1
@@ -28,14 +31,28 @@ export function UserNav() {
         .join("")
         .toUpperCase();
 
+    async function handleLogout() {
+        const request = await new HandleRequest().get(`/auth/sign-out`);
+
+        request.onDone(() => {
+            removeUserData();
+
+            toast({
+                title: "Você saiu do console!",
+            });
+
+            return navigate("/");
+        });
+    }
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                     <Avatar className="h-8 w-8">
                         <AvatarImage
-                            src={auth?.avatar ? `${BASE_FILES}/${auth?.avatar}` : ""}
-                            alt={`${auth?.name}`}
+                            src={userData?.avatar ? `${BASE_FILES}/${userData?.avatar}` : ""}
+                            alt={`${userData?.name}`}
                             className="object-cover"
                         />
                         <AvatarFallback>{userInitials}</AvatarFallback>
@@ -45,8 +62,8 @@ export function UserNav() {
             <DropdownMenuContent className="w-56" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">{auth?.name}</p>
-                        <p className="text-xs leading-none text-muted-foreground">{auth?.email}</p>
+                        <p className="text-sm font-medium leading-none">{userData?.name}</p>
+                        <p className="text-xs leading-none text-muted-foreground">{userData?.email}</p>
                     </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
@@ -84,7 +101,7 @@ export function UserNav() {
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="cursor-pointer" asChild>
-                    <span onClick={removeAuth}>
+                    <span onClick={handleLogout}>
                         {writeLang([
                             ["en", "Log out"],
                             ["pt", "Sair"],

@@ -4,8 +4,8 @@ import { Page } from "../../../components/shared/page";
 import { useLanguage } from "../../../components/shared/language-provider";
 import { templates } from "../data/data";
 import { HandleRequest } from "lib/handle-request";
-import { BASE_API, SENDER_EMAIL } from "config/constants";
-import { useAuth } from "components/shared/auth-provider";
+import { SENDER_EMAIL } from "config/constants";
+import { useUserData } from "components/shared/user-data-provider";
 import { useState } from "react";
 import { SubmitButton } from "components/shared/submit-button";
 import { errorToast } from "components/shared/error-toast";
@@ -13,7 +13,7 @@ import { toast } from "components/ui/toast/use-toast";
 import { Input } from "components/ui/input";
 
 export function TemplateDetails() {
-    const { auth } = useAuth();
+    const { userData } = useUserData();
     const { writeLang } = useLanguage();
     const navigate = useNavigate();
     const { id } = useParams();
@@ -30,13 +30,11 @@ export function TemplateDetails() {
         const request = await new HandleRequest({
             name: "Teste",
             from: SENDER_EMAIL,
-            to: [auth?.email],
+            to: [userData?.email],
             subject: `E-mail de teste - MeuNovoApp`,
             html: template?.component,
             no_save: true,
-        }).post(`${BASE_API}/emails`, {
-            token: auth?.token,
-        });
+        }).post(`/emails`);
 
         request.onDone(() => {
             toast({
@@ -45,8 +43,8 @@ export function TemplateDetails() {
                     ["pt", "Teste enviado com sucesso!"],
                 ]) as string,
                 description: writeLang([
-                    ["en", `Sent to ${auth?.email}`],
-                    ["pt", `Enviado para ${auth?.email}`],
+                    ["en", `Sent to ${userData?.email}`],
+                    ["pt", `Enviado para ${userData?.email}`],
                 ]) as string,
             });
         });

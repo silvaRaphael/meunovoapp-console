@@ -3,8 +3,6 @@ import { InviteUserSchema, inviteUserSchema } from "adapters/client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HandleRequest } from "lib/handle-request";
-import { BASE_API } from "config/constants";
-import { useAuth } from "components/shared/auth-provider";
 import { useLanguage } from "components/shared/language-provider";
 import { toast } from "components/ui/toast/use-toast";
 import { errorToast } from "components/shared/error-toast";
@@ -14,7 +12,7 @@ import { SubmitButton } from "components/shared/submit-button";
 import { ContentAlert } from "components/shared/content-alert";
 import { Client } from "../data/client";
 import { Button } from "components/ui/button";
-import { User } from "config/user";
+import { UserProfile } from "config/user";
 
 export function InviteUserForm({
     client,
@@ -27,7 +25,6 @@ export function InviteUserForm({
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-    const { auth } = useAuth();
     const { writeLang } = useLanguage();
 
     const form = useForm<InviteUserSchema>({
@@ -42,9 +39,7 @@ export function InviteUserForm({
         const request = await new HandleRequest({
             email: data.email,
             client_id: client.id,
-        }).post(`${BASE_API}/users`, {
-            token: auth?.token,
-        });
+        }).post(`/users`);
 
         request.onDone(() => {
             toast({
@@ -65,7 +60,7 @@ export function InviteUserForm({
                     ...(client.users || []),
                     {
                         email: data.email,
-                    } as User,
+                    } as UserProfile,
                 ],
             });
         });

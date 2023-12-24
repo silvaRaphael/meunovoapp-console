@@ -2,8 +2,6 @@ import { CreateTaskSchema, createTaskSchema } from "adapters/task";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HandleRequest } from "lib/handle-request";
-import { BASE_API } from "config/constants";
-import { useAuth } from "components/shared/auth-provider";
 import { useLanguage } from "components/shared/language-provider";
 import { toast } from "components/ui/toast/use-toast";
 import { errorToast } from "components/shared/error-toast";
@@ -16,8 +14,17 @@ import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "components/ui/select";
 import { Project } from "pages/projects/data/project";
 
-export function CreateTaskForm({ label, project_id, projects, onCreated }: { label?: string; project_id?: string; projects?: Project[]; onCreated: Function }) {
-    const { auth } = useAuth();
+export function CreateTaskForm({
+    label,
+    project_id,
+    projects,
+    onCreated,
+}: {
+    label?: string;
+    project_id?: string;
+    projects?: Project[];
+    onCreated: Function;
+}) {
     const { writeLang } = useLanguage();
 
     const [open, setOpen] = useState<boolean>(false);
@@ -31,9 +38,7 @@ export function CreateTaskForm({ label, project_id, projects, onCreated }: { lab
     });
 
     async function onSubmit(data: CreateTaskSchema) {
-        const request = await new HandleRequest(data).post(`${BASE_API}/tasks`, {
-            token: auth?.token,
-        });
+        const request = await new HandleRequest(data).post(`/tasks`);
 
         request.onDone(() => {
             toast({

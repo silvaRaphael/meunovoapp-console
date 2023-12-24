@@ -12,17 +12,19 @@ import { TaskDetails } from "pages/tasks/details";
 import { Profile } from "pages/profile";
 import { Preferences } from "pages/preferences";
 import { useLanguage } from "components/shared/language-provider";
-import { useAuth } from "components/shared/auth-provider";
+import { useUserData } from "components/shared/user-data-provider";
 import { Emails } from "pages/emails";
 import { EmailDetails } from "pages/emails/details";
 import { CompleteProfile } from "pages/complete-profile";
 import { CommingSoon } from "pages/comming-soon";
 import { Templates } from "pages/templates";
 import { TemplateDetails } from "pages/templates/details";
+import { Users } from "pages/users";
+import { UserDetails } from "pages/users/details";
 
 export function App() {
     const { writeLang } = useLanguage();
-    const { auth } = useAuth();
+    const { userData } = useUserData();
 
     return (
         <BrowserRouter>
@@ -31,12 +33,12 @@ export function App() {
                     <Route>
                         <Route path="/login" element={<Login />} />
                         <Route path="/comecar" element={<CompleteProfile />} />
-                        {!auth?.token && <Route path="/*" element={<Navigate to="/login" />} />}
+                        {!userData?.email && <Route path="/*" element={<Navigate to="/login" />} />}
                     </Route>
                 }
-                {!!auth?.token && (
+                {!!userData?.email && (
                     <Route>
-                        {["master"].includes(auth.role) && (
+                        {["master"].includes(userData.role) && (
                             <Route path="/">
                                 <Route path="" element={<Console />} />
                                 <Route
@@ -49,6 +51,17 @@ export function App() {
                                 >
                                     <Route path="" element={<Clients />} />
                                     <Route path=":id" element={<ClientDetails />} />
+                                </Route>
+                                <Route
+                                    path={
+                                        writeLang([
+                                            ["en", "/users"],
+                                            ["pt", "/usuarios"],
+                                        ]) as string
+                                    }
+                                >
+                                    <Route path="" element={<Users />} />
+                                    <Route path=":id" element={<UserDetails />} />
                                 </Route>
                                 <Route path="emails">
                                     <Route path="" element={<Emails />} />
@@ -118,7 +131,7 @@ export function App() {
                                 <Route path="*" element={<NotFound />} />
                             </Route>
                         )}
-                        {["client", "admin"].includes(auth.role) && (
+                        {["client", "admin"].includes(userData.role) && (
                             <Route path="/">
                                 <Route path="" element={<Console />} />
                                 <Route
