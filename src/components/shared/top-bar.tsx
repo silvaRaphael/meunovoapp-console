@@ -27,7 +27,6 @@ export function TopBar({ pathname, toggleSideBar, isOpen }: { pathname: string; 
 
         request.onError((error) => {
             setNotifications(null);
-            console.log(error);
             if (error.redirect) navigate(error.redirect);
         });
     }
