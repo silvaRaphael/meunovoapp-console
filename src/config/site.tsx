@@ -13,6 +13,7 @@ import {
 import { Role } from "./roles";
 import { ReactNode } from "react";
 import { UserData } from "components/shared/user-data-provider";
+import { Langs } from "./languages";
 
 export interface MenuItem {
     path: string;
@@ -33,8 +34,10 @@ export interface SideBarMenuRole {
 
 export const SideMenu = ({
     writeLang,
+    lang,
 }: {
-    writeLang: (texts: [string, React.ReactNode][]) => ReactNode;
+    writeLang: (texts: [string, React.ReactNode][], lang?: Langs) => ReactNode;
+    lang?: Langs;
 }): SideBarMenuRole[] => {
     return [
         {
@@ -50,140 +53,203 @@ export const SideMenu = ({
                     ],
                 },
                 {
-                    title: writeLang([
-                        ["en", "Management"],
-                        ["pt", "Gestão"],
-                    ]) as string,
+                    title: writeLang(
+                        [
+                            ["en", "Management"],
+                            ["pt", "Gestão"],
+                        ],
+                        lang,
+                    ) as string,
                     menu: [
                         {
-                            label: writeLang([
-                                ["en", "Clients"],
-                                ["pt", "Clientes"],
-                            ]) as string,
-                            path: writeLang([
-                                ["en", "/clients"],
-                                ["pt", "/clientes"],
-                            ]) as string,
+                            label: writeLang(
+                                [
+                                    ["en", "Clients"],
+                                    ["pt", "Clientes"],
+                                ],
+                                lang,
+                            ) as string,
+                            path: writeLang(
+                                [
+                                    ["en", "/clients"],
+                                    ["pt", "/clientes"],
+                                ],
+                                lang,
+                            ) as string,
                             icon: <Building2 className="mr-1" size={14} />,
                         },
                         {
-                            label: writeLang([
-                                ["en", "Users"],
-                                ["pt", "Usuários"],
-                            ]) as string,
-                            path: writeLang([
-                                ["en", "/users"],
-                                ["pt", "/usuarios"],
-                            ]) as string,
+                            label: writeLang(
+                                [
+                                    ["en", "Users"],
+                                    ["pt", "Usuários"],
+                                ],
+                                lang,
+                            ) as string,
+                            path: writeLang(
+                                [
+                                    ["en", "/users"],
+                                    ["pt", "/usuarios"],
+                                ],
+                                lang,
+                            ) as string,
                             icon: <Users className="mr-1" size={14} />,
                         },
                         {
-                            label: writeLang([
-                                ["en", "Emails"],
-                                ["pt", "E-mails"],
-                            ]) as string,
+                            label: writeLang(
+                                [
+                                    ["en", "Emails"],
+                                    ["pt", "E-mails"],
+                                ],
+                                lang,
+                            ) as string,
                             path: "/emails",
                             icon: <Mail className="mr-1" size={14} />,
                         },
                         {
-                            label: writeLang([
-                                ["en", "Templates"],
-                                ["pt", "Modelos"],
-                            ]) as string,
-                            path: writeLang([
-                                ["en", "/templates"],
-                                ["pt", "/modelos"],
-                            ]) as string,
+                            label: writeLang(
+                                [
+                                    ["en", "Templates"],
+                                    ["pt", "Modelos"],
+                                ],
+                                lang,
+                            ) as string,
+                            path: writeLang(
+                                [
+                                    ["en", "/templates"],
+                                    ["pt", "/modelos"],
+                                ],
+                                lang,
+                            ) as string,
                             icon: <FileCode className="mr-1" size={14} />,
                         },
                     ],
                 },
                 {
-                    title: writeLang([
-                        ["en", "Project"],
-                        ["pt", "Projeto"],
-                    ]) as string,
+                    title: writeLang(
+                        [
+                            ["en", "Project"],
+                            ["pt", "Projeto"],
+                        ],
+                        lang,
+                    ) as string,
                     menu: [
                         {
-                            label: writeLang([
-                                ["en", "Projects"],
-                                ["pt", "Projetos"],
-                            ]) as string,
-                            path: writeLang([
-                                ["en", "/projects"],
-                                ["pt", "/projetos"],
-                            ]) as string,
+                            label: writeLang(
+                                [
+                                    ["en", "Projects"],
+                                    ["pt", "Projetos"],
+                                ],
+                                lang,
+                            ) as string,
+                            path: writeLang(
+                                [
+                                    ["en", "/projects"],
+                                    ["pt", "/projetos"],
+                                ],
+                                lang,
+                            ) as string,
                             icon: <ClipboardList className="mr-1" size={14} />,
                         },
                         {
-                            label: writeLang([
-                                ["en", "Tasks"],
-                                ["pt", "Tarefas"],
-                            ]) as string,
-                            path: writeLang([
-                                ["en", "/tasks"],
-                                ["pt", "/tarefas"],
-                            ]) as string,
+                            label: writeLang(
+                                [
+                                    ["en", "Tasks"],
+                                    ["pt", "Tarefas"],
+                                ],
+                                lang,
+                            ) as string,
+                            path: writeLang(
+                                [
+                                    ["en", "/tasks"],
+                                    ["pt", "/tarefas"],
+                                ],
+                                lang,
+                            ) as string,
                             icon: <ListTodo className="mr-1" size={14} />,
                         },
                         // {
                         //     label: writeLang([
                         //         ["en", "Schedule"],
                         //         ["pt", "Calendário"],
-                        //     ]) as string,
+                        //     ], lang) as string,
                         //     path: writeLang([
                         //         ["en", "/schedule"],
                         //         ["pt", "/calendario"],
-                        //     ]) as string,
+                        //     ], lang) as string,
                         //     icon: <Calendar className="mr-1" size={14} />,
                         // },
                     ],
                 },
                 {
-                    title: writeLang([
-                        ["en", "Personal"],
-                        ["pt", "Pessoal"],
-                    ]) as string,
+                    title: writeLang(
+                        [
+                            ["en", "Personal"],
+                            ["pt", "Pessoal"],
+                        ],
+                        lang,
+                    ) as string,
                     menu: [
                         {
-                            label: writeLang([
-                                ["en", "Profile"],
-                                ["pt", "Perfil"],
-                            ]) as string,
-                            path: writeLang([
-                                ["en", "/profile"],
-                                ["pt", "/perfil"],
-                            ]) as string,
+                            label: writeLang(
+                                [
+                                    ["en", "Profile"],
+                                    ["pt", "Perfil"],
+                                ],
+                                lang,
+                            ) as string,
+                            path: writeLang(
+                                [
+                                    ["en", "/profile"],
+                                    ["pt", "/perfil"],
+                                ],
+                                lang,
+                            ) as string,
                             icon: <User className="mr-1" size={14} />,
                         },
                         {
-                            label: writeLang([
-                                ["en", "Preferences"],
-                                ["pt", "Preferências"],
-                            ]) as string,
-                            path: writeLang([
-                                ["en", "/preferences"],
-                                ["pt", "/preferencias"],
-                            ]) as string,
+                            label: writeLang(
+                                [
+                                    ["en", "Preferences"],
+                                    ["pt", "Preferências"],
+                                ],
+                                lang,
+                            ) as string,
+                            path: writeLang(
+                                [
+                                    ["en", "/preferences"],
+                                    ["pt", "/preferencias"],
+                                ],
+                                lang,
+                            ) as string,
                             icon: <Settings2 className="mr-1" size={14} />,
                         },
                     ],
                 },
                 {
-                    title: writeLang([
-                        ["en", "Help"],
-                        ["pt", "Ajuda"],
-                    ]) as string,
+                    title: writeLang(
+                        [
+                            ["en", "Help"],
+                            ["pt", "Ajuda"],
+                        ],
+                        lang,
+                    ) as string,
                     menu: [
                         {
-                            label: writeLang([
-                                ["en", "Support"],
-                                ["pt", "Suporte"],
-                            ]) as string,
-                            path: writeLang([
-                                ["en", "/support"],
-                                ["pt", "/suporte"],
-                            ]) as string,
+                            label: writeLang(
+                                [
+                                    ["en", "Support"],
+                                    ["pt", "Suporte"],
+                                ],
+                                lang,
+                            ) as string,
+                            path: writeLang(
+                                [
+                                    ["en", "/support"],
+                                    ["pt", "/suporte"],
+                                ],
+                                lang,
+                            ) as string,
                             icon: <HelpCircle className="mr-1" size={14} />,
                         },
                     ],
@@ -203,91 +269,130 @@ export const SideMenu = ({
                     ],
                 },
                 {
-                    title: writeLang([
-                        ["en", "Project"],
-                        ["pt", "Projeto"],
-                    ]) as string,
+                    title: writeLang(
+                        [
+                            ["en", "Project"],
+                            ["pt", "Projeto"],
+                        ],
+                        lang,
+                    ) as string,
                     menu: [
                         {
-                            label: writeLang([
-                                ["en", "Projects"],
-                                ["pt", "Projetos"],
-                            ]) as string,
-                            path: writeLang([
-                                ["en", "/projects"],
-                                ["pt", "/projetos"],
-                            ]) as string,
+                            label: writeLang(
+                                [
+                                    ["en", "Projects"],
+                                    ["pt", "Projetos"],
+                                ],
+                                lang,
+                            ) as string,
+                            path: writeLang(
+                                [
+                                    ["en", "/projects"],
+                                    ["pt", "/projetos"],
+                                ],
+                                lang,
+                            ) as string,
                             icon: <ClipboardList className="mr-1" size={14} />,
                         },
                         {
-                            label: writeLang([
-                                ["en", "Tasks"],
-                                ["pt", "Tarefas"],
-                            ]) as string,
-                            path: writeLang([
-                                ["en", "/tasks"],
-                                ["pt", "/tarefas"],
-                            ]) as string,
+                            label: writeLang(
+                                [
+                                    ["en", "Tasks"],
+                                    ["pt", "Tarefas"],
+                                ],
+                                lang,
+                            ) as string,
+                            path: writeLang(
+                                [
+                                    ["en", "/tasks"],
+                                    ["pt", "/tarefas"],
+                                ],
+                                lang,
+                            ) as string,
                             icon: <ListTodo className="mr-1" size={14} />,
                         },
                         // {
                         //     label: writeLang([
                         //         ["en", "Schedule"],
                         //         ["pt", "Calendário"],
-                        //     ]) as string,
+                        //     ], lang) as string,
                         //     path: writeLang([
                         //         ["en", "/schedule"],
                         //         ["pt", "/calendario"],
-                        //     ]) as string,
+                        //     ], lang) as string,
                         //     icon: <Calendar className="mr-1" size={14} />,
                         // },
                     ],
                 },
                 {
-                    title: writeLang([
-                        ["en", "Personal"],
-                        ["pt", "Pessoal"],
-                    ]) as string,
+                    title: writeLang(
+                        [
+                            ["en", "Personal"],
+                            ["pt", "Pessoal"],
+                        ],
+                        lang,
+                    ) as string,
                     menu: [
                         {
-                            label: writeLang([
-                                ["en", "Profile"],
-                                ["pt", "Perfil"],
-                            ]) as string,
-                            path: writeLang([
-                                ["en", "/profile"],
-                                ["pt", "/perfil"],
-                            ]) as string,
+                            label: writeLang(
+                                [
+                                    ["en", "Profile"],
+                                    ["pt", "Perfil"],
+                                ],
+                                lang,
+                            ) as string,
+                            path: writeLang(
+                                [
+                                    ["en", "/profile"],
+                                    ["pt", "/perfil"],
+                                ],
+                                lang,
+                            ) as string,
                             icon: <User className="mr-1" size={14} />,
                         },
                         {
-                            label: writeLang([
-                                ["en", "Preferences"],
-                                ["pt", "Preferências"],
-                            ]) as string,
-                            path: writeLang([
-                                ["en", "/preferences"],
-                                ["pt", "/preferencias"],
-                            ]) as string,
+                            label: writeLang(
+                                [
+                                    ["en", "Preferences"],
+                                    ["pt", "Preferências"],
+                                ],
+                                lang,
+                            ) as string,
+                            path: writeLang(
+                                [
+                                    ["en", "/preferences"],
+                                    ["pt", "/preferencias"],
+                                ],
+                                lang,
+                            ) as string,
                             icon: <Settings2 className="mr-1" size={14} />,
                         },
                     ],
                 },
                 {
-                    title: writeLang([
-                        ["en", "Help"],
-                        ["pt", "Ajuda"],
-                    ]) as string,
+                    title: writeLang(
+                        [
+                            ["en", "Help"],
+                            ["pt", "Ajuda"],
+                        ],
+                        lang,
+                    ) as string,
                     menu: [
                         {
-                            label: writeLang([
-                                ["en", "Support"],
-                                ["pt", "Suporte"],
-                            ]) as string,
-                            path: writeLang([
-                                ["en", "/support"],
-                                ["pt", "/suporte"],
-                            ]) as string,
+                            label: writeLang(
+                                [
+                                    ["en", "Support"],
+                                    ["pt", "Suporte"],
+                                ],
+                                lang,
+                            ) as string,
+                            path: writeLang(
+                                [
+                                    ["en", "/support"],
+                                    ["pt", "/suporte"],
+                                ],
+                                lang,
+                            ) as string,
                             icon: <HelpCircle className="mr-1" size={14} />,
                         },
                     ],
@@ -300,13 +405,15 @@ export const SideMenu = ({
 export const MenuItems = ({
     userData,
     writeLang,
+    lang,
 }: {
     userData: UserData;
-    writeLang: (texts: [string, React.ReactNode][]) => ReactNode;
+    writeLang: (texts: [string, React.ReactNode][], lang?: Langs) => ReactNode;
+    lang?: Langs;
 }): MenuItem[] => {
     let menuItems: MenuItem[] = [];
 
-    for (const item of SideMenu({ writeLang })) {
+    for (const item of SideMenu({ writeLang, lang })) {
         if (!item.role.includes(userData?.role)) continue;
         for (const subItem of item.menu) {
             menuItems.push(...subItem.menu);

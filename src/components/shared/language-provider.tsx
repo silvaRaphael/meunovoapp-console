@@ -1,8 +1,9 @@
+import { Langs } from "config/languages";
 import { ReactNode, createContext, useContext, useEffect, useState } from "react";
 
 export type Language = {
     label: string;
-    lang: string;
+    lang: Langs;
     locale: string;
     currency: string;
     dateLocale: Locale;
@@ -43,7 +44,9 @@ export function LanguageProvider({
     storageKey = "quat-language",
     ...props
 }: LanguageProviderProps) {
-    const [language, setLanguage] = useState<Pick<Language, "lang" | "locale" | "currency">>(() => JSON.parse(localStorage.getItem(storageKey) as string) || defaultLanguage);
+    const [language, setLanguage] = useState<Pick<Language, "lang" | "locale" | "currency">>(
+        () => JSON.parse(localStorage.getItem(storageKey) as string) || defaultLanguage,
+    );
 
     useEffect(() => {
         const root = window.document.documentElement;
@@ -56,8 +59,8 @@ export function LanguageProvider({
             localStorage.setItem(storageKey, JSON.stringify(language));
             setLanguage(language);
         },
-        writeLang: (texts: [string, string | ReactNode][]) => {
-            const text = texts.find((item) => item[0] === language.lang) as Array<string>;
+        writeLang: (texts: [string, string | ReactNode][], lang?: Langs) => {
+            const text = texts.find((item) => item[0] === (lang ?? language.lang)) as Array<string>;
 
             if (!text) return texts[0][1];
 

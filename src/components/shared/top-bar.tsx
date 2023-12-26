@@ -12,8 +12,10 @@ import { Notifications } from "./notifications";
 import { useEffect, useState } from "react";
 import { Notification } from "config/notifications";
 import { HandleRequest } from "lib/handle-request";
+import { useUserData } from "./user-data-provider";
 
 export function TopBar({ pathname, toggleSideBar, isOpen }: { pathname: string; toggleSideBar: any; isOpen: boolean }) {
+    const { userData } = useUserData();
     const navigate = useNavigate();
 
     const [notifications, setNotifications] = useState<Notification[] | null>(null);
@@ -63,7 +65,7 @@ export function TopBar({ pathname, toggleSideBar, isOpen }: { pathname: string; 
                 <div className="flex items-center justify-end space-x-2 ps-2 pe-4 border-l h-full">
                     <div className="flex items-center space-x-1">
                         <Notifications notifications={notifications ?? []} />
-                        <LanguageToggle />
+                        <LanguageToggle userData={userData} />
                         <ThemeToggle />
                     </div>
                     <UserNav />

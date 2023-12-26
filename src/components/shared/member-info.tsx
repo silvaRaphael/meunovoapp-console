@@ -1,14 +1,16 @@
 import { BASE_FILES } from "config/constants";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Verified } from "lucide-react";
 
 interface Props {
     absoluteAvatar?: string;
     avatar?: string;
     name: string;
     email: string;
+    isManager?: boolean;
 }
 
-export function MemberInfo({ absoluteAvatar, avatar, name, email }: Props) {
+export function MemberInfo({ absoluteAvatar, avatar, name, email, isManager = false }: Props) {
     const nameSplitted = name?.split(" ");
     const nameInitials = name
         ? [
@@ -32,7 +34,10 @@ export function MemberInfo({ absoluteAvatar, avatar, name, email }: Props) {
                 <AvatarFallback>{nameInitials}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col items-start">
-                <span className="text-left text-sm font-medium">{name}</span>
+                <span className="flex items-center text-left text-sm font-medium">
+                    {name}
+                    {isManager && <Verified size={14} className="ms-1 text-green-700 dark:text-green-400" />}
+                </span>
                 <span className="text-xs text-muted-foreground">{email}</span>
             </div>
         </div>

@@ -19,6 +19,7 @@ export function UsersCard({
             email: string;
             avatar: string;
             activated_at: Date;
+            is_manager: boolean;
         }[]
     >([]);
 
@@ -51,7 +52,12 @@ export function UsersCard({
             {data.length ? (
                 data.map((item, i) => (
                     <div key={i} className="flex space-x-4 justify-between items-center">
-                        <MemberInfo name={item.name} email={item.email} avatar={item.avatar} />
+                        <MemberInfo
+                            name={item.name}
+                            email={item.email}
+                            avatar={item.avatar}
+                            isManager={item.is_manager}
+                        />
                         {item.activated_at ? (
                             <span className="text-xs font-medium text-end">
                                 {writeLang([

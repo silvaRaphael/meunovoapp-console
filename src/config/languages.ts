@@ -1,6 +1,8 @@
 import { Language } from "../components/shared/language-provider";
 import { enUS, ptBR } from "date-fns/locale";
 
+export type Langs = "pt" | "en";
+
 export const languages: Language[] = [
     {
         label: "Português",

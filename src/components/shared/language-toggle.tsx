@@ -5,14 +5,31 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Language, useLanguage } from "./language-provider";
 import { languages } from "config/languages";
 import { useNavigate } from "react-router-dom";
+import { MenuItems } from "config/site";
+import { UserData } from "./user-data-provider";
 
-export function LanguageToggle() {
-    const { setLanguage } = useLanguage();
+export function LanguageToggle({ userData }: { userData: UserData | null }) {
+    const { language, setLanguage, writeLang } = useLanguage();
     const navigate = useNavigate();
 
-    function handleChangeLanguage(language: Language) {
-        setLanguage(language);
-        navigate("/");
+    function handleChangeLanguage(newLanguage: Language) {
+        let redirect = "/";
+
+        if (userData) {
+            const menuItems = MenuItems({ userData, writeLang, lang: language.lang });
+
+            const activeItemIndex = menuItems.indexOf(
+                menuItems.find((item) => item.path === window.location.pathname) as any,
+            );
+
+            const newMenuItems = MenuItems({ userData, writeLang, lang: newLanguage.lang });
+
+            redirect = newMenuItems[activeItemIndex].path;
+        }
+
+        setLanguage(newLanguage);
+
+        navigate(redirect);
     }
 
     return (
