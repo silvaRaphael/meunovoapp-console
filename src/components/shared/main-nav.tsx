@@ -43,7 +43,8 @@ export function MainNav({ pathname }: { pathname: string }) {
         let _newActiveMenu: MenuItem[] = [];
         newActiveMenu.forEach((item) => {
             if (!userData) return;
-            const _item = MenuItems({ userData, writeLang }).find((menu) => item === menu.path);
+            const _item = MenuItems({ userData, writeLang, lang: language.lang }).find((menu) => item === menu.path);
+
             if (_item) _newActiveMenu.push(_item);
         });
 
