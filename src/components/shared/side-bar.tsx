@@ -78,8 +78,9 @@ export function SideBar({ pathname, isOpen }: { pathname: string; isOpen: boolea
                                                     {isOpen && item.label}
                                                 </Link>
                                             </TooltipTrigger>
-
-                                            <TooltipContent hidden={!!isOpen}>{item.label}</TooltipContent>
+                                            <TooltipContent side="right" hidden={!!isOpen}>
+                                                {item.label}
+                                            </TooltipContent>
                                         </Tooltip>
                                     );
                                 })}

@@ -29,7 +29,7 @@ const initialState: UserDataProviderState = {
 
 const UserDataProviderContext = createContext<UserDataProviderState>(initialState);
 
-export function UserDataProvider({ children, storageKey = "meunovoapp-userData", ...props }: UserDataProviderProps) {
+export function UserDataProvider({ children, storageKey = "meunovoapp-user-data", ...props }: UserDataProviderProps) {
     const [userData, setUserData] = useState<UserData | null>(
         () => JSON.parse(Cookies.get(storageKey) || "{}") as UserData,
     );

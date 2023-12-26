@@ -9,7 +9,7 @@ import { TooltipProvider } from "components/ui/tooltip";
 
 const Layout = () => {
     return (
-        <UserDataProvider storageKey="meunovoapp-userData">
+        <UserDataProvider storageKey="meunovoapp-user-data">
             <ThemeProvider defaultTheme="system" storageKey="meunovoapp-ui-theme">
                 <LanguageProvider
                     defaultLanguage={{
