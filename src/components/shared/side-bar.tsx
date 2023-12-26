@@ -2,13 +2,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { Hash, LogOutIcon } from "lucide-react";
 
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
-import { Badge } from "../ui/badge";
 import { SideMenu } from "config/site";
 import { cn } from "lib/utils";
 import { useLanguage } from "./language-provider";
 import { useUserData } from "./user-data-provider";
 import { HandleRequest } from "lib/handle-request";
 import { toast } from "components/ui/toast/use-toast";
+import { Tooltip, TooltipContent, TooltipTrigger } from "components/ui/tooltip";
 
 export const sideBarWidth = 200;
 export const sideBarWidthCollapsed = 48;
@@ -59,28 +59,29 @@ export function SideBar({ pathname, isOpen }: { pathname: string; isOpen: boolea
                             <div className={cn(isOpen ? "px-4 space-y-2" : "px-0 space-y-2")}>
                                 {item.menu.map((item, i) => {
                                     return (
-                                        <Link
-                                            key={i}
-                                            to={item.path}
-                                            className={cn(
-                                                "flex items-center text-sm h-6 font-medium transition-colors hover:text-primary border-l-2 border-l-transparent group",
-                                                pathname !== item.path ? "text-muted-foreground" : "",
-                                                !isOpen ? "justify-center" : "",
-                                                !isOpen && pathname === item.path
-                                                    ? "border-l-neutral-800 dark:border-l-neutral-200"
-                                                    : "",
-                                            )}
-                                        >
-                                            {<div className={`${!isOpen && "scale-125"}`}>{item?.icon}</div> ?? (
-                                                <Hash className="mr-1" size={14} />
-                                            )}
-                                            {isOpen && item.label}
-                                            {!isOpen && (
-                                                <Badge className="z-50 hidden group-hover:flex absolute top-2 left-14 whitespace-nowrap">
-                                                    {item.label}
-                                                </Badge>
-                                            )}
-                                        </Link>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Link
+                                                    key={i}
+                                                    to={item.path}
+                                                    className={cn(
+                                                        "flex items-center text-sm h-6 font-medium transition-colors hover:text-primary border-l-2 border-l-transparent group",
+                                                        pathname !== item.path ? "text-muted-foreground" : "",
+                                                        !isOpen ? "justify-center" : "",
+                                                        !isOpen && pathname === item.path
+                                                            ? "border-l-neutral-800 dark:border-l-neutral-200"
+                                                            : "",
+                                                    )}
+                                                >
+                                                    {(
+                                                        <div className={`${!isOpen && "scale-125"}`}>{item?.icon}</div>
+                                                    ) ?? <Hash className="mr-1" size={14} />}
+                                                    {isOpen && item.label}
+                                                </Link>
+                                            </TooltipTrigger>
+
+                                            <TooltipContent hidden={!!isOpen}>{item.label}</TooltipContent>
+                                        </Tooltip>
                                     );
                                 })}
                             </div>

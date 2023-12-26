@@ -5,6 +5,7 @@ import { LanguageProvider } from "components/shared/language-provider";
 import { Toaster } from "components/ui/toast/toaster";
 import { App } from "./app";
 import { UserDataProvider } from "components/shared/user-data-provider";
+import { TooltipProvider } from "components/ui/tooltip";
 
 const Layout = () => {
     return (
@@ -18,8 +19,10 @@ const Layout = () => {
                     }}
                     storageKey="meunovoapp-language"
                 >
-                    <Toaster />
-                    <App />
+                    <TooltipProvider delayDuration={0}>
+                        <Toaster />
+                        <App />
+                    </TooltipProvider>
                 </LanguageProvider>
             </ThemeProvider>
         </UserDataProvider>
