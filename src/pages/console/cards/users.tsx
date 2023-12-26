@@ -52,19 +52,18 @@ export function UsersCard({
                 data.map((item, i) => (
                     <div key={i} className="flex space-x-4 justify-between items-center">
                         <MemberInfo name={item.name} email={item.email} avatar={item.avatar} />
-                        <span className="text-xs font-medium text-end">
-                            {writeLang([
-                                ["en", "Active "],
-                                ["pt", "Ativo "],
-                            ])}
-
-                            {item.activated_at
-                                ? formatDistance(new Date(item.activated_at), new Date(), {
-                                      locale: languages.find((item) => item.lang === language.lang)?.dateLocale,
-                                      addSuffix: true,
-                                  })
-                                : null}
-                        </span>
+                        {item.activated_at ? (
+                            <span className="text-xs font-medium text-end">
+                                {writeLang([
+                                    ["en", "Active "],
+                                    ["pt", "Ativo "],
+                                ])}
+                                {formatDistance(new Date(item.activated_at), new Date(), {
+                                    locale: languages.find((item) => item.lang === language.lang)?.dateLocale,
+                                    addSuffix: true,
+                                })}
+                            </span>
+                        ) : null}
                     </div>
                 ))
             ) : (
