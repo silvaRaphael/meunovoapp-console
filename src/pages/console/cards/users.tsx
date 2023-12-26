@@ -57,10 +57,13 @@ export function UsersCard({
                                 ["en", "Active "],
                                 ["pt", "Ativo "],
                             ])}
-                            {formatDistance(new Date(item.activated_at), new Date(), {
-                                locale: languages.find((item) => item.lang === language.lang)?.dateLocale,
-                                addSuffix: true,
-                            })}
+
+                            {item.activated_at
+                                ? formatDistance(new Date(item.activated_at), new Date(), {
+                                      locale: languages.find((item) => item.lang === language.lang)?.dateLocale,
+                                      addSuffix: true,
+                                  })
+                                : null}
                         </span>
                     </div>
                 ))
