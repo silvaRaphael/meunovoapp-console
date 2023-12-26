@@ -52,4 +52,12 @@ const TabsContent = React.forwardRef<
 ));
 TabsContent.displayName = TabsPrimitive.Content.displayName;
 
-export { Tabs, TabsList, TabsTrigger, TabsContent };
+const changeTab = (tab: string, setTab: React.Dispatch<React.SetStateAction<string>>) => {
+    const _tab = tab === "0" ? "" : `?tab=${tab}`;
+
+    window.history.pushState({}, `?tab`, new URL(`${window.location.origin}${window.location.pathname}${_tab}`));
+
+    setTab(tab);
+};
+
+export { Tabs, TabsList, TabsTrigger, TabsContent, changeTab };

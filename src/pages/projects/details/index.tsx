@@ -4,7 +4,7 @@ import { SectionHeader } from "../../../components/shared/section-header";
 import { ProjectForm } from "./form";
 import { Page } from "../../../components/shared/page";
 import { Project } from "../data/project";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger, changeTab } from "../../../components/ui/tabs";
 import { HandleRequest } from "../../../lib/handle-request";
 import { useLanguage } from "../../../components/shared/language-provider";
 import { errorToast } from "components/shared/error-toast";
@@ -17,7 +17,7 @@ export function ProjectDetails() {
     const { id } = useParams();
 
     const [project, setProject] = useState<Project>();
-    const [tab, setTab] = useState<string>();
+    const [tab, setTab] = useState<string>(new URL(window.location.href).searchParams.get("tab") ?? "0");
 
     async function getProject(id?: string) {
         const request = await new HandleRequest().get(`/projects/${id}`);
@@ -87,25 +87,25 @@ export function ProjectDetails() {
             }
         >
             <div className="space-y-6 pb-40">
-                <Tabs defaultValue="project" className="w-full" value={tab} onValueChange={setTab}>
+                <Tabs defaultValue="0" className="w-full" value={tab} onValueChange={(tab) => changeTab(tab, setTab)}>
                     <TabsList className="w-min flex mx-auto">
-                        <TabsTrigger value="project" className="w-auto sm:w-36">
+                        <TabsTrigger value="0" className="w-auto sm:w-36">
                             {writeLang([
                                 ["en", "Project"],
                                 ["pt", "Projeto"],
                             ])}
                         </TabsTrigger>
-                        <TabsTrigger value="tasks" className="w-auto sm:w-36">
+                        <TabsTrigger value="1" className="w-auto sm:w-36">
                             {writeLang([
                                 ["en", "Tasks"],
                                 ["pt", "Tarefas"],
                             ])}
                         </TabsTrigger>
                     </TabsList>
-                    <TabsContent value="project" className="pt-3">
+                    <TabsContent value="0" className="pt-3">
                         <ProjectForm project={project} />
                     </TabsContent>
-                    <TabsContent value="tasks" className="pt-3">
+                    <TabsContent value="1" className="pt-3">
                         <ProjectTasks project={project} />
                     </TabsContent>
                 </Tabs>

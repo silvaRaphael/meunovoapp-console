@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { SectionHeader } from "../../../components/shared/section-header";
 import { Page } from "../../../components/shared/page";
 import { Client } from "../data/client";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger, changeTab } from "../../../components/ui/tabs";
 import { HandleRequest } from "../../../lib/handle-request";
 import { useLanguage } from "../../../components/shared/language-provider";
 import { errorToast } from "components/shared/error-toast";
@@ -18,8 +18,8 @@ export function ClientDetails() {
     const { id } = useParams();
 
     const [client, setClient] = useState<Client>();
-    const [tab, setTab] = useState<string>();
     const [inviteUserOpen, setInviteUserOpen] = useState<boolean>(false);
+    const [tab, setTab] = useState<string>(new URL(window.location.href).searchParams.get("tab") ?? "0");
 
     async function getClient(id?: string) {
         const request = await new HandleRequest().get(`/clients/${id}`);
@@ -95,34 +95,34 @@ export function ClientDetails() {
             }
         >
             <div className="space-y-6 pb-40">
-                <Tabs defaultValue="client" className="w-full" value={tab} onValueChange={setTab}>
+                <Tabs defaultValue="0" className="w-full" value={tab} onValueChange={(tab) => changeTab(tab, setTab)}>
                     <TabsList className="w-min flex mx-auto">
-                        <TabsTrigger value="client" className="w-auto sm:w-36">
+                        <TabsTrigger value="0" className="w-auto sm:w-36">
                             {writeLang([
                                 ["en", "Client"],
                                 ["pt", "Cliente"],
                             ])}
                         </TabsTrigger>
-                        <TabsTrigger value="users" className="w-auto sm:w-36">
+                        <TabsTrigger value="1" className="w-auto sm:w-36">
                             {writeLang([
                                 ["en", "Users"],
                                 ["pt", "Usuários"],
                             ])}
                         </TabsTrigger>
-                        <TabsTrigger value="projects" className="w-auto sm:w-36">
+                        <TabsTrigger value="2" className="w-auto sm:w-36">
                             {writeLang([
                                 ["en", "Projects"],
                                 ["pt", "Projetos"],
                             ])}
                         </TabsTrigger>
                     </TabsList>
-                    <TabsContent value="client" className="pt-3">
+                    <TabsContent value="0" className="pt-3">
                         <ClientForm client={client} />
                     </TabsContent>
-                    <TabsContent value="users" className="pt-3">
+                    <TabsContent value="1" className="pt-3">
                         <ClientUsers client={client} />
                     </TabsContent>
-                    <TabsContent value="projects" className="pt-3">
+                    <TabsContent value="2" className="pt-3">
                         <ClientProjects client={client} />
                     </TabsContent>
                 </Tabs>
