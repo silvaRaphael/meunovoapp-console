@@ -2,12 +2,13 @@ import { BASE_FILES } from "config/constants";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 interface Props {
+    absoluteAvatar?: string;
     avatar?: string;
     name: string;
     email: string;
 }
 
-export function MemberInfo({ avatar, name, email }: Props) {
+export function MemberInfo({ absoluteAvatar, avatar, name, email }: Props) {
     const nameSplitted = name?.split(" ");
     const nameInitials = name
         ? [
@@ -23,7 +24,11 @@ export function MemberInfo({ avatar, name, email }: Props) {
     return (
         <div className="flex items-center space-x-2">
             <Avatar className="h-8 w-8 border">
-                <AvatarImage src={avatar ? `${BASE_FILES}/${avatar}` : ""} alt={`${name}`} className="object-cover" />
+                <AvatarImage
+                    src={absoluteAvatar ?? (avatar ? `${BASE_FILES}/${avatar}` : "")}
+                    alt={`${name}`}
+                    className="object-cover"
+                />
                 <AvatarFallback>{nameInitials}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col items-start">

@@ -59,10 +59,9 @@ export function SideBar({ pathname, isOpen }: { pathname: string; isOpen: boolea
                             <div className={cn(isOpen ? "px-4 space-y-2" : "px-0 space-y-2")}>
                                 {item.menu.map((item, i) => {
                                     return (
-                                        <Tooltip>
+                                        <Tooltip key={i}>
                                             <TooltipTrigger asChild>
                                                 <Link
-                                                    key={i}
                                                     to={item.path}
                                                     className={cn(
                                                         "flex items-center text-sm h-6 font-medium transition-colors hover:text-primary border-l-2 border-l-transparent group",
