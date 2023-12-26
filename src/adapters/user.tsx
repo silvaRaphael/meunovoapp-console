@@ -2,14 +2,18 @@ import { z } from "zod";
 
 export const updateUserSchema = z
     .object({
-        name: z.string({
-            required_error: "Nome é necessário.",
-        }),
+        name: z
+            .string({
+                required_error: "Nome é necessário.",
+            })
+            .min(1, {
+                message: "Nome é necessário.",
+            }),
         email: z
             .string({
                 required_error: "E-mail é necessário.",
             })
-            .email({ message: "Digite um e-mail válido" }),
+            .email({ message: "Diite um e-mail válgido" }),
         old_password: z
             .string({ required_error: "Senha antiga é necessária." })
             .min(5, { message: "Digite uma senha maior." })
@@ -29,9 +33,13 @@ export type UpdateUserSchema = z.infer<typeof updateUserSchema>;
 
 export const completeUserSchema = z
     .object({
-        name: z.string({
-            required_error: "Nome é necessário.",
-        }),
+        name: z
+            .string({
+                required_error: "Nome é necessário.",
+            })
+            .min(1, {
+                message: "Nome é necessário.",
+            }),
         email: z
             .string({
                 required_error: "E-mail é necessário.",

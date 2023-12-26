@@ -16,7 +16,13 @@ export function MemberInfo({ absoluteAvatar, avatar, name, email, isManager = fa
         ? [
               nameSplitted[0][0],
               nameSplitted.length === 1
-                  ? nameSplitted[0][nameSplitted[0].length - 1]
+                  ? nameSplitted[0].length > 1
+                      ? nameSplitted[0][1]
+                      : ""
+                  : nameSplitted.length > 1
+                  ? nameSplitted[nameSplitted.length - 1][0]
+                  : nameSplitted[0].length > 1
+                  ? nameSplitted[nameSplitted.length - 1][nameSplitted[0].length - 1]
                   : nameSplitted[nameSplitted.length - 1][0],
           ]
               .join("")

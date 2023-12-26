@@ -1,7 +1,7 @@
 import { errorToast } from "components/shared/error-toast";
 import { HandleRequest } from "lib/handle-request";
 import { useEffect, useState } from "react";
-import { Bar, ComposedChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
 export function ProjectsCard({ writeLang }: { writeLang: (texts: [string, React.ReactNode][]) => React.ReactNode }) {
     const [data, setData] = useState<
@@ -38,7 +38,7 @@ export function ProjectsCard({ writeLang }: { writeLang: (texts: [string, React.
     return (
         <ResponsiveContainer width="100%" height={200}>
             {data.length ? (
-                <ComposedChart layout="vertical" data={data}>
+                <BarChart layout="vertical" data={data}>
                     <XAxis type="number" tickLine={false} axisLine={false} tickFormatter={(value) => `${value}%`} />
                     <YAxis
                         dataKey="name"
@@ -49,7 +49,7 @@ export function ProjectsCard({ writeLang }: { writeLang: (texts: [string, React.
                         width={120}
                     />
                     <Bar dataKey="progress" fill="currentColor" radius={[0, 4, 4, 0]} className="fill-primary" />
-                </ComposedChart>
+                </BarChart>
             ) : (
                 <div className="flex w-full h-full justify-center items-center">
                     <span className="font-medium text-muted-foreground">
