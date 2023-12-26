@@ -198,8 +198,8 @@ export function UserForm({ user }: { user: User }) {
                                         src={
                                             avatarBase64
                                                 ? avatarBase64
-                                                : user.avatar
-                                                ? `${BASE_FILES}/${user.avatar}`
+                                                : avatar
+                                                ? `${BASE_FILES}/${avatar}`
                                                 : "" || undefined
                                         }
                                         className="object-cover"

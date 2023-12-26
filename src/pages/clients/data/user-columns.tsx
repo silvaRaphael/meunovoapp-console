@@ -87,7 +87,7 @@ export const userColumns = (
             },
         },
         {
-            id: "actions",
+            id: "reinvite",
             cell: ({ row }) => {
                 if (row.original.activated_at) return <></>;
 

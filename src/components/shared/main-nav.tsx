@@ -18,7 +18,13 @@ export function MainNav({ pathname }: { pathname: string }) {
 
         localStorage.setItem(`${language.lang}-menu`, JSON.stringify(_activeMenu.map((item) => item.path)));
 
-        if (item.path === pathname) return navigate("/");
+        if (item.path === pathname) {
+            const closedIndex = activeMenu.indexOf(item);
+
+            if (closedIndex > 0) return navigate(activeMenu[closedIndex - 1].path);
+
+            return navigate("/");
+        }
 
         setActiveMenu(_activeMenu);
     }
