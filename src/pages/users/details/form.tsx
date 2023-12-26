@@ -195,7 +195,13 @@ export function UserForm({ user }: { user: User }) {
                             <label htmlFor="avatar-input">
                                 <Avatar className="w-32 h-32 p-0 aspect-square border cursor-pointer">
                                     <AvatarImage
-                                        src={avatarBase64 ? avatarBase64 : `${BASE_FILES}/${user.avatar}` || undefined}
+                                        src={
+                                            avatarBase64
+                                                ? avatarBase64
+                                                : user.avatar
+                                                ? `${BASE_FILES}/${user.avatar}`
+                                                : "" || undefined
+                                        }
                                         className="object-cover"
                                     />
                                     <AvatarFallback className="bg-muted/50 hover:bg-accent/60 group">
