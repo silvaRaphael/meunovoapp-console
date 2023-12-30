@@ -62,13 +62,10 @@ export function Users() {
                             ["pt", "/usuarios"],
                         ]) as string
                     }
-                >
-                    {/* <CreateUserForm onCreated={getUsers} /> */}
-                </SectionHeader>
+                ></SectionHeader>
             }
         >
             <DataTable columns={userColumns(language, writeLang)} data={users} />
-            {/* <InviteManagerForm user={user} setUser={setUser} /> */}
         </Page>
     );
 }

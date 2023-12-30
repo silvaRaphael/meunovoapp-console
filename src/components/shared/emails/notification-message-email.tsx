@@ -23,12 +23,7 @@ export function NotificationMessageEmail({
                 em manter você sempre informado sobre o progresso e as novas tarefas.
             </Text>
             <Text style={{ fontSize: 18 }}>Resumo das Atualizações</Text>
-            <div
-                style={{ fontSize: 14 }}
-                dangerouslySetInnerHTML={{
-                    __html: description.replace(/\n/g, "<br />"),
-                }}
-            />
+            <div style={{ fontSize: 14, whiteSpace: "pre-wrap" }}>{description}</div>
             <Text style={{ fontSize: 18 }}>Próximos Passos:</Text>
             <Text>
                 <span style={{ fontWeight: 600 }}>Acessar as Atualizações: </span>

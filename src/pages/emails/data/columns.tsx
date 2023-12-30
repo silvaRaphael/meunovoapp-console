@@ -6,7 +6,9 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Badge } from "components/ui/badge";
 
-export const emailsColumns = (writeLang: (texts: [string, React.ReactNode][]) => React.ReactNode): ColumnDef<Email>[] => {
+export const emailsColumns = (
+    writeLang: (texts: [string, React.ReactNode][]) => React.ReactNode,
+): ColumnDef<Email>[] => {
     return [
         {
             accessorKey: "name",

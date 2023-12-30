@@ -16,11 +16,11 @@ import { useUserData } from "components/shared/user-data-provider";
 import { Emails } from "pages/emails";
 import { EmailDetails } from "pages/emails/details";
 import { CompleteProfile } from "pages/complete-profile";
-import { CommingSoon } from "pages/comming-soon";
 import { Templates } from "pages/templates";
 import { TemplateDetails } from "pages/templates/details";
 import { Users } from "pages/users";
 import { UserDetails } from "pages/users/details";
+import { Chats } from "pages/chat";
 
 export function App() {
     const { writeLang } = useLanguage();
@@ -119,15 +119,7 @@ export function App() {
                                     }
                                     element={<Preferences />}
                                 />
-                                <Route
-                                    path={
-                                        writeLang([
-                                            ["en", "/support"],
-                                            ["pt", "/suporte"],
-                                        ]) as string
-                                    }
-                                    element={<CommingSoon />}
-                                />
+                                <Route path="/chat" element={<Chats />} />
                                 <Route path="*" element={<NotFound />} />
                             </Route>
                         )}
@@ -174,15 +166,7 @@ export function App() {
                                     }
                                     element={<Preferences />}
                                 />
-                                <Route
-                                    path={
-                                        writeLang([
-                                            ["en", "/support"],
-                                            ["pt", "/suporte"],
-                                        ]) as string
-                                    }
-                                    element={<CommingSoon />}
-                                />
+                                <Route path="/chat" element={<Chats />} />
                                 <Route path="*" element={<NotFound />} />
                             </Route>
                         )}

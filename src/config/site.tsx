@@ -2,10 +2,10 @@ import {
     Building2,
     ClipboardList,
     FileCode,
-    HelpCircle,
     LayoutDashboard,
     ListTodo,
     Mail,
+    MessageCircle,
     Settings2,
     User,
     Users,
@@ -99,7 +99,7 @@ export const SideMenu = ({
                             label: writeLang(
                                 [
                                     ["en", "Emails"],
-                                    ["pt", "E-mails"],
+                                    ["pt", "E-chats"],
                                 ],
                                 lang,
                             ) as string,
@@ -229,28 +229,16 @@ export const SideMenu = ({
                 {
                     title: writeLang(
                         [
-                            ["en", "Help"],
-                            ["pt", "Ajuda"],
+                            ["en", "Contact"],
+                            ["pt", "Contato"],
                         ],
                         lang,
                     ) as string,
                     menu: [
                         {
-                            label: writeLang(
-                                [
-                                    ["en", "Support"],
-                                    ["pt", "Suporte"],
-                                ],
-                                lang,
-                            ) as string,
-                            path: writeLang(
-                                [
-                                    ["en", "/support"],
-                                    ["pt", "/suporte"],
-                                ],
-                                lang,
-                            ) as string,
-                            icon: <HelpCircle className="mr-1" size={14} />,
+                            label: "Chat",
+                            path: "/chat",
+                            icon: <MessageCircle className="mr-1" size={14} />,
                         },
                     ],
                 },
@@ -372,28 +360,16 @@ export const SideMenu = ({
                 {
                     title: writeLang(
                         [
-                            ["en", "Help"],
-                            ["pt", "Ajuda"],
+                            ["en", "Contact"],
+                            ["pt", "Contato"],
                         ],
                         lang,
                     ) as string,
                     menu: [
                         {
-                            label: writeLang(
-                                [
-                                    ["en", "Support"],
-                                    ["pt", "Suporte"],
-                                ],
-                                lang,
-                            ) as string,
-                            path: writeLang(
-                                [
-                                    ["en", "/support"],
-                                    ["pt", "/suporte"],
-                                ],
-                                lang,
-                            ) as string,
-                            icon: <HelpCircle className="mr-1" size={14} />,
+                            label: "Chat",
+                            path: "/chat",
+                            icon: <MessageCircle className="mr-1" size={14} />,
                         },
                     ],
                 },

@@ -48,7 +48,7 @@ export function EmailDetails() {
                     title={
                         writeLang([
                             ["en", "Emails"],
-                            ["pt", "E-mails"],
+                            ["pt", "E-chats"],
                         ]) as string
                     }
                     pathname="/emails"
