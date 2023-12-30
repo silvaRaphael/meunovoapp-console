@@ -10,6 +10,7 @@ export type MessageUser = {
     email: string;
     avatar?: string;
     is_manager: boolean;
+    ws_token?: string;
 };
 
 export interface Message {

@@ -10,7 +10,7 @@ import { cn } from "lib/utils";
 import { useForm } from "react-hook-form";
 import { CreateMessageSchema, createMessageSchema } from "adapters/message";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormDescription, FormField, FormItem } from "components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from "components/ui/form";
 import { GetMessageLabel, Message, MessageLabel, MessageUser, messageLabelTypes } from "pages/chat/data/message";
 import { Badge } from "components/ui/badge";
 import { useEffect, useRef, useState } from "react";
@@ -22,57 +22,24 @@ import { errorToast } from "components/shared/error-toast";
 import { useNavigate } from "react-router-dom";
 import { useUserData } from "components/shared/user-data-provider";
 import { v4 as v4UUID } from "uuid";
+import { socket } from "./websocket";
 
 export function ChatDisplay({ chat, newChat }: { chat: Chat | null; newChat: MessageUser | null }) {
     const { userData } = useUserData();
-    const { writeLang } = useLanguage();
     const navigate = useNavigate();
 
-    const [messages, setMessages] = useState<Message[] | null>(null);
+    useEffect(() => {
+        if (!chat) return;
 
-    const addMessage = (message: Message) => {
-        if (!messages) {
-            setMessages([message]);
-            return;
-        }
-        setMessages([...messages, message]);
-    };
+        socket.emit("getMessages", chat.id);
 
-    const markAsReadMessage = (message: Message) => {
-        if (message.user.email === chat?.user.email) return;
-        new HandleRequest({}).put(`/messages/${message.id}`);
-    };
-
-    async function getMessages() {
-        if (!chat) {
-            setMessages([]);
-            return;
-        }
-
-        const request = await new HandleRequest().get(`/messages/${chat.id}`);
-
-        request.onDone((response) => {
-            setMessages(
-                response.map((item: Message) => {
-                    markAsReadMessage(item);
-                    return item;
-                }),
-            );
-        });
-
-        request.onError((error) => {
+        socket.on("error", (error) => {
             errorToast(error);
             if (error.redirect) navigate(error.redirect);
         });
-    }
-
-    useEffect(() => {
-        const controller = new AbortController();
-
-        getMessages();
 
         return () => {
-            controller.abort();
+            socket.off("error");
         };
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -81,8 +48,9 @@ export function ChatDisplay({ chat, newChat }: { chat: Chat | null; newChat: Mes
     return (
         <div className="flex h-full flex-col">
             {chat ? (
-                <MailContent chat={chat} messages={messages} addMessage={addMessage} />
-            ) : newChat ? (
+                <MailContent chat={chat} />
+            ) : (
+                newChat &&
                 userData && (
                     <MailContent
                         chat={{
@@ -95,32 +63,72 @@ export function ChatDisplay({ chat, newChat }: { chat: Chat | null; newChat: Mes
                             } as MessageUser,
                             participant: newChat,
                         }}
-                        messages={messages}
-                        addMessage={addMessage}
                     />
                 )
-            ) : (
-                <div className="flex justify-center items-center h-full p-8 text-center text-muted-foreground">
-                    {writeLang([
-                        ["en", "No chat selected."],
-                        ["pt", "Nenhum chat selecionado."],
-                    ])}
-                </div>
             )}
         </div>
     );
 }
 
-const MailContent = ({
-    chat,
-    messages,
-    addMessage,
-}: {
-    chat: Chat;
-    messages: Message[] | null;
-    addMessage: (message: Message) => void;
-}) => {
+const MailContent = ({ chat }: { chat: Chat }) => {
     const { language, writeLang } = useLanguage();
+    const navigate = useNavigate();
+
+    const [messages, setMessages] = useState<Message[] | null>(null);
+
+    const addMessage = (message: Message, messages?: Message[]) => {
+        setMessages([...(messages ?? []), message]);
+    };
+
+    const sendMessage = (message: Message) => {
+        socket.emit("createMessage", message);
+
+        addMessage(message, messages ?? []);
+    };
+
+    const markAsReadMessage = (message: Message) => {
+        if (message.user.email === chat?.user.email) return;
+
+        socket.emit("markAsRead", message);
+    };
+
+    useEffect(() => {
+        socket.on("messages", (response: any) => {
+            setMessages(
+                response.map((item: Message) => {
+                    markAsReadMessage(item);
+                    return item;
+                }),
+            );
+        });
+
+        socket.on("message", (response: Message) => {
+            addMessage(response, messages || []);
+        });
+
+        socket.on("messageRead", (response: Message) => {
+            setMessages(
+                [...(messages ?? [])].map((item: Message) => {
+                    if (item.id === response.id) return response;
+
+                    return item;
+                }),
+            );
+        });
+
+        socket.on("error", (error) => {
+            errorToast(error);
+            if (error.redirect) navigate(error.redirect);
+        });
+
+        return () => {
+            socket.off("error");
+            socket.off("messages");
+            socket.off("message");
+        };
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [messages]);
 
     return (
         <div className="flex flex-1 flex-col">
@@ -149,7 +157,7 @@ const MailContent = ({
             <Separator />
             <MessageList items={messages} chat={chat} />
             <Separator className="mt-auto" />
-            <MailFooter chat={chat} addMessage={addMessage} name={chat.participant.name} />
+            <MailFooter chat={chat} sendMessage={sendMessage} name={chat.participant.name} />
         </div>
     );
 };
@@ -250,11 +258,11 @@ const MessageList = ({ items, chat }: { items: Message[] | null; chat: Chat }) =
 const MailFooter = ({
     chat,
     name,
-    addMessage,
+    sendMessage,
 }: {
     chat: Chat;
     name: string;
-    addMessage: (message: Message) => void;
+    sendMessage: (message: Message) => void;
 }) => {
     const { writeLang } = useLanguage();
     const navigate = useNavigate();
@@ -282,7 +290,7 @@ const MailFooter = ({
             if (error.redirect) navigate(error.redirect);
         });
 
-        addMessage({
+        sendMessage({
             chat_id: chat?.id,
             date: new Date(),
             id: new Date().getTime().toString(),
@@ -322,6 +330,7 @@ const MailFooter = ({
                                             ["pt", "Responder"],
                                         ])} ${name}...`}
                                         rows={2}
+                                        maxLength={500}
                                         onKeyUp={(e) => {
                                             if (e.ctrlKey && e.key === "Enter") onSubmit(form.getValues());
                                         }}
@@ -329,6 +338,9 @@ const MailFooter = ({
                                     />
                                 </FormControl>
                                 <FormDescription>
+                                    <span className="ms-0">
+                                        {(form.getValues().text?.length ?? 0).toString()}/500 -{" "}
+                                    </span>
                                     {writeLang([
                                         ["en", "Ctrl+Enter to send"],
                                         ["pt", "Ctrl+Enter para enviar"],

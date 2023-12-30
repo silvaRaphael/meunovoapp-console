@@ -99,7 +99,7 @@ export const SideMenu = ({
                             label: writeLang(
                                 [
                                     ["en", "Emails"],
-                                    ["pt", "E-chats"],
+                                    ["pt", "E-mails"],
                                 ],
                                 lang,
                             ) as string,

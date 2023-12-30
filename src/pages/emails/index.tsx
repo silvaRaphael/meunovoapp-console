@@ -53,7 +53,7 @@ export function Emails() {
                     title={
                         writeLang([
                             ["en", `Emails (${emails.length})`],
-                            ["pt", `E-chats (${emails.length})`],
+                            ["pt", `E-mails (${emails.length})`],
                         ]) as string
                     }
                     pathname={

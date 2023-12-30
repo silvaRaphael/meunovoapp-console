@@ -13,6 +13,9 @@ export const createMessageSchema = z.object({
         .string({
             required_error: "Mensagem é necessária.",
         })
+        .min(1, {
+            message: "Mensagem é necessária.",
+        })
         .max(500, { message: "A mensagem deve ter ao máximo 500 digitos." }),
     labels: z
         .array(

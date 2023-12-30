@@ -3,15 +3,19 @@ import { cn } from "lib/utils";
 import { MessageUser } from "pages/chat/data/message";
 import { Chat } from "pages/chat/data/chat";
 
-interface ContactListProps {
+export function ContactList({
+    items,
+    chats,
+    setChat,
+    setMessageUser,
+    setTab,
+}: {
     items: MessageUser[];
     chats: Chat[];
     setChat: React.Dispatch<React.SetStateAction<Chat | null>>;
     setMessageUser: React.Dispatch<React.SetStateAction<MessageUser | null>>;
     setTab: React.Dispatch<React.SetStateAction<string>>;
-}
-
-export function ContactList({ items, chats, setChat, setMessageUser, setTab }: ContactListProps) {
+}) {
     return (
         <div
             className="h-full overflow-y-auto vertical-scrollbar"
