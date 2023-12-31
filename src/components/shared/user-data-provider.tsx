@@ -42,7 +42,7 @@ export function UserDataProvider({ children, storageKey = "meunovoapp-user-data"
             });
             setUserData(userData);
         },
-        removeUserData: () => {
+        removeUserData: async () => {
             Cookies.remove(storageKey);
             setUserData(null);
         },

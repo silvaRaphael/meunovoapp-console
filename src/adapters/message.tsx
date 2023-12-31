@@ -1,5 +1,5 @@
-import { messageLabelTypes } from "pages/chat/data/message";
 import { z } from "zod";
+import { messageLabelTypes } from "pages/chat/data/message";
 
 export const createMessageSchema = z.object({
     chat_id: z

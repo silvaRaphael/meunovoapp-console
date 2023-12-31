@@ -4,10 +4,13 @@ import { Logo } from "components/shared/logo";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { HandleRequest } from "lib/handle-request";
-import { BASE_API } from "config/constants";
+import { useUserData } from "components/shared/user-data-provider";
+import { toast } from "components/ui/toast/use-toast";
 
 export function CompleteProfile() {
     document.title = "Começar - Console | MeuNovoApp";
+
+    const { userData, removeUserData } = useUserData();
 
     const navigate = useNavigate();
 
@@ -31,6 +34,20 @@ export function CompleteProfile() {
 
     useEffect(() => {
         if (!id) navigate("/login");
+
+        if (userData?.email) {
+            removeUserData();
+
+            (async () => {
+                const request = await new HandleRequest().get(`/auth/sign-out`);
+
+                request.onDone(() => {
+                    toast({
+                        title: "Você saiu do console!",
+                    });
+                });
+            })();
+        }
 
         canUpdate();
         // eslint-disable-next-line react-hooks/exhaustive-deps

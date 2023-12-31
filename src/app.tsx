@@ -21,10 +21,26 @@ import { TemplateDetails } from "pages/templates/details";
 import { Users } from "pages/users";
 import { UserDetails } from "pages/users/details";
 import { Chats } from "pages/chat";
+import { useEffect } from "react";
+import { socket } from "pages/chat/components/websocket";
 
 export function App() {
     const { writeLang } = useLanguage();
     const { userData } = useUserData();
+
+    useEffect(() => {
+        if (userData?.email) {
+            socket.connect();
+        } else {
+            socket.disconnect();
+        }
+
+        return () => {
+            socket.disconnect();
+        };
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [userData]);
 
     return (
         <BrowserRouter>

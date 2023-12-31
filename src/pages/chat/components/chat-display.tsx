@@ -10,21 +10,30 @@ import { cn } from "lib/utils";
 import { useForm } from "react-hook-form";
 import { CreateMessageSchema, createMessageSchema } from "adapters/message";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from "components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem } from "components/ui/form";
 import { GetMessageLabel, Message, MessageLabel, MessageUser, messageLabelTypes } from "pages/chat/data/message";
 import { Badge } from "components/ui/badge";
 import { useEffect, useRef, useState } from "react";
 import { Chat } from "pages/chat/data/chat";
 import { formatDistanceToNow } from "date-fns";
 import { Loader } from "lucide-react";
-import { HandleRequest } from "lib/handle-request";
 import { errorToast } from "components/shared/error-toast";
 import { useNavigate } from "react-router-dom";
 import { useUserData } from "components/shared/user-data-provider";
 import { v4 as v4UUID } from "uuid";
 import { socket } from "./websocket";
 
-export function ChatDisplay({ chat, newChat }: { chat: Chat | null; newChat: MessageUser | null }) {
+export function ChatDisplay({
+    chat,
+    newChat,
+    chats,
+    setChats,
+}: {
+    chat: Chat | null;
+    newChat: MessageUser | null;
+    chats: Chat[];
+    setChats: React.Dispatch<React.SetStateAction<Chat[]>>;
+}) {
     const { userData } = useUserData();
     const navigate = useNavigate();
 
@@ -48,7 +57,7 @@ export function ChatDisplay({ chat, newChat }: { chat: Chat | null; newChat: Mes
     return (
         <div className="flex h-full flex-col">
             {chat ? (
-                <MailContent chat={chat} />
+                <MailContent chat={chat} chats={chats} setChats={setChats} />
             ) : (
                 newChat &&
                 userData && (
@@ -63,6 +72,9 @@ export function ChatDisplay({ chat, newChat }: { chat: Chat | null; newChat: Mes
                             } as MessageUser,
                             participant: newChat,
                         }}
+                        chats={chats}
+                        setChats={setChats}
+                        isNewChat
                     />
                 )
             )}
@@ -70,50 +82,123 @@ export function ChatDisplay({ chat, newChat }: { chat: Chat | null; newChat: Mes
     );
 }
 
-const MailContent = ({ chat }: { chat: Chat }) => {
+const MailContent = ({
+    chat,
+    chats,
+    setChats,
+    isNewChat = false,
+}: {
+    chat: Chat;
+    chats: Chat[];
+    setChats: React.Dispatch<React.SetStateAction<Chat[]>>;
+    isNewChat?: boolean;
+}) => {
     const { language, writeLang } = useLanguage();
     const navigate = useNavigate();
 
-    const [messages, setMessages] = useState<Message[] | null>(null);
+    const [messages, setMessages] = useState<Message[] | null>(isNewChat ? [] : null);
 
     const addMessage = (message: Message, messages?: Message[]) => {
         setMessages([...(messages ?? []), message]);
     };
 
     const sendMessage = (message: Message) => {
-        socket.emit("createMessage", message);
+        socket.emit("createMessage", message, chat.participant.id);
+
+        const updateChats = chats.map((item) => {
+            if (item.id === chat?.id)
+                return {
+                    ...item,
+                    last_message: message,
+                };
+
+            return item;
+        });
+
+        setChats(updateChats);
 
         addMessage(message, messages ?? []);
     };
 
     const markAsReadMessage = (message: Message) => {
-        if (message.user.email === chat?.user.email) return;
-
-        socket.emit("markAsRead", message);
+        if (message.user.email === chat.participant.email && !message.read) {
+            socket.emit("markAsRead", message);
+        }
     };
 
     useEffect(() => {
-        socket.on("messages", (response: any) => {
+        socket.on("messages", (response: Message[]) => {
             setMessages(
                 response.map((item: Message) => {
-                    markAsReadMessage(item);
                     return item;
                 }),
             );
+
+            const lastMessage = response[response.length - 1];
+
+            if (lastMessage) markAsReadMessage(lastMessage);
+
+            const updateChats = chats.map((item) => {
+                if (item.id === chat?.id)
+                    return {
+                        ...item,
+                        last_message: {
+                            ...lastMessage,
+                            read: true,
+                        },
+                    };
+
+                return item;
+            });
+
+            setChats(updateChats);
         });
 
         socket.on("message", (response: Message) => {
             addMessage(response, messages || []);
+
+            markAsReadMessage(response);
+
+            const updateChats = chats.map((item) => {
+                if (item.id === chat?.id)
+                    return {
+                        ...item,
+                        last_message: {
+                            ...response,
+                            read: true,
+                        },
+                    };
+
+                return item;
+            });
+
+            setChats(updateChats);
         });
 
         socket.on("messageRead", (response: Message) => {
             setMessages(
                 [...(messages ?? [])].map((item: Message) => {
-                    if (item.id === response.id) return response;
-
-                    return item;
+                    return {
+                        ...item,
+                        read: true,
+                    };
                 }),
             );
+
+            const updateChats = chats.map((item) => {
+                if (item.id === chat?.id)
+                    return {
+                        ...item,
+                        last_message: {
+                            ...response,
+                            read: true,
+                        },
+                    };
+
+                return item;
+            });
+
+            setChats(updateChats);
         });
 
         socket.on("error", (error) => {
@@ -229,7 +314,7 @@ const MessageList = ({ items, chat }: { items: Message[] | null; chat: Chat }) =
                                             key={label}
                                             variant={item.user.email === chat.user.email ? "secondary" : "secondary"}
                                         >
-                                            {label}
+                                            <GetMessageLabel messageLabel={label} />
                                         </Badge>
                                     ))}
                                 </div>
@@ -265,7 +350,6 @@ const MailFooter = ({
     sendMessage: (message: Message) => void;
 }) => {
     const { writeLang } = useLanguage();
-    const navigate = useNavigate();
 
     const [labels, setLabels] = useState<MessageLabel[]>([]);
 
@@ -278,26 +362,15 @@ const MailFooter = ({
     });
 
     async function onSubmit(data: CreateMessageSchema) {
-        const request = await new HandleRequest({
-            chat_id: chat.id,
-            text: data.text,
-            labels,
-            receiver_id: chat.participant.id,
-        }).post(`/messages`);
-
-        request.onError((error) => {
-            errorToast(error);
-            if (error.redirect) navigate(error.redirect);
-        });
-
         sendMessage({
+            id: v4UUID(),
             chat_id: chat?.id,
             date: new Date(),
-            id: new Date().getTime().toString(),
             labels,
             read: false,
             text: data.text,
             user: {
+                id: chat.user.id,
                 name: chat.user.name,
                 email: chat.user.email,
                 avatar: chat.user.avatar,

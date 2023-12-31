@@ -13,7 +13,6 @@ import { SectionHeader } from "components/shared/section-header";
 import { ContactList } from "./components/contact-list";
 import { ChatList } from "./components/chat-list";
 import { ChatDisplay } from "./components/chat-display";
-import { socket } from "./components/websocket";
 
 export function Chats() {
     const { writeLang } = useLanguage();
@@ -56,13 +55,8 @@ export function Chats() {
 
         (async () => Promise.all([getChats(), getContacts()]))();
 
-        socket.connect();
-
-        socket.on("connect", () => console.log("conected", socket.id));
-
         return () => {
             controller.abort();
-            socket.disconnect();
         };
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -108,6 +102,7 @@ export function Chats() {
                                 items={contacts}
                                 chats={chats}
                                 setChat={setChat}
+                                setChats={setChats}
                                 setMessageUser={setMessageUser}
                                 setTab={setTab}
                             />
@@ -116,8 +111,8 @@ export function Chats() {
                 </ResizablePanel>
                 <ResizableHandle withHandle />
                 <ResizablePanel defaultSize={60} minSize={40} className="border border-l-0 rounded-tr-md rounded-br-md">
-                    {!!chat ? (
-                        <ChatDisplay chat={chat} newChat={newChat} />
+                    {!!chat || !!newChat ? (
+                        <ChatDisplay chat={chat} newChat={newChat} chats={chats} setChats={setChats} />
                     ) : (
                         <div className="flex h-full flex-col">
                             <div className="flex justify-center items-center h-full p-8 text-center text-muted-foreground">
