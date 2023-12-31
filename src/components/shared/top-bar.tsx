@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { sideBarWidth } from "./side-bar";
 import { MainNav } from "./main-nav";
@@ -13,10 +13,17 @@ import { useEffect, useState } from "react";
 import { Notification } from "config/notifications";
 import { HandleRequest } from "lib/handle-request";
 import { useUserData } from "./user-data-provider";
+import { socket } from "pages/chat/components/websocket";
+import { Message } from "pages/chat/data/message";
+import { toast } from "components/ui/toast/use-toast";
+import { ToastAction } from "components/ui/toast/toast";
+import { useLanguage } from "./language-provider";
 
 export function TopBar({ pathname, toggleSideBar, isOpen }: { pathname: string; toggleSideBar: any; isOpen: boolean }) {
     const { userData } = useUserData();
+    const { writeLang } = useLanguage();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [notifications, setNotifications] = useState<Notification[] | null>(null);
 
@@ -37,6 +44,42 @@ export function TopBar({ pathname, toggleSideBar, isOpen }: { pathname: string; 
         const controller = new AbortController();
 
         getNotifications();
+
+        socket.on("offlineMessage", (message: Message) => {
+            toast({
+                variant: "message",
+                title: `${
+                    writeLang([
+                        ["en", "New message from"],
+                        ["pt", "Nova mensagem de"],
+                    ]) as string
+                } ${message.user.name}`,
+                description: <div className="line-clamp-2 text-xs">{message.text.substring(0, 200)}</div>,
+                action: (
+                    <ToastAction
+                        altText={
+                            writeLang([
+                                ["en", "Open chat."],
+                                ["pt", "Abrir chat"],
+                            ]) as string
+                        }
+                        onClick={() => {
+                            navigate(`/chat`);
+                        }}
+                    >
+                        Abrir chat
+                        {writeLang([
+                            ["en", "Open chat."],
+                            ["pt", "Abrir chat"],
+                        ])}
+                    </ToastAction>
+                ),
+            });
+        });
+
+        if (location.pathname !== "/chat") {
+            socket.emit("logoutChats");
+        }
 
         return () => {
             controller.abort();

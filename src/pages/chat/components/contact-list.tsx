@@ -10,14 +10,12 @@ export function ContactList({
     chats,
     setChat,
     setChats,
-    setMessageUser,
     setTab,
 }: {
     items: MessageUser[];
     chats: Chat[];
     setChat: React.Dispatch<React.SetStateAction<Chat | null>>;
     setChats: React.Dispatch<React.SetStateAction<Chat[]>>;
-    setMessageUser: React.Dispatch<React.SetStateAction<MessageUser | null>>;
     setTab: React.Dispatch<React.SetStateAction<string>>;
 }) {
     const { userData } = useUserData();
@@ -37,7 +35,7 @@ export function ContactList({
                             "flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent",
                         )}
                         onClick={() => {
-                            const chatsExistent = chats.find((mail) => mail.participant.email === item.email);
+                            const chatsExistent = chats.find((chat) => chat.participant.id === item.id);
 
                             if (chatsExistent) {
                                 setChat(chatsExistent);
@@ -47,8 +45,7 @@ export function ContactList({
 
                             if (!userData) return;
 
-                            // setChat(null);
-                            const chat = {
+                            const chat: Chat = {
                                 id: v4UUID(),
                                 participant: {
                                     id: item.id,
@@ -67,13 +64,6 @@ export function ContactList({
 
                             setChat(chat);
                             setChats([...chats, chat]);
-                            // setMessageUser({
-                            //     id: item.id,
-                            //     name: item.name,
-                            //     email: item.email,
-                            //     avatar: item.avatar,
-                            //     is_manager: item.is_manager,
-                            // });
                             setTab("chats");
                         }}
                     >

@@ -18,6 +18,16 @@ export function ChatList({
 }) {
     const { language } = useLanguage();
 
+    items = items.map((item: Chat) => {
+        if (!item.last_message?.text)
+            return {
+                ...item,
+                last_message: undefined,
+            };
+
+        return item;
+    });
+
     return (
         <div
             className="h-full overflow-y-auto vertical-scrollbar"
@@ -29,8 +39,8 @@ export function ChatList({
                 {items
                     .sort(
                         (a, b) =>
-                            (new Date(b.last_message?.date ?? new Date()).getTime() ?? 1) -
-                            (new Date(a.last_message?.date ?? new Date()).getTime() ?? 1),
+                            (b.last_message ? new Date(b.last_message?.date ?? new Date()).getTime() ?? 1 : 1) -
+                            (a.last_message ? new Date(a.last_message?.date ?? new Date()).getTime() ?? 1 : 1),
                     )
                     .map((item, i) => (
                         <button
@@ -69,9 +79,11 @@ export function ChatList({
                                     </div>
                                 </div>
                             </div>
-                            <div className="line-clamp-2 text-xs text-muted-foreground">
-                                {item.last_message?.text.substring(0, 300)}
-                            </div>
+                            {item.last_message?.text && (
+                                <div className="line-clamp-2 text-xs text-muted-foreground">
+                                    {item.last_message?.text.substring(0, 300)}
+                                </div>
+                            )}
                             {item.last_message?.labels.length ? (
                                 <div className="flex items-center gap-2">
                                     {item.last_message.labels.map((label) => (

@@ -25,14 +25,14 @@ import { socket } from "./websocket";
 
 export function ChatDisplay({
     chat,
-    newChat,
     chats,
     setChats,
+    isNewChat = false,
 }: {
     chat: Chat | null;
-    newChat: MessageUser | null;
     chats: Chat[];
     setChats: React.Dispatch<React.SetStateAction<Chat[]>>;
+    isNewChat?: boolean;
 }) {
     const { userData } = useUserData();
     const navigate = useNavigate();
@@ -40,7 +40,7 @@ export function ChatDisplay({
     useEffect(() => {
         if (!chat) return;
 
-        socket.emit("getMessages", chat.id);
+        if (!isNewChat) socket.emit("getMessages", chat.id);
 
         socket.on("error", (error) => {
             errorToast(error);
@@ -56,10 +56,11 @@ export function ChatDisplay({
 
     return (
         <div className="flex h-full flex-col">
-            {chat ? (
+            {chat && !isNewChat ? (
                 <MailContent chat={chat} chats={chats} setChats={setChats} />
             ) : (
-                newChat &&
+                chat &&
+                isNewChat &&
                 userData && (
                     <MailContent
                         chat={{
@@ -70,7 +71,7 @@ export function ChatDisplay({
                                 avatar: userData.avatar,
                                 is_manager: false,
                             } as MessageUser,
-                            participant: newChat,
+                            participant: chat.participant,
                         }}
                         chats={chats}
                         setChats={setChats}
@@ -121,7 +122,7 @@ const MailContent = ({
     };
 
     const markAsReadMessage = (message: Message) => {
-        if (message.user.email === chat.participant.email && !message.read) {
+        if (message.user.id === chat.participant.id) {
             socket.emit("markAsRead", message);
         }
     };
@@ -137,21 +138,6 @@ const MailContent = ({
             const lastMessage = response[response.length - 1];
 
             if (lastMessage) markAsReadMessage(lastMessage);
-
-            const updateChats = chats.map((item) => {
-                if (item.id === chat?.id)
-                    return {
-                        ...item,
-                        last_message: {
-                            ...lastMessage,
-                            read: true,
-                        },
-                    };
-
-                return item;
-            });
-
-            setChats(updateChats);
         });
 
         socket.on("message", (response: Message) => {
@@ -175,7 +161,7 @@ const MailContent = ({
             setChats(updateChats);
         });
 
-        socket.on("messageRead", (response: Message) => {
+        socket.on("messageRead", () => {
             setMessages(
                 [...(messages ?? [])].map((item: Message) => {
                     return {
@@ -184,21 +170,6 @@ const MailContent = ({
                     };
                 }),
             );
-
-            const updateChats = chats.map((item) => {
-                if (item.id === chat?.id)
-                    return {
-                        ...item,
-                        last_message: {
-                            ...response,
-                            read: true,
-                        },
-                    };
-
-                return item;
-            });
-
-            setChats(updateChats);
         });
 
         socket.on("error", (error) => {
@@ -213,7 +184,7 @@ const MailContent = ({
         };
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [messages]);
+    }, [messages, chat]);
 
     return (
         <div className="flex flex-1 flex-col">

@@ -7,12 +7,13 @@ import { useLanguage } from "components/shared/language-provider";
 import { HandleRequest } from "lib/handle-request";
 import { Chat } from "./data/chat";
 import { errorToast } from "components/shared/error-toast";
-import { MessageUser } from "./data/message";
+import { Message, MessageUser } from "./data/message";
 import { Page } from "components/shared/page";
 import { SectionHeader } from "components/shared/section-header";
 import { ContactList } from "./components/contact-list";
 import { ChatList } from "./components/chat-list";
 import { ChatDisplay } from "./components/chat-display";
+import { socket } from "./components/websocket";
 
 export function Chats() {
     const { writeLang } = useLanguage();
@@ -22,13 +23,39 @@ export function Chats() {
     const [contacts, setContacts] = useState<MessageUser[]>([]);
     const [tab, setTab] = useState<string>("chats");
     const [chat, setChat] = useState<Chat | null>(null);
-    const [newChat, setMessageUser] = useState<MessageUser | null>(null);
 
     async function getChats() {
         const request = await new HandleRequest().get(`/chats`);
 
-        request.onDone((response) => {
+        request.onDone((response: Chat[]) => {
             setChats(response);
+
+            const chatId = new URL(window.location.href).searchParams.get("chat");
+
+            if (chatId) {
+                window.history.pushState({}, ``, new URL(`${window.location.origin}${window.location.pathname}`));
+
+                const chat = response.find((item) => item.id === chatId);
+
+                if (!chat) return;
+
+                setChat(chat);
+            }
+
+            socket.on("offlineMessage", (message: Message) => {
+                response = response.map((item) => {
+                    if (item.id === message.chat_id) {
+                        return {
+                            ...item,
+                            last_message: message,
+                        };
+                    }
+
+                    return item;
+                });
+
+                setChats(response);
+            });
         });
 
         request.onError((error) => {
@@ -103,7 +130,6 @@ export function Chats() {
                                 chats={chats}
                                 setChat={setChat}
                                 setChats={setChats}
-                                setMessageUser={setMessageUser}
                                 setTab={setTab}
                             />
                         </TabsContent>
@@ -111,8 +137,8 @@ export function Chats() {
                 </ResizablePanel>
                 <ResizableHandle withHandle />
                 <ResizablePanel defaultSize={60} minSize={40} className="border border-l-0 rounded-tr-md rounded-br-md">
-                    {!!chat || !!newChat ? (
-                        <ChatDisplay chat={chat} newChat={newChat} chats={chats} setChats={setChats} />
+                    {!!chat ? (
+                        <ChatDisplay chat={chat} chats={chats} setChats={setChats} />
                     ) : (
                         <div className="flex h-full flex-col">
                             <div className="flex justify-center items-center h-full p-8 text-center text-muted-foreground">

@@ -40,7 +40,7 @@ export function App() {
         };
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [userData]);
+    }, [userData, window.location.href]);
 
     return (
         <BrowserRouter>
