@@ -18,6 +18,7 @@ import { Message } from "pages/chat/data/message";
 import { toast } from "components/ui/toast/use-toast";
 import { ToastAction } from "components/ui/toast/toast";
 import { useLanguage } from "./language-provider";
+import { MessageNotifications } from "./message-notifications";
 
 export function TopBar({ pathname, toggleSideBar, isOpen }: { pathname: string; toggleSideBar: any; isOpen: boolean }) {
     const { userData } = useUserData();
@@ -26,6 +27,7 @@ export function TopBar({ pathname, toggleSideBar, isOpen }: { pathname: string; 
     const location = useLocation();
 
     const [notifications, setNotifications] = useState<Notification[] | null>(null);
+    const [messages, setMessages] = useState<Message[] | null>(null);
 
     async function getNotifications() {
         const request = await new HandleRequest().get(`/notifications`);
@@ -40,10 +42,24 @@ export function TopBar({ pathname, toggleSideBar, isOpen }: { pathname: string; 
         });
     }
 
+    async function getMessages() {
+        const request = await new HandleRequest().get(`/messages`);
+
+        request.onDone((response) => {
+            setMessages(response);
+        });
+
+        request.onError((error) => {
+            setMessages(null);
+            if (error.redirect) navigate(error.redirect);
+        });
+    }
+
     useEffect(() => {
         const controller = new AbortController();
 
         getNotifications();
+        getMessages();
 
         socket.on("offlineMessage", (message: Message) => {
             toast({
@@ -67,7 +83,6 @@ export function TopBar({ pathname, toggleSideBar, isOpen }: { pathname: string; 
                             navigate(`/chat`);
                         }}
                     >
-                        Abrir chat
                         {writeLang([
                             ["en", "Open chat."],
                             ["pt", "Abrir chat"],
@@ -75,6 +90,8 @@ export function TopBar({ pathname, toggleSideBar, isOpen }: { pathname: string; 
                     </ToastAction>
                 ),
             });
+
+            setMessages([message, ...(messages ?? [])]);
         });
 
         if (location.pathname !== "/chat") {
@@ -107,9 +124,10 @@ export function TopBar({ pathname, toggleSideBar, isOpen }: { pathname: string; 
                 <MainNav pathname={pathname} />
                 <div className="flex items-center justify-end space-x-2 ps-2 pe-4 border-l h-full">
                     <div className="flex items-center space-x-1">
-                        <Notifications notifications={notifications ?? []} />
                         <LanguageToggle userData={userData} />
                         <ThemeToggle />
+                        <Notifications notifications={notifications ?? []} />
+                        <MessageNotifications messages={messages ?? []} />
                     </div>
                     <UserNav />
                 </div>

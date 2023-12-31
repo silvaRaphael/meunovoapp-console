@@ -5,7 +5,6 @@ import {
     LayoutDashboard,
     ListTodo,
     Mail,
-    MessageCircle,
     Settings2,
     User,
     Users,
@@ -14,6 +13,7 @@ import { Role } from "./roles";
 import { ReactNode } from "react";
 import { UserData } from "components/shared/user-data-provider";
 import { Langs } from "./languages";
+import { ChatBubbleIcon } from "@radix-ui/react-icons";
 
 export interface MenuItem {
     path: string;
@@ -238,7 +238,7 @@ export const SideMenu = ({
                         {
                             label: "Chat",
                             path: "/chat",
-                            icon: <MessageCircle className="mr-1" size={14} />,
+                            icon: <ChatBubbleIcon className="mr-1 h-3.5" />,
                         },
                     ],
                 },
@@ -369,7 +369,7 @@ export const SideMenu = ({
                         {
                             label: "Chat",
                             path: "/chat",
-                            icon: <MessageCircle className="mr-1" size={14} />,
+                            icon: <ChatBubbleIcon className="mr-1 h-3.5" />,
                         },
                     ],
                 },

@@ -8,16 +8,17 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Bell } from "lucide-react";
-import { Notification, notificationsIcons } from "../../config/notifications";
+import { MessageCircle } from "lucide-react";
 import { format } from "date-fns";
 import { useLanguage } from "./language-provider";
 import { languages } from "config/languages";
 import { cn } from "lib/utils";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Message } from "pages/chat/data/message";
+import { ChatBubbleIcon } from "@radix-ui/react-icons";
 
-export function Notifications({ notifications }: { notifications: Notification[] }) {
+export function MessageNotifications({ messages }: { messages: Message[] }) {
     const { language, writeLang } = useLanguage();
 
     const [open, onOpenChange] = useState<boolean>(false);
@@ -44,14 +45,14 @@ export function Notifications({ notifications }: { notifications: Notification[]
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open]);
 
-    const notificationsLength = notifications?.length ?? 0;
+    const messagesLength = messages?.length ?? 0;
 
     return (
         <DropdownMenu open={open} onOpenChange={onOpenChange}>
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="relative p-2">
-                    <Bell size={16} />
-                    {notificationsLength > 0 && (
+                    <MessageCircle size={16} />
+                    {messagesLength > 0 && (
                         <div className="absolute top-[4px] right-[6px] w-[5px] h-[5px] rounded-full bg-neutral-950 dark:bg-neutral-50"></div>
                     )}
                 </Button>
@@ -76,17 +77,17 @@ export function Notifications({ notifications }: { notifications: Notification[]
                             ])}
                         </p>
                         <p className="text-xs leading-none text-muted-foreground">
-                            {!notificationsLength
+                            {!messagesLength
                                 ? writeLang([
-                                      ["en", "You don't have any notifications"],
-                                      ["pt", "Você não tem nenhuma notificação"],
+                                      ["en", "You don't have any messages"],
+                                      ["pt", "Você não tem nenhuma mensagem"],
                                   ])
                                 : writeLang([
-                                      ["en", `You have ${notificationsLength} notifications`],
+                                      ["en", `You have ${messagesLength} messages`],
                                       [
                                           "pt",
-                                          `Você tem ${notificationsLength} ${
-                                              notificationsLength === 1 ? "notificação" : "notificações"
+                                          `Você tem ${messagesLength} ${
+                                              messagesLength === 1 ? "mensagem" : "mensagens"
                                           }`,
                                       ],
                                   ])}
@@ -95,15 +96,15 @@ export function Notifications({ notifications }: { notifications: Notification[]
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup className="max-h-60 overflow-y-auto vertical-scrollbar">
-                    {!notificationsLength ? (
+                    {!messagesLength ? (
                         <p className="text-xs font-medium text-muted-foreground p-2 py-3">
                             {writeLang([
-                                ["en", "No notifications yet"],
-                                ["pt", "Nenhuma notificação ainda"],
+                                ["en", "No messages yet"],
+                                ["pt", "Nenhuma mensagem ainda"],
                             ])}
                         </p>
                     ) : (
-                        notifications?.map((item: Notification, i) => {
+                        messages?.map((item: Message, i) => {
                             const child = (
                                 <div className="flex items-center space-x-2 group">
                                     <div
@@ -112,24 +113,29 @@ export function Notifications({ notifications }: { notifications: Notification[]
                                             "p-0 aspect-square group-hover:bg-background",
                                         )}
                                     >
-                                        {notificationsIcons[item.type]}
+                                        <ChatBubbleIcon />
                                     </div>
                                     <div className="flex flex-col space-y-1">
-                                        <span className="text-sm font-medium leading-none">{item.title}</span>
-                                        <p className="text-xs leading-none text-muted-foreground">{item.description}</p>
+                                        <span className="text-sm font-medium leading-none">
+                                            {`${
+                                                writeLang([
+                                                    ["en", "New message from"],
+                                                    ["pt", "Nova mensagem de"],
+                                                ]) as string
+                                            } ${item.user.name}`}
+                                        </span>
+                                        <p className="text-xs leading-none text-muted-foreground line-clamp-1">
+                                            {item.text.substring(0, 100)}
+                                        </p>
                                     </div>
                                 </div>
                             );
 
                             return (
                                 <DropdownMenuItem key={i} asChild>
-                                    {item.link ? (
-                                        <Link to={item.link} className="cursor-pointer">
-                                            {child}
-                                        </Link>
-                                    ) : (
-                                        child
-                                    )}
+                                    <Link to={`/chat`} className="cursor-pointer">
+                                        {child}
+                                    </Link>
                                 </DropdownMenuItem>
                             );
                         })
