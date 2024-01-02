@@ -1,7 +1,7 @@
 import { Language } from "components/shared/language-provider";
 import { MemberInfo } from "components/shared/member-info";
 import { formatDistance } from "date-fns";
-import { languages } from "config/languages";
+import { Langs, languages } from "config/languages";
 import { useEffect, useState } from "react";
 import { errorToast } from "components/shared/error-toast";
 import { HandleRequest } from "lib/handle-request";
@@ -11,7 +11,7 @@ export function UsersCard({
     writeLang,
 }: {
     language: Pick<Language, "lang" | "locale" | "currency">;
-    writeLang: (texts: [string, React.ReactNode][]) => React.ReactNode;
+    writeLang: (texts: [Langs, React.ReactNode][]) => React.ReactNode;
 }) {
     const [data, setData] = useState<
         {
@@ -24,7 +24,7 @@ export function UsersCard({
     >([]);
 
     async function getData() {
-        const request = await new HandleRequest().get(`/dashboard/users`);
+        const request = await new HandleRequest().get(`/dashboard/users`, { language });
 
         request.onDone((response) => {
             setData(response);

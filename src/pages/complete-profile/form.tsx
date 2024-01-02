@@ -23,7 +23,7 @@ let emailTimeout: any;
 export function CompleteProfileForm({ id, email }: { id: string; email: string }) {
     const navigate = useNavigate();
     const { setUserData } = useUserData();
-    const { writeLang } = useLanguage();
+    const { language, writeLang } = useLanguage();
 
     const [avatar, setAvatar] = useState<string | null>(null);
     const [avatarBase64, setAvatarBase64] = useState<string | null>(null);
@@ -41,7 +41,7 @@ export function CompleteProfileForm({ id, email }: { id: string; email: string }
         const request = await new HandleRequest({
             ...data,
             avatar: avatarBase64 || "",
-        }).put(`/users/complete/${id}`);
+        }).put(`/users/complete/${id}`, { language });
 
         request.onDone((response) => {
             setUserData(response as unknown as UserData);
@@ -70,7 +70,7 @@ export function CompleteProfileForm({ id, email }: { id: string; email: string }
 
         if (!email.length) return;
 
-        const request = await new HandleRequest({ email }).post(`/users/can-use-email/${id}`);
+        const request = await new HandleRequest({ email }).post(`/users/can-use-email/${id}`, { language });
 
         request.onError(() => {
             form.setError("email", {
@@ -100,7 +100,7 @@ export function CompleteProfileForm({ id, email }: { id: string; email: string }
                             ])}
                         </p>
                     </div>
-                    <div className="col-span-6 space-y-4">
+                    <div className="col-span-12 sm:col-span-6 space-y-4">
                         <FormField
                             control={form.control}
                             name="name"
@@ -145,7 +145,7 @@ export function CompleteProfileForm({ id, email }: { id: string; email: string }
                             ])}
                         </p>
                     </div>
-                    <div className="col-span-6 space-y-4">
+                    <div className="col-span-12 sm:col-span-6 space-y-4">
                         <FormField
                             control={form.control}
                             name="email"
@@ -195,7 +195,7 @@ export function CompleteProfileForm({ id, email }: { id: string; email: string }
                             ])}
                         </p>
                     </div>
-                    <div className="col-span-6 space-y-4">
+                    <div className="col-span-12 sm:col-span-6 space-y-4">
                         <div className="flex flex-col items-center space-y-3">
                             <label htmlFor="avatar-input">
                                 <Avatar className="w-32 h-32 p-0 aspect-square border cursor-pointer">
@@ -282,7 +282,7 @@ export function CompleteProfileForm({ id, email }: { id: string; email: string }
                             ])}
                         </p>
                     </div>
-                    <div className="col-span-6 space-y-4">
+                    <div className="col-span-12 sm:col-span-6 space-y-4">
                         <FormField
                             control={form.control}
                             name="password"

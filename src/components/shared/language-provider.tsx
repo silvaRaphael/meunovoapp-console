@@ -19,7 +19,7 @@ type LanguageProviderProps = {
 type LanguageProviderState = {
     language: Pick<Language, "lang" | "locale" | "currency">;
     setLanguage: (language: Pick<Language, "lang" | "locale" | "currency">) => void;
-    writeLang: (texts: [string, string | ReactNode][]) => string | ReactNode;
+    writeLang: (texts: [Langs, string | ReactNode][]) => string | ReactNode;
 };
 
 const initialState: LanguageProviderState = {
@@ -59,7 +59,7 @@ export function LanguageProvider({
             localStorage.setItem(storageKey, JSON.stringify(language));
             setLanguage(language);
         },
-        writeLang: (texts: [string, string | ReactNode][], lang?: Langs) => {
+        writeLang: (texts: [Langs, string | ReactNode][], lang?: Langs) => {
             const text = texts.find((item) => item[0] === (lang ?? language.lang)) as Array<string>;
 
             if (!text) return texts[0][1];

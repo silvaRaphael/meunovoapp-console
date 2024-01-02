@@ -4,7 +4,7 @@ import { Button } from "components/ui/button";
 import { useLanguage } from "components/shared/language-provider";
 
 export function CommingSoon() {
-    const { writeLang } = useLanguage();
+    const { language, writeLang } = useLanguage();
 
     document.title = `${writeLang([
         ["en", "Comming Soon"],

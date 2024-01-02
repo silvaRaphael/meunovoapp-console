@@ -1,9 +1,17 @@
 import { errorToast } from "components/shared/error-toast";
+import { Language } from "components/shared/language-provider";
+import { Langs } from "config/languages";
 import { HandleRequest } from "lib/handle-request";
 import { useEffect, useState } from "react";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
-export function ProjectsCard({ writeLang }: { writeLang: (texts: [string, React.ReactNode][]) => React.ReactNode }) {
+export function ProjectsCard({
+    language,
+    writeLang,
+}: {
+    language: Pick<Language, "locale" | "lang" | "currency">;
+    writeLang: (texts: [Langs, React.ReactNode][]) => React.ReactNode;
+}) {
     const [data, setData] = useState<
         {
             name: string;
@@ -12,7 +20,7 @@ export function ProjectsCard({ writeLang }: { writeLang: (texts: [string, React.
     >([]);
 
     async function getData() {
-        const request = await new HandleRequest().get(`/dashboard/projects`);
+        const request = await new HandleRequest().get(`/dashboard/projects`, { language });
 
         request.onDone((response) => {
             setData(response);

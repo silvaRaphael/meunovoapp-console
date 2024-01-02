@@ -3,7 +3,7 @@ import { DataTableColumnHeader } from "../../../components/ui/data-table/data-ta
 import { MemberInfo } from "../../../components/shared/member-info";
 import { Badge } from "components/ui/badge";
 import { formatDistance } from "date-fns";
-import { languages } from "config/languages";
+import { Langs, languages } from "config/languages";
 import { Language } from "components/shared/language-provider";
 import { Actions } from "components/shared/actions";
 import { ClientInfo } from "components/shared/client-info";
@@ -12,7 +12,7 @@ import { User } from "./user";
 
 export const userColumns = (
     language: Pick<Language, "lang" | "locale" | "currency">,
-    writeLang: (texts: [string, React.ReactNode][]) => React.ReactNode,
+    writeLang: (texts: [Langs, React.ReactNode][]) => React.ReactNode,
 ): ColumnDef<User>[] => {
     return [
         {

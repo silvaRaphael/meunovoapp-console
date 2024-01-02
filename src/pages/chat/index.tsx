@@ -16,7 +16,7 @@ import { ChatDisplay } from "./components/chat-display";
 import { socket } from "./components/websocket";
 
 export function Chats() {
-    const { writeLang } = useLanguage();
+    const { language, writeLang } = useLanguage();
     const navigate = useNavigate();
 
     const [chats, setChats] = useState<Chat[]>([]);
@@ -25,7 +25,7 @@ export function Chats() {
     const [chat, setChat] = useState<Chat | null>(null);
 
     async function getChats() {
-        const request = await new HandleRequest().get(`/chats`);
+        const request = await new HandleRequest().get(`/chats`, { language });
 
         request.onDone((response: Chat[]) => {
             setChats(response);
@@ -65,7 +65,7 @@ export function Chats() {
     }
 
     async function getContacts() {
-        const request = await new HandleRequest().get(`/chats/users`);
+        const request = await new HandleRequest().get(`/chats/users`, { language });
 
         request.onDone((response) => {
             setContacts(response);

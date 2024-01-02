@@ -9,7 +9,7 @@ import { EmailSearch } from "../forms/search-form";
 import { errorToast } from "components/shared/error-toast";
 
 export function EmailDetails() {
-    const { writeLang } = useLanguage();
+    const { language, writeLang } = useLanguage();
 
     const { id } = useParams();
     const [email, setEmail] = useState<Email>();

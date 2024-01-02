@@ -14,7 +14,7 @@ import { ClientProjects } from "./projects";
 import { CreateProjectForm } from "pages/projects/forms/create";
 
 export function ClientDetails() {
-    const { writeLang } = useLanguage();
+    const { language, writeLang } = useLanguage();
     const { id } = useParams();
 
     const [client, setClient] = useState<Client>();
@@ -22,7 +22,7 @@ export function ClientDetails() {
     const [tab, setTab] = useState<string>(new URL(window.location.href).searchParams.get("tab") ?? "0");
 
     async function getClient(id?: string) {
-        const request = await new HandleRequest().get(`/clients/${id}`);
+        const request = await new HandleRequest().get(`/clients/${id}`, { language });
 
         request.onDone((response) => {
             setClient(response);
@@ -96,20 +96,20 @@ export function ClientDetails() {
         >
             <div className="space-y-6 pb-40">
                 <Tabs defaultValue="0" className="w-full" value={tab} onValueChange={(tab) => changeTab(tab, setTab)}>
-                    <TabsList className="w-min flex mx-auto">
-                        <TabsTrigger value="0" className="w-auto sm:w-36">
+                    <TabsList className="sm:w-min w-full flex mx-auto">
+                        <TabsTrigger value="0" className="w-full sm:w-36">
                             {writeLang([
                                 ["en", "Client"],
                                 ["pt", "Cliente"],
                             ])}
                         </TabsTrigger>
-                        <TabsTrigger value="1" className="w-auto sm:w-36">
+                        <TabsTrigger value="1" className="w-full sm:w-36">
                             {writeLang([
                                 ["en", "Users"],
                                 ["pt", "Usuários"],
                             ])}
                         </TabsTrigger>
-                        <TabsTrigger value="2" className="w-auto sm:w-36">
+                        <TabsTrigger value="2" className="w-full sm:w-36">
                             {writeLang([
                                 ["en", "Projects"],
                                 ["pt", "Projetos"],

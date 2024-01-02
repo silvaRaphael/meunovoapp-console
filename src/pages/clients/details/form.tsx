@@ -20,7 +20,7 @@ import { UploadCloudIcon } from "lucide-react";
 import { convertToBase64 } from "lib/helper";
 
 export function ClientForm({ client }: { client: Client }) {
-    const { writeLang } = useLanguage();
+    const { language, writeLang } = useLanguage();
 
     const [logotipo, setLogotipo] = useState<string | null>(
         client.logotipo ? `${BASE_FILES}/${client.logotipo}` : null,
@@ -42,7 +42,7 @@ export function ClientForm({ client }: { client: Client }) {
             ...data,
             logotipoName: logotipo ? client.logotipo || "" : "",
             logotipo: logotipoBase64 || "",
-        }).put(`/clients/${client.id}`);
+        }).put(`/clients/${client.id}`, { language });
 
         request.onDone(() => {
             toast({
@@ -60,7 +60,7 @@ export function ClientForm({ client }: { client: Client }) {
         <Form {...form}>
             <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
                 <div className="grid grid-cols-12">
-                    <div className="col-span-3">
+                    <div className="col-span-12 sm:col-span-3 mb-4 sm:m-0">
                         <h3 className="font-semibold leading-4">
                             {writeLang([
                                 ["en", "Company"],
@@ -74,7 +74,7 @@ export function ClientForm({ client }: { client: Client }) {
                             ])}
                         </p>
                     </div>
-                    <div className="col-span-6 space-y-4">
+                    <div className="col-span-12 sm:col-span-6 space-y-4">
                         <FormField
                             control={form.control}
                             name="company"
@@ -163,7 +163,7 @@ export function ClientForm({ client }: { client: Client }) {
                 </div>
                 <Separator />
                 <div className="grid grid-cols-12">
-                    <div className="col-span-3">
+                    <div className="col-span-12 sm:col-span-3 mb-4 sm:m-0">
                         <h3 className="font-semibold leading-4">Logotipo</h3>
                         <p className="text-sm text-muted-foreground">
                             {writeLang([
@@ -172,7 +172,7 @@ export function ClientForm({ client }: { client: Client }) {
                             ])}
                         </p>
                     </div>
-                    <div className="col-span-6 space-y-4">
+                    <div className="col-span-12 sm:col-span-6 space-y-4">
                         <div className="flex flex-col items-center space-y-3">
                             <label htmlFor="logotipo-input">
                                 <Avatar className="w-32 h-32 p-0 aspect-square border cursor-pointer">

@@ -2,8 +2,11 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Actions } from "../../../components/shared/actions";
 import { DataTableColumnHeader } from "../../../components/ui/data-table/data-table-column-header";
 import { Template } from "./template";
+import { Langs } from "config/languages";
 
-export const templateColumns = (writeLang: (texts: [string, React.ReactNode][]) => React.ReactNode): ColumnDef<Template>[] => {
+export const templateColumns = (
+    writeLang: (texts: [Langs, React.ReactNode][]) => React.ReactNode,
+): ColumnDef<Template>[] => {
     return [
         {
             accessorKey: "name",

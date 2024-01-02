@@ -8,12 +8,12 @@ import { HandleRequest } from "lib/handle-request";
 import { errorToast } from "components/shared/error-toast";
 
 export function Preferences() {
-    const { writeLang } = useLanguage();
+    const { language, writeLang } = useLanguage();
 
     const [preferences, setPreferences] = useState<PreferencesSchema>();
 
     async function getPreferences() {
-        const request = await new HandleRequest().get(`/preferences`);
+        const request = await new HandleRequest().get(`/preferences`, { language });
 
         request.onDone((response) => {
             setPreferences(response);

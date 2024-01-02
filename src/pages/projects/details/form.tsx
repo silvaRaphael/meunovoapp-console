@@ -47,7 +47,7 @@ export function ProjectForm({ project }: { project: Project }) {
     });
 
     async function onSubmit(data: CreateProjectSchema) {
-        const request = await new HandleRequest(data).put(`/projects/${project.id}`);
+        const request = await new HandleRequest(data).put(`/projects/${project.id}`, { language });
 
         request.onDone(() => {
             toast({
@@ -67,7 +67,7 @@ export function ProjectForm({ project }: { project: Project }) {
         <Form {...form}>
             <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
                 <div className="grid grid-cols-12">
-                    <div className="col-span-3">
+                    <div className="col-span-12 sm:col-span-3 mb-4 sm:m-0">
                         <h3 className="font-semibold leading-4">
                             {writeLang([
                                 ["en", "Project"],
@@ -81,7 +81,7 @@ export function ProjectForm({ project }: { project: Project }) {
                             ])}
                         </p>
                     </div>
-                    <div className="col-span-6 space-y-4">
+                    <div className="col-span-12 sm:col-span-6 space-y-4">
                         <FormField
                             control={form.control}
                             name="name"

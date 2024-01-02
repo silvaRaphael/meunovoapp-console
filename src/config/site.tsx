@@ -36,7 +36,7 @@ export const SideMenu = ({
     writeLang,
     lang,
 }: {
-    writeLang: (texts: [string, React.ReactNode][], lang?: Langs) => ReactNode;
+    writeLang: (texts: [Langs, React.ReactNode][], lang?: Langs) => ReactNode;
     lang?: Langs;
 }): SideBarMenuRole[] => {
     return [
@@ -384,7 +384,7 @@ export const MenuItems = ({
     lang,
 }: {
     userData: UserData;
-    writeLang: (texts: [string, React.ReactNode][], lang?: Langs) => ReactNode;
+    writeLang: (texts: [Langs, React.ReactNode][], lang?: Langs) => ReactNode;
     lang?: Langs;
 }): MenuItem[] => {
     let menuItems: MenuItem[] = [];

@@ -25,7 +25,7 @@ export function CreateTaskForm({
     projects?: Project[];
     onCreated: Function;
 }) {
-    const { writeLang } = useLanguage();
+    const { language, writeLang } = useLanguage();
 
     const [open, setOpen] = useState<boolean>(false);
 
@@ -38,7 +38,7 @@ export function CreateTaskForm({
     });
 
     async function onSubmit(data: CreateTaskSchema) {
-        const request = await new HandleRequest(data).post(`/tasks`);
+        const request = await new HandleRequest(data).post(`/tasks`, { language });
 
         request.onDone(() => {
             toast({

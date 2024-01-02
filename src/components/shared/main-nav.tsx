@@ -72,7 +72,10 @@ export function MainNav({ pathname }: { pathname: string }) {
     }, [pathname, language]);
 
     return (
-        <nav ref={ref} className="flex items-center flex-grow ps-4 pe-2 space-x-2 overflow-x-auto horizontal-scrollbar">
+        <nav
+            ref={ref}
+            className="flex items-center flex-grow ps-4 pe-2 space-x-2 overflow-x-auto horizontal-scrollbar invisible sm:visible"
+        >
             {activeMenu.map((item, i) => (
                 <Link
                     key={i}

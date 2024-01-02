@@ -22,7 +22,7 @@ import { MessageNotifications } from "./message-notifications";
 
 export function TopBar({ pathname, toggleSideBar, isOpen }: { pathname: string; toggleSideBar: any; isOpen: boolean }) {
     const { userData } = useUserData();
-    const { writeLang } = useLanguage();
+    const { language, writeLang } = useLanguage();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -30,7 +30,7 @@ export function TopBar({ pathname, toggleSideBar, isOpen }: { pathname: string; 
     const [messages, setMessages] = useState<Message[] | null>(null);
 
     async function getNotifications() {
-        const request = await new HandleRequest().get(`/notifications`);
+        const request = await new HandleRequest().get(`/notifications`, { language });
 
         request.onDone((response) => {
             setNotifications(response);
@@ -43,7 +43,7 @@ export function TopBar({ pathname, toggleSideBar, isOpen }: { pathname: string; 
     }
 
     async function getMessages() {
-        const request = await new HandleRequest().get(`/messages`);
+        const request = await new HandleRequest().get(`/messages`, { language });
 
         request.onDone((response) => {
             setMessages(response);

@@ -4,7 +4,7 @@ import { MemberInfo } from "../../../components/shared/member-info";
 import { Badge } from "components/ui/badge";
 import { buttonVariants } from "components/ui/button";
 import { formatDistance } from "date-fns";
-import { languages } from "config/languages";
+import { Langs, languages } from "config/languages";
 import { Language } from "components/shared/language-provider";
 import { SubmitButton } from "components/shared/submit-button";
 import { cn } from "lib/utils";
@@ -14,7 +14,7 @@ import { Actions } from "components/shared/actions";
 
 export const userColumns = (
     language: Pick<Language, "lang" | "locale" | "currency">,
-    writeLang: (texts: [string, React.ReactNode][]) => React.ReactNode,
+    writeLang: (texts: [Langs, React.ReactNode][]) => React.ReactNode,
 ): ColumnDef<User>[] => {
     return [
         {

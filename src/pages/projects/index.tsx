@@ -20,7 +20,7 @@ export function Projects() {
     const [clients, setClients] = useState<Client[]>([]);
 
     async function getProjects() {
-        const request = await new HandleRequest().get(`/projects`);
+        const request = await new HandleRequest().get(`/projects`, { language });
 
         request.onDone((response) => {
             setProjects(response);
@@ -32,7 +32,7 @@ export function Projects() {
     }
 
     async function getClients() {
-        const request = await new HandleRequest().get(`/clients`);
+        const request = await new HandleRequest().get(`/clients`, { language });
 
         request.onDone((response) => {
             setClients(response);

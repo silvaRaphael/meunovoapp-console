@@ -5,9 +5,10 @@ import { Actions } from "components/shared/actions";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Badge } from "components/ui/badge";
+import { Langs } from "config/languages";
 
 export const emailsColumns = (
-    writeLang: (texts: [string, React.ReactNode][]) => React.ReactNode,
+    writeLang: (texts: [Langs, React.ReactNode][]) => React.ReactNode,
 ): ColumnDef<Email>[] => {
     return [
         {

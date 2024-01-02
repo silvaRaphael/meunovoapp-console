@@ -10,17 +10,19 @@ import { useLanguage } from "../../../components/shared/language-provider";
 import { errorToast } from "components/shared/error-toast";
 import { ProjectTasks } from "./tasks";
 import { CreateTaskForm } from "pages/tasks/forms/create";
-import { HandlePermission } from "lib/handle-permission";
+import { hasPermission } from "lib/handle-permission";
+import { useUserData } from "components/shared/user-data-provider";
 
 export function ProjectDetails() {
-    const { writeLang } = useLanguage();
     const { id } = useParams();
+    const { language, writeLang } = useLanguage();
+    const { userData } = useUserData();
 
     const [project, setProject] = useState<Project>();
     const [tab, setTab] = useState<string>(new URL(window.location.href).searchParams.get("tab") ?? "0");
 
     async function getProject(id?: string) {
-        const request = await new HandleRequest().get(`/projects/${id}`);
+        const request = await new HandleRequest().get(`/projects/${id}`, { language });
 
         request.onDone((response) => {
             setProject(response);
@@ -69,33 +71,32 @@ export function ProjectDetails() {
                     }
                     tree={!!project ? [{ label: project.name }] : []}
                 >
-                    {tab === "1" &&
-                        !["completed", "cancelled"].includes(project.status) &&
-                        HandlePermission(
-                            <CreateTaskForm
-                                label={
-                                    writeLang([
-                                        ["en", "Create task"],
-                                        ["pt", "Nova tarefa"],
-                                    ]) as string
-                                }
-                                project_id={project.id}
-                                onCreated={() => getProject(id)}
-                            />,
-                        )}
+                    {tab === "1" && !["completed", "cancelled"].includes(project.status) && hasPermission(userData) && (
+                        <CreateTaskForm
+                            label={
+                                writeLang([
+                                    ["en", "Create task"],
+                                    ["pt", "Nova tarefa"],
+                                ]) as string
+                            }
+                            project_id={project.id}
+                            onCreated={() => getProject(id)}
+                        />
+                    )}
                 </SectionHeader>
             }
         >
             <div className="space-y-6 pb-40">
                 <Tabs defaultValue="0" className="w-full" value={tab} onValueChange={(tab) => changeTab(tab, setTab)}>
-                    <TabsList className="w-min flex mx-auto">
-                        <TabsTrigger value="0" className="w-auto sm:w-36">
+                    {/* <Tabs defaultValue="0" className="w-full"> */}
+                    <TabsList className="sm:w-min w-full flex mx-auto">
+                        <TabsTrigger value="0" className="w-full sm:w-36">
                             {writeLang([
                                 ["en", "Project"],
                                 ["pt", "Projeto"],
                             ])}
                         </TabsTrigger>
-                        <TabsTrigger value="1" className="w-auto sm:w-36">
+                        <TabsTrigger value="1" className="w-full sm:w-36">
                             {writeLang([
                                 ["en", "Tasks"],
                                 ["pt", "Tarefas"],

@@ -35,7 +35,7 @@ export function ContentAlert({
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>{triggerButton}</DialogTrigger>
-            <DialogContent className="max-w-[425px]">
+            <DialogContent className="max-w-[90%] sm:max-w-[425px]">
                 <DialogHeader>
                     <DialogTitle>{title}</DialogTitle>
                     <DialogDescription>{description}</DialogDescription>

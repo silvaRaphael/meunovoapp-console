@@ -7,9 +7,10 @@ import { ClientInfo } from "components/shared/client-info";
 import { Button } from "components/ui/button";
 import { Badge } from "components/ui/badge";
 import { Link } from "react-router-dom";
+import { Langs } from "config/languages";
 
 export const clientColumns = (
-    writeLang: (texts: [string, React.ReactNode][]) => React.ReactNode,
+    writeLang: (texts: [Langs, React.ReactNode][]) => React.ReactNode,
 ): ColumnDef<Client>[] => {
     return [
         {

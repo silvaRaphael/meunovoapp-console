@@ -11,10 +11,12 @@ import { SignInSchema, signInSchema } from "adapters/auth";
 import { UserData, useUserData } from "components/shared/user-data-provider";
 import { HandleRequest } from "lib/handle-request";
 import { errorToast } from "components/shared/error-toast";
+import { useLanguage } from "components/shared/language-provider";
 
 export function LoginInForm() {
-    const navigate = useNavigate();
+    const { language, writeLang } = useLanguage();
     const { setUserData } = useUserData();
+    const navigate = useNavigate();
 
     const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
 
@@ -24,13 +26,16 @@ export function LoginInForm() {
     });
 
     async function onSubmit(data: SignInSchema) {
-        const request = await new HandleRequest(data).post(`/auth/sign-in`);
+        const request = await new HandleRequest(data).post(`/auth/sign-in`, { language });
 
         request.onDone((response) => {
             setUserData(response as unknown as UserData);
 
             toast({
-                title: "Você acessou o console!",
+                title: writeLang([
+                    ["en", "You accessed console!"],
+                    ["pt", "Você acessou o console!"],
+                ]) as string,
             });
 
             form.reset({

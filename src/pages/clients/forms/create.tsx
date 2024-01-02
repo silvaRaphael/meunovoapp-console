@@ -13,7 +13,7 @@ import { Button } from "components/ui/button";
 import { useState } from "react";
 
 export function CreateClientForm({ onCreated }: { onCreated: Function }) {
-    const { writeLang } = useLanguage();
+    const { language, writeLang } = useLanguage();
 
     const [open, setOpen] = useState<boolean>(false);
 
@@ -24,7 +24,7 @@ export function CreateClientForm({ onCreated }: { onCreated: Function }) {
     });
 
     async function onSubmit(data: CreateClientSchema) {
-        const request = await new HandleRequest(data).post(`/clients`);
+        const request = await new HandleRequest(data).post(`/clients`, { language });
 
         request.onDone(() => {
             toast({

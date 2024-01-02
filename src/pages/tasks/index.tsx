@@ -18,7 +18,7 @@ export function Tasks() {
     const [projects, setProjects] = useState<Project[]>([]);
 
     async function getTasks() {
-        const request = await new HandleRequest().get(`/tasks`);
+        const request = await new HandleRequest().get(`/tasks`, { language });
 
         request.onDone((response) => {
             setTasks(response);
@@ -30,7 +30,7 @@ export function Tasks() {
     }
 
     async function getProjects() {
-        const request = await new HandleRequest().get(`/projects`);
+        const request = await new HandleRequest().get(`/projects`, { language });
 
         request.onDone((response) => {
             setProjects(response.filter((item: Project) => !["completed", "cancelled"].includes(item.status)));

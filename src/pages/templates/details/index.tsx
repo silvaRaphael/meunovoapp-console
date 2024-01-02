@@ -14,7 +14,7 @@ import { Input } from "components/ui/input";
 
 export function TemplateDetails() {
     const { userData } = useUserData();
-    const { writeLang } = useLanguage();
+    const { language, writeLang } = useLanguage();
     const navigate = useNavigate();
     const { id } = useParams();
 
@@ -35,7 +35,7 @@ export function TemplateDetails() {
             subject: `E-mail de teste - MeuNovoApp`,
             html: template?.component,
             no_save: true,
-        }).post(`/emails`);
+        }).post(`/emails`, { language });
 
         request.onDone(() => {
             toast({

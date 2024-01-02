@@ -3,7 +3,7 @@ import { Input } from "../ui/input";
 import { useLanguage } from "./language-provider";
 
 export function Search({ placeholder }: { placeholder?: string }) {
-    const { writeLang } = useLanguage();
+    const { language, writeLang } = useLanguage();
 
     return (
         <div className="relative">

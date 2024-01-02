@@ -7,12 +7,12 @@ import { Task } from "./task";
 import { cn } from "lib/utils";
 import { ClientInfo } from "components/shared/client-info";
 import { format } from "date-fns";
-import { languages } from "config/languages";
+import { Langs, languages } from "config/languages";
 import { Language } from "components/shared/language-provider";
 
 export const taskColumns = (
     language: Pick<Language, "lang" | "locale" | "currency">,
-    writeLang: (texts: [string, React.ReactNode][]) => React.ReactNode,
+    writeLang: (texts: [Langs, React.ReactNode][]) => React.ReactNode,
 ): ColumnDef<Task>[] => {
     return [
         {

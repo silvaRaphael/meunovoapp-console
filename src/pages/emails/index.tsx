@@ -10,13 +10,13 @@ import { errorToast } from "components/shared/error-toast";
 import { useNavigate } from "react-router-dom";
 
 export function Emails() {
-    const { writeLang } = useLanguage();
+    const { language, writeLang } = useLanguage();
     const navigate = useNavigate();
 
     const [emails, setEmails] = useState<Email[]>([]);
 
     async function getEmails() {
-        const request = await new HandleRequest().get(`/emails`);
+        const request = await new HandleRequest().get(`/emails`, { language });
 
         request.onDone((response) => {
             setEmails(response as unknown as Email[]);

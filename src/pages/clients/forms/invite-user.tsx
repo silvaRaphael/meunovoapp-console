@@ -25,7 +25,7 @@ export function InviteUserForm({
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-    const { writeLang } = useLanguage();
+    const { language, writeLang } = useLanguage();
 
     const form = useForm<InviteUserSchema>({
         resolver: zodResolver(inviteUserSchema),
@@ -39,7 +39,7 @@ export function InviteUserForm({
         const request = await new HandleRequest({
             email: data.email,
             client_id: client.id,
-        }).post(`/users`);
+        }).post(`/users`, { language });
 
         request.onDone(() => {
             toast({

@@ -15,19 +15,22 @@ export const sideBarWidthCollapsed = 48;
 
 export function SideBar({ pathname, isOpen }: { pathname: string; isOpen: boolean }) {
     const navigate = useNavigate();
-    const { writeLang } = useLanguage();
+    const { language, writeLang } = useLanguage();
     const { userData, removeUserData } = useUserData();
 
     const menu = SideMenu({ writeLang }).find((item) => item.role.includes(userData?.role || "client"))?.menu ?? [];
 
     async function handleLogout() {
-        const request = await new HandleRequest().get(`/auth/sign-out`);
+        const request = await new HandleRequest().get(`/auth/sign-out`, { language });
 
         request.onDone(() => {
             removeUserData();
 
             toast({
-                title: "Você saiu do console!",
+                title: writeLang([
+                    ["en", "You left console!"],
+                    ["pt", "Você saiu do console!"],
+                ]) as string,
             });
 
             return navigate("/");

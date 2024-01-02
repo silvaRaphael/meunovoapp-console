@@ -20,7 +20,7 @@ export const statusesColors = {
 };
 
 export function GetStatus({ status }: { status: Status }) {
-    const { writeLang } = useLanguage();
+    const { language, writeLang } = useLanguage();
 
     const translatedStatus = {
         waiting: writeLang([

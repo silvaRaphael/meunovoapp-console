@@ -72,7 +72,7 @@ export function EmailReplyBudget({ email }: { email: Email }) {
             }),
             projectPayment: data.projectPayment,
             projectBenefits: data.projectBenefits,
-        }).post(`/emails/reply-budget-message`);
+        }).post(`/emails/reply-budget-message`, { language });
 
         request.onDone(() => {
             toast({

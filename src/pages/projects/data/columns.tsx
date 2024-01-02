@@ -7,14 +7,14 @@ import { Project } from "./project";
 import { Progress } from "../../../components/ui/progress";
 import { cn } from "../../../lib/utils";
 import { ClientInfo } from "components/shared/client-info";
-import { languages } from "config/languages";
+import { Langs, languages } from "config/languages";
 import { Language } from "components/shared/language-provider";
 import { GetStatus, Status, statusesColors, statusesIcons } from "./status";
 import { Link } from "react-router-dom";
 
 export const projectColumns = (
     language: Pick<Language, "lang" | "locale" | "currency">,
-    writeLang: (texts: [string, React.ReactNode][]) => React.ReactNode,
+    writeLang: (texts: [Langs, React.ReactNode][]) => React.ReactNode,
 ): ColumnDef<Project>[] => {
     return [
         {
@@ -33,7 +33,13 @@ export const projectColumns = (
             ),
             cell: ({ row }) => {
                 if (!row.original.client) return <></>;
-                return <ClientInfo id={row.original.client.id} logotipo={row.original.client.logotipo} company={row.original.client.company} />;
+                return (
+                    <ClientInfo
+                        id={row.original.client.id}
+                        logotipo={row.original.client.logotipo}
+                        company={row.original.client.company}
+                    />
+                );
             },
         },
         {

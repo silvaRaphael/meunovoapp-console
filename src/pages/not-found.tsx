@@ -4,7 +4,7 @@ import { Button } from "components/ui/button";
 import { useLanguage } from "components/shared/language-provider";
 
 export function NotFound() {
-    const { writeLang } = useLanguage();
+    const { language, writeLang } = useLanguage();
 
     document.title = `404 - Console | MeuNovoApp`;
 

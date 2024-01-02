@@ -12,7 +12,7 @@ interface Props {
 
 export function ClientInfo({ id, company, logotipo }: Props) {
     const { userData } = useUserData();
-    const { writeLang } = useLanguage();
+    const { language, writeLang } = useLanguage();
 
     const companySplitted = company.split(" ");
     const companyInitials = [

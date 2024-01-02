@@ -21,7 +21,7 @@ import { UploadCloudIcon } from "lucide-react";
 let emailTimeout: any;
 
 export function UserForm({ user }: { user: User }) {
-    const { writeLang } = useLanguage();
+    const { language, writeLang } = useLanguage();
 
     const [avatar, setAvatar] = useState<string | null>(user.avatar ? user.avatar : null);
     const [avatarBase64, setAvatarBase64] = useState<string | null>(null);
@@ -40,7 +40,7 @@ export function UserForm({ user }: { user: User }) {
 
         if (!email.length) return;
 
-        const request = await new HandleRequest({ email }).post(`/users/can-use-email/${user.id}`);
+        const request = await new HandleRequest({ email }).post(`/users/can-use-email/${user.id}`, { language });
 
         request.onError(() => {
             form.setError("email", {
@@ -58,7 +58,7 @@ export function UserForm({ user }: { user: User }) {
             ...data,
             avatarName: avatar ?? "",
             avatar: avatarBase64 || "",
-        }).put(`/users/${user.id}`);
+        }).put(`/users/${user.id}`, { language });
 
         request.onDone(() => {
             toast({
@@ -81,7 +81,7 @@ export function UserForm({ user }: { user: User }) {
         <Form {...form}>
             <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
                 <div className="grid grid-cols-12">
-                    <div className="col-span-3">
+                    <div className="col-span-12 sm:col-span-3 mb-4 sm:m-0">
                         <h3 className="font-semibold leading-4">
                             {writeLang([
                                 ["en", "Name"],
@@ -95,7 +95,7 @@ export function UserForm({ user }: { user: User }) {
                             ])}
                         </p>
                     </div>
-                    <div className="col-span-6 space-y-4">
+                    <div className="col-span-12 sm:col-span-6 space-y-4">
                         <FormField
                             control={form.control}
                             name="name"
@@ -126,7 +126,7 @@ export function UserForm({ user }: { user: User }) {
                 </div>
                 <Separator />
                 <div className="grid grid-cols-12">
-                    <div className="col-span-3">
+                    <div className="col-span-12 sm:col-span-3 mb-4 sm:m-0">
                         <h3 className="font-semibold leading-4">
                             {writeLang([
                                 ["en", "Info"],
@@ -140,7 +140,7 @@ export function UserForm({ user }: { user: User }) {
                             ])}
                         </p>
                     </div>
-                    <div className="col-span-6 space-y-4">
+                    <div className="col-span-12 sm:col-span-6 space-y-4">
                         <FormField
                             control={form.control}
                             name="email"
@@ -181,7 +181,7 @@ export function UserForm({ user }: { user: User }) {
                 </div>
                 <Separator />
                 <div className="grid grid-cols-12">
-                    <div className="col-span-3">
+                    <div className="col-span-12 sm:col-span-3 mb-4 sm:m-0">
                         <h3 className="font-semibold leading-4">Avatar</h3>
                         <p className="text-sm text-muted-foreground">
                             {writeLang([
@@ -190,7 +190,7 @@ export function UserForm({ user }: { user: User }) {
                             ])}
                         </p>
                     </div>
-                    <div className="col-span-6 space-y-4">
+                    <div className="col-span-12 sm:col-span-6 space-y-4">
                         <div className="flex flex-col items-center space-y-3">
                             <label htmlFor="avatar-input">
                                 <Avatar className="w-32 h-32 p-0 aspect-square border cursor-pointer">

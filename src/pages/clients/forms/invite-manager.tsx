@@ -22,7 +22,7 @@ export function InviteManagerForm({
     client: Client | null;
     setClient: React.Dispatch<React.SetStateAction<Client | null>>;
 }) {
-    const { writeLang } = useLanguage();
+    const { language, writeLang } = useLanguage();
 
     const form = useForm<InviteUserSchema>({
         resolver: zodResolver(inviteUserSchema),
@@ -37,7 +37,7 @@ export function InviteManagerForm({
             email: data.email,
             client_id: client.id,
             is_manager: true,
-        }).post(`/users`);
+        }).post(`/users`, { language });
 
         request.onDone((response) => {
             toast({
@@ -60,7 +60,7 @@ export function InviteManagerForm({
                 subject: `Você recebeu um convite para se juntar à MeuNovoApp`,
                 html: render(<InviteUserEmail userId={response.id} />),
                 no_save: true,
-            }).post(`/emails`);
+            }).post(`/emails`, { language });
         });
 
         request.onError((error) => {

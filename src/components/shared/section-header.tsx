@@ -23,21 +23,19 @@ export function SectionHeader({
         : `${tree?.at(-1)?.label} - Console | MeuNovoApp`;
 
     return (
-        <div className="w-full">
-            <div className="flex h-20 items-center px-4">
-                <div className="flex flex-col">
-                    <div className="2">
-                        <Link
-                            to={pathname}
-                            className={cn(
-                                "flex items-center text-sm font-semibold",
-                                tree?.length ? "text-sm text-muted-foreground" : "",
-                            )}
-                        >
-                            {tree?.length && <ArrowLeft size={16} className="me-1" />}
-                            {title}
-                        </Link>
-                    </div>
+        <div className="w-full pt-4">
+            <div className="flex min-h-20 items-center px-4">
+                <div className="flex flex-col text-2xl space-y-1">
+                    <Link
+                        to={pathname}
+                        className={cn(
+                            "flex items-center font-semibold",
+                            tree?.length ? "text-sm text-muted-foreground" : "",
+                        )}
+                    >
+                        {tree?.length && <ArrowLeft size={16} className="me-1" />}
+                        {title}
+                    </Link>
                     <div className="flex space-x-1">
                         {tree?.map((item, i, arr) =>
                             item.pathname ? (

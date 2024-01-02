@@ -16,14 +16,14 @@ export interface ClientRow extends Client {
 }
 
 export function Clients() {
-    const { writeLang } = useLanguage();
+    const { language, writeLang } = useLanguage();
     const navigate = useNavigate();
 
     const [clients, setClients] = useState<ClientRow[]>([]);
     const [client, setClient] = useState<Client | null>(null);
 
     async function getClients() {
-        const request = await new HandleRequest().get(`/clients`);
+        const request = await new HandleRequest().get(`/clients`, { language });
 
         request.onDone((response) => {
             setClients(

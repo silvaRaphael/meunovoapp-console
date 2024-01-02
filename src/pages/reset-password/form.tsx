@@ -16,7 +16,7 @@ import { Button } from "components/ui/button";
 
 export function ResetPasswordForm({ passwordKey }: { passwordKey: string }) {
     const navigate = useNavigate();
-    const { writeLang } = useLanguage();
+    const { language, writeLang } = useLanguage();
 
     const [passwordVisible, setPasswordVisible] = useState<boolean[]>([false, false]);
 
@@ -26,7 +26,9 @@ export function ResetPasswordForm({ passwordKey }: { passwordKey: string }) {
     });
 
     async function onSubmit(data: UpdatePasswordSchema) {
-        const request = await new HandleRequest(data).put(`/users/reset-password/${encodeURIComponent(passwordKey)}`);
+        const request = await new HandleRequest(data).put(`/users/reset-password/${encodeURIComponent(passwordKey)}`, {
+            language,
+        });
 
         request.onDone(() => {
             toast({

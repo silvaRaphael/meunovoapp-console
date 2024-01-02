@@ -16,7 +16,7 @@ export function Users() {
     const [users, setUsers] = useState<User[]>([]);
 
     async function getUsers() {
-        const request = await new HandleRequest().get(`/users`);
+        const request = await new HandleRequest().get(`/users`, { language });
 
         request.onDone((response) => {
             setUsers(response);

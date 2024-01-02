@@ -7,10 +7,12 @@ import { useUserData } from "components/shared/user-data-provider";
 import { toast } from "components/ui/toast/use-toast";
 import { ResetPasswordForm } from "./form";
 import { Button } from "components/ui/button";
+import { useLanguage } from "components/shared/language-provider";
 
 export function ResetPassword() {
     document.title = "Recuperar Senha - Console | MeuNovoApp";
 
+    const { language, writeLang } = useLanguage();
     const { userData, removeUserData } = useUserData();
 
     const navigate = useNavigate();
@@ -22,7 +24,9 @@ export function ResetPassword() {
     async function canReset() {
         if (!passwordKey) return navigate("/login");
 
-        const request = await new HandleRequest().get(`/users/can-reset-password/${encodeURIComponent(passwordKey)}`);
+        const request = await new HandleRequest().get(`/users/can-reset-password/${encodeURIComponent(passwordKey)}`, {
+            language,
+        });
 
         request.onDone(() => {
             setLoading(false);
@@ -40,11 +44,14 @@ export function ResetPassword() {
             removeUserData();
 
             (async () => {
-                const request = await new HandleRequest().get(`/auth/sign-out`);
+                const request = await new HandleRequest().get(`/auth/sign-out`, { language });
 
                 request.onDone(() => {
                     toast({
-                        title: "Você saiu do console!",
+                        title: writeLang([
+                            ["en", "You left console!"],
+                            ["pt", "Você saiu do console!"],
+                        ]) as string,
                     });
                 });
             })();

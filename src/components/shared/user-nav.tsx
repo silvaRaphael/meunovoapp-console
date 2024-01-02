@@ -19,7 +19,7 @@ import { HandleRequest } from "lib/handle-request";
 export function UserNav() {
     const navigate = useNavigate();
     const { userData, removeUserData } = useUserData();
-    const { writeLang } = useLanguage();
+    const { language, writeLang } = useLanguage();
 
     const nameSplitted = userData?.name.split(" ") ?? "";
     const userInitials = [
@@ -32,13 +32,16 @@ export function UserNav() {
         .toUpperCase();
 
     async function handleLogout() {
-        const request = await new HandleRequest().get(`/auth/sign-out`);
+        const request = await new HandleRequest().get(`/auth/sign-out`, { language });
 
         request.onDone(() => {
             removeUserData();
 
             toast({
-                title: "Você saiu do console!",
+                title: writeLang([
+                    ["en", "You left console!"],
+                    ["pt", "Você saiu do console!"],
+                ]) as string,
             });
 
             return navigate("/");

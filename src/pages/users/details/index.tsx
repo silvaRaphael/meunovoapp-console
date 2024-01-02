@@ -9,13 +9,13 @@ import { errorToast } from "components/shared/error-toast";
 import { UserForm } from "./form";
 
 export function UserDetails() {
-    const { writeLang } = useLanguage();
+    const { language, writeLang } = useLanguage();
     const { id } = useParams();
 
     const [user, setUser] = useState<User>();
 
     async function getUser(id?: string) {
-        const request = await new HandleRequest().get(`/users/${id}`);
+        const request = await new HandleRequest().get(`/users/${id}`, { language });
 
         request.onDone((response) => {
             setUser(response);

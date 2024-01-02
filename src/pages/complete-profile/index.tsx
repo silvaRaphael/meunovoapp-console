@@ -6,10 +6,12 @@ import { useNavigate } from "react-router-dom";
 import { HandleRequest } from "lib/handle-request";
 import { useUserData } from "components/shared/user-data-provider";
 import { toast } from "components/ui/toast/use-toast";
+import { useLanguage } from "components/shared/language-provider";
 
 export function CompleteProfile() {
     document.title = "Começar - Console | MeuNovoApp";
 
+    const { writeLang } = useLanguage();
     const { userData, removeUserData } = useUserData();
 
     const navigate = useNavigate();
@@ -43,7 +45,10 @@ export function CompleteProfile() {
 
                 request.onDone(() => {
                     toast({
-                        title: "Você saiu do console!",
+                        title: writeLang([
+                            ["en", "You left console!"],
+                            ["pt", "Você saiu do console!"],
+                        ]) as string,
                     });
                 });
             })();

@@ -10,12 +10,12 @@ import { errorToast } from "components/shared/error-toast";
 import { UserProfile } from "config/user";
 
 export function Profile() {
-    const { writeLang } = useLanguage();
+    const { language, writeLang } = useLanguage();
 
     const [profile, setProfile] = useState<UserProfile>();
 
     async function getProfile() {
-        const request = await new HandleRequest().get(`/users/profile`);
+        const request = await new HandleRequest().get(`/users/profile`, { language });
 
         request.onDone((response) => {
             setProfile(response);
@@ -68,14 +68,14 @@ export function Profile() {
             <div className="space-y-6 pb-40">
                 <Tabs defaultValue="profile" className="w-full">
                     {profile.client && (
-                        <TabsList className="w-min flex mx-auto">
-                            <TabsTrigger value="profile" className="w-auto sm:w-36">
+                        <TabsList className="sm:w-min w-full flex mx-auto">
+                            <TabsTrigger value="profile" className="w-full sm:w-36">
                                 {writeLang([
                                     ["en", "Profile"],
                                     ["pt", "Perfil"],
                                 ])}
                             </TabsTrigger>
-                            <TabsTrigger value="client" className="w-auto sm:w-36">
+                            <TabsTrigger value="client" className="w-full sm:w-36">
                                 {writeLang([
                                     ["en", "Client"],
                                     ["pt", "Cliente"],

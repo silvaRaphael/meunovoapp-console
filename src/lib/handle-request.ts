@@ -1,9 +1,16 @@
 import { Language } from "../components/shared/language-provider";
 import { BASE_API } from "config/constants";
+import { customError } from "components/shared/error-toast";
 
 export interface IRequestOptions {
-    language?: Language;
+    language?: Pick<Language, "locale">;
 }
+
+const setHeaders = (option?: IRequestOptions) =>
+    new Headers({
+        "Content-Type": "application/json",
+        "Content-Language": option?.language?.locale ?? "",
+    });
 
 export class HandleRequest {
     private response: Response = new Response();
@@ -19,10 +26,7 @@ export class HandleRequest {
             const response = await fetch(`${BASE_API}${url}`, {
                 method: "get",
                 credentials: "include",
-                headers: new Headers({
-                    "Content-Type": "application/json",
-                    "Content-Language": option?.language?.locale ?? "",
-                }),
+                headers: setHeaders(option),
             });
 
             if (!response.ok) throw await response.json();
@@ -36,7 +40,7 @@ export class HandleRequest {
 
         return {
             onDone: (fn: (response: any) => any) => this.onDone(fn),
-            onError: (fn: (error: { error: { message: string }[]; redirect?: string }) => any) => this.onError(fn),
+            onError: (fn: (error: customError) => any) => this.onError(fn),
         };
     }
 
@@ -47,10 +51,7 @@ export class HandleRequest {
             const response = await fetch(`${BASE_API}${url}`, {
                 method: "post",
                 credentials: "include",
-                headers: new Headers({
-                    "Content-Type": "application/json",
-                    "Content-Language": option?.language?.locale ?? "",
-                }),
+                headers: setHeaders(option),
                 body: JSON.stringify(this.data),
             });
 
@@ -65,7 +66,7 @@ export class HandleRequest {
 
         return {
             onDone: (fn: (response: any) => any) => this.onDone(fn),
-            onError: (fn: (error: { error: { message: string }[]; redirect?: string }) => any) => this.onError(fn),
+            onError: (fn: (error: customError) => any) => this.onError(fn),
         };
     }
 
@@ -76,10 +77,7 @@ export class HandleRequest {
             const response = await fetch(`${BASE_API}${url}`, {
                 method: "put",
                 credentials: "include",
-                headers: new Headers({
-                    "Content-Type": "application/json",
-                    "Content-Language": option?.language?.locale ?? "",
-                }),
+                headers: setHeaders(option),
                 body: JSON.stringify(this.data),
             });
 
@@ -94,7 +92,7 @@ export class HandleRequest {
 
         return {
             onDone: (fn: (response: any) => any) => this.onDone(fn),
-            onError: (fn: (error: { error: { message: string }[]; redirect?: string }) => any) => this.onError(fn),
+            onError: (fn: (error: customError) => any) => this.onError(fn),
         };
     }
 
@@ -103,10 +101,7 @@ export class HandleRequest {
             const response = await fetch(`${BASE_API}${url}`, {
                 method: "delete",
                 credentials: "include",
-                headers: new Headers({
-                    "Content-Type": "application/json",
-                    "Content-Language": option?.language?.locale ?? "",
-                }),
+                headers: setHeaders(option),
             });
 
             if (!response.ok) throw await response.json();
@@ -120,7 +115,7 @@ export class HandleRequest {
 
         return {
             onDone: (fn: (response: any) => any) => this.onDone(fn),
-            onError: (fn: (error: { error: { message: string }[]; redirect?: string }) => any) => this.onError(fn),
+            onError: (fn: (error: customError) => any) => this.onError(fn),
         };
     }
 
@@ -129,7 +124,7 @@ export class HandleRequest {
         return fn(this.response);
     }
 
-    private onError(fn: (error: { error: { message: string }[]; redirect?: string }) => any) {
+    private onError(fn: (error: customError) => any) {
         if (!this.error) return;
         return fn(this.error);
     }

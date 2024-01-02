@@ -18,18 +18,17 @@ export function SendResetPasswordForm({
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-    const { writeLang } = useLanguage();
+    const { language, writeLang } = useLanguage();
 
     const form = useForm<InviteUserSchema>({
         resolver: zodResolver(inviteUserSchema),
-        defaultValues: {},
         mode: "onChange",
     });
 
     async function onSubmit(data: InviteUserSchema) {
         const request = await new HandleRequest({
             email: data.email,
-        }).post(`/users/reset-password`);
+        }).post(`/users/reset-password`, { language });
 
         request.onDone(() => {
             toast({

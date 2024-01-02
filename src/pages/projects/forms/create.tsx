@@ -46,7 +46,7 @@ export function CreateProjectForm({
     });
 
     async function onSubmit(data: CreateProjectSchema) {
-        const request = await new HandleRequest(data).post(`/projects`);
+        const request = await new HandleRequest(data).post(`/projects`, { language });
 
         request.onDone(() => {
             toast({

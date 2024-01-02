@@ -6,7 +6,7 @@ import { templateColumns } from "./data/column";
 import { templates } from "./data/data";
 
 export function Templates() {
-    const { writeLang } = useLanguage();
+    const { language, writeLang } = useLanguage();
 
     return (
         <Page

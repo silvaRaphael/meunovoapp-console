@@ -19,7 +19,7 @@ import { useUserData } from "components/shared/user-data-provider";
 export function PreferencesForm({ preferences }: { preferences: PreferencesSchema }) {
     const { theme, setTheme } = useTheme();
     const { userData } = useUserData();
-    const { writeLang } = useLanguage();
+    const { language, writeLang } = useLanguage();
 
     const form = useForm<PreferencesSchema>({
         resolver: zodResolver(preferencesSchema),
@@ -37,7 +37,7 @@ export function PreferencesForm({ preferences }: { preferences: PreferencesSchem
         const request = await new HandleRequest({
             email_notification: data.email_notification,
             console_notification: data.console_notification,
-        }).put(`/preferences`);
+        }).put(`/preferences`, { language });
 
         request.onDone(() => {
             setTheme(data.themeMode!);
@@ -58,7 +58,7 @@ export function PreferencesForm({ preferences }: { preferences: PreferencesSchem
         <Form {...form}>
             <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
                 <div className="grid grid-cols-12">
-                    <div className="col-span-3">
+                    <div className="col-span-12 sm:col-span-3 mb-4 sm:m-0">
                         <h3 className="font-semibold leading-4">
                             {writeLang([
                                 ["en", "Notifications"],
@@ -72,7 +72,7 @@ export function PreferencesForm({ preferences }: { preferences: PreferencesSchem
                             ])}
                         </p>
                     </div>
-                    <div className="col-span-6 space-y-4">
+                    <div className="col-span-12 sm:col-span-6 space-y-4">
                         <FormField
                             control={form.control}
                             name="email_notification"
@@ -156,7 +156,7 @@ export function PreferencesForm({ preferences }: { preferences: PreferencesSchem
                 </div>
                 <Separator />
                 <div className="grid grid-cols-12">
-                    <div className="col-span-3">
+                    <div className="col-span-12 sm:col-span-3 mb-4 sm:m-0">
                         <h3 className="font-semibold leading-4">
                             {writeLang([
                                 ["en", "Theme"],
@@ -170,7 +170,7 @@ export function PreferencesForm({ preferences }: { preferences: PreferencesSchem
                             ])}
                         </p>
                     </div>
-                    <div className="col-span-6 space-y-4">
+                    <div className="col-span-12 sm:col-span-6 space-y-4">
                         <FormField
                             control={form.control}
                             name="themeMode"

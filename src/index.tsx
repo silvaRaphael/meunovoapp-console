@@ -6,19 +6,15 @@ import { Toaster } from "components/ui/toast/toaster";
 import { App } from "./app";
 import { UserDataProvider } from "components/shared/user-data-provider";
 import { TooltipProvider } from "components/ui/tooltip";
+import { languages } from "config/languages";
 
 const Layout = () => {
+    const initialLanguage = languages.find((item) => item.locale.startsWith(navigator.language.split("-")[0]));
+
     return (
         <UserDataProvider storageKey="meunovoapp-user-data">
             <ThemeProvider defaultTheme="system" storageKey="meunovoapp-ui-theme">
-                <LanguageProvider
-                    defaultLanguage={{
-                        lang: "pt",
-                        locale: "pt-BR",
-                        currency: "BRL",
-                    }}
-                    storageKey="meunovoapp-language"
-                >
+                <LanguageProvider defaultLanguage={initialLanguage} storageKey="meunovoapp-language">
                     <TooltipProvider delayDuration={0}>
                         <Toaster />
                         <App />

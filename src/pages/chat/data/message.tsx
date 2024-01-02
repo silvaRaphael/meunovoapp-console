@@ -24,7 +24,7 @@ export interface Message {
 }
 
 export function GetMessageLabel({ messageLabel }: { messageLabel: MessageLabel }) {
-    const { writeLang } = useLanguage();
+    const { language, writeLang } = useLanguage();
 
     const translatedMessageLabel = {
         support: writeLang([

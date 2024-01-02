@@ -17,7 +17,7 @@ export function ClientUsers({ client }: { client: Client }) {
     async function inviteUser(item: User) {
         const request = await new HandleRequest({
             email: item.email,
-        }).post(`/users/invite/${item.id}`);
+        }).post(`/users/invite/${item.id}`, { language });
 
         request.onDone(() => {
             toast({

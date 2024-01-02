@@ -9,13 +9,13 @@ import { useLanguage } from "../../../components/shared/language-provider";
 import { errorToast } from "components/shared/error-toast";
 
 export function TaskDetails() {
-    const { writeLang } = useLanguage();
+    const { language, writeLang } = useLanguage();
     const { id } = useParams();
 
     const [task, setTask] = useState<Task>();
 
     async function getTask(id?: string) {
-        const request = await new HandleRequest().get(`/tasks/${id}`);
+        const request = await new HandleRequest().get(`/tasks/${id}`, { language });
 
         request.onDone((response) => {
             setTask(response);
