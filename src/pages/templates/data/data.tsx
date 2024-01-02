@@ -1,13 +1,19 @@
-import { ReplyMessageEmail } from "components/shared/emails/reply-message-email";
-import { Template } from "./template";
-import { InviteUserEmail } from "components/shared/emails/invite-user-email";
 import { render } from "@react-email/components";
+import { Template } from "./template";
+import { ResetPasswordEmail } from "components/shared/emails/reset-password";
+import { ReplyMessageEmail } from "components/shared/emails/reply-message-email";
+import { InviteUserEmail } from "components/shared/emails/invite-user-email";
 import { ContactEmail } from "components/shared/emails/contact-email";
 import { BudgetEmail } from "components/shared/emails/budget-email";
 import { ReplyBudgetEmail } from "components/shared/emails/reply-budget-email";
 import { NotificationMessageEmail } from "components/shared/emails/notification-message-email";
 
 export const templates: Template[] = [
+    {
+        id: "reset-password",
+        name: "Recuperar Senha",
+        component: render(<ResetPasswordEmail resetPasswordKey="[resetPasswordKey]" name="[name]" />),
+    },
     {
         id: "invide-user",
         name: "Convidar Usuário",

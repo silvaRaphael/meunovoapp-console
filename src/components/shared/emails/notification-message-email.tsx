@@ -14,10 +14,7 @@ export function NotificationMessageEmail({
 }) {
     return (
         <EmailBase title={title}>
-            <Text style={{ fontSize: 18 }}>
-                Olá {name}
-                {name && ","}
-            </Text>
+            <Text style={{ fontSize: 18 }}>{name ? `Olá ${name},` : "Olá,"}</Text>
             <Text>
                 Gostaríamos de informar que houve recentes atualizações no projeto {projectName}. Estamos comprometidos
                 em manter você sempre informado sobre o progresso e as novas tarefas.

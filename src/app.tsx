@@ -23,6 +23,7 @@ import { UserDetails } from "pages/users/details";
 import { Chats } from "pages/chat";
 import { useEffect } from "react";
 import { socket } from "pages/chat/components/websocket";
+import { ResetPassword } from "pages/reset-password";
 
 export function App() {
     const { writeLang } = useLanguage();
@@ -49,6 +50,7 @@ export function App() {
                     <Route>
                         <Route path="/login" element={<Login />} />
                         <Route path="/comecar" element={<CompleteProfile />} />
+                        <Route path="/recuperar-senha" element={<ResetPassword />} />
                         {!userData?.email && <Route path="/*" element={<Navigate to="/login" />} />}
                     </Route>
                 }

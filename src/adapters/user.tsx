@@ -58,3 +58,22 @@ export const completeUserSchema = z
         path: ["confirm_password"],
     });
 export type CompleteUserSchema = z.infer<typeof completeUserSchema>;
+
+export const updatePasswordSchema = z
+    .object({
+        password: z
+            .string({ required_error: "Senha é necessária." })
+            .min(5, { message: "Digite uma senha maior." })
+            .max(20, { message: "Digite uma senha menor." })
+            .optional(),
+        confirm_password: z
+            .string({ required_error: "Confirmação de senha é necessária." })
+            .min(5, { message: "Digite uma senha maior." })
+            .max(20, { message: "Digite uma senha menor." })
+            .optional(),
+    })
+    .refine((data) => data.password === data.confirm_password, {
+        message: "As senhas não são iguais.",
+        path: ["confirm_password"],
+    });
+export type UpdatePasswordSchema = z.infer<typeof updatePasswordSchema>;

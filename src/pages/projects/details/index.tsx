@@ -69,7 +69,7 @@ export function ProjectDetails() {
                     }
                     tree={!!project ? [{ label: project.name }] : []}
                 >
-                    {tab === "tasks" &&
+                    {tab === "1" &&
                         !["completed", "cancelled"].includes(project.status) &&
                         HandlePermission(
                             <CreateTaskForm

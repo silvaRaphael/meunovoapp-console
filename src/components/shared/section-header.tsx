@@ -1,6 +1,7 @@
-import { Link } from "react-router-dom";
 import { ReactNode } from "react";
+import { Link } from "react-router-dom";
 import { cn } from "lib/utils";
+import { ArrowLeft } from "lucide-react";
 
 export function SectionHeader({
     isRoot = false,
@@ -15,25 +16,49 @@ export function SectionHeader({
     tree?: { label: string; pathname?: string }[];
     children?: ReactNode;
 }) {
-    document.title = isRoot ? "Console | MeuNovoApp" : !tree?.length ? `${title} - Console | MeuNovoApp` : `${tree?.at(-1)?.label} - Console | MeuNovoApp`;
+    document.title = isRoot
+        ? "Console | MeuNovoApp"
+        : !tree?.length
+        ? `${title} - Console | MeuNovoApp`
+        : `${tree?.at(-1)?.label} - Console | MeuNovoApp`;
 
     return (
         <div className="w-full">
             <div className="flex h-20 items-center px-4">
                 <div className="flex flex-col">
-                    <div className="text-sm font-medium flex items-center space-x-2">
-                        <Link to={pathname} className={cn("text-2xl font-semibold", tree?.length ? "text-sm text-muted-foreground" : "")}>
+                    <div className="2">
+                        <Link
+                            to={pathname}
+                            className={cn(
+                                "flex items-center text-sm font-semibold",
+                                tree?.length ? "text-sm text-muted-foreground" : "",
+                            )}
+                        >
+                            {tree?.length && <ArrowLeft size={16} className="me-1" />}
                             {title}
                         </Link>
                     </div>
-                    <div className={"flex space-x-1"}>
+                    <div className="flex space-x-1">
                         {tree?.map((item, i, arr) =>
                             item.pathname ? (
-                                <Link key={i} to={item.pathname} className={cn("text-2xl font-semibold", i < arr.length - 1 ? "text-sm text-muted-foreground" : "")}>
+                                <Link
+                                    key={i}
+                                    to={item.pathname}
+                                    className={cn(
+                                        "text-2xl font-semibold",
+                                        i < arr.length - 1 ? "text-sm text-muted-foreground" : "",
+                                    )}
+                                >
                                     {item.label}
                                 </Link>
                             ) : (
-                                <span key={i} className={cn("text-2xl font-semibold", i < arr.length - 1 ? "text-sm text-muted-foreground" : "")}>
+                                <span
+                                    key={i}
+                                    className={cn(
+                                        "text-2xl font-semibold",
+                                        i < arr.length - 1 ? "text-sm text-muted-foreground" : "",
+                                    )}
+                                >
                                     {item.label}
                                 </span>
                             ),

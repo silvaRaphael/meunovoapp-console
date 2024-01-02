@@ -71,7 +71,7 @@ export function ClientDetails() {
                     }
                     tree={!!client ? [{ label: client.company }] : []}
                 >
-                    {tab === "users" && (
+                    {tab === "1" && (
                         <InviteUserForm
                             client={client}
                             setClient={setClient}
@@ -79,7 +79,7 @@ export function ClientDetails() {
                             setOpen={setInviteUserOpen}
                         />
                     )}
-                    {tab === "projects" && (
+                    {tab === "2" && (
                         <CreateProjectForm
                             label={
                                 writeLang([

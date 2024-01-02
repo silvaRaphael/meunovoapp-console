@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { SectionHeader } from "../../../components/shared/section-header";
 import { Page } from "../../../components/shared/page";
@@ -6,7 +7,6 @@ import { templates } from "../data/data";
 import { HandleRequest } from "lib/handle-request";
 import { SENDER_EMAIL } from "config/constants";
 import { useUserData } from "components/shared/user-data-provider";
-import { useState } from "react";
 import { SubmitButton } from "components/shared/submit-button";
 import { errorToast } from "components/shared/error-toast";
 import { toast } from "components/ui/toast/use-toast";
@@ -21,6 +21,7 @@ export function TemplateDetails() {
     const template = templates.find((item) => item.id === id);
 
     const [status, setStatus] = useState<"initial" | "loading">("initial");
+    const [copyStatus, setCopyStatus] = useState<"initial" | "loading">("initial");
 
     async function sendTestEmail() {
         if (!template?.component) return;
@@ -55,6 +56,23 @@ export function TemplateDetails() {
         });
 
         setStatus("initial");
+    }
+
+    async function handleCopyToClipboard() {
+        if (!template?.component) return;
+
+        setCopyStatus("loading");
+
+        await navigator.clipboard.writeText(template.component);
+
+        toast({
+            title: writeLang([
+                ["en", "Template copied successfully!"],
+                ["pt", "Modelo copiado com sucesso!"],
+            ]) as string,
+        });
+
+        setCopyStatus("initial");
     }
 
     if (!template) return <></>;
@@ -97,13 +115,31 @@ export function TemplateDetails() {
             }
         >
             <div className="space-y-6 pb-40">
+                <div className="flex space-x-4">
+                    <Input
+                        defaultValue={template.component}
+                        className="text-muted-foreground"
+                        disabled={!template.component}
+                    />
+                    <SubmitButton
+                        className="border-input bg-muted/50 hover:bg-muted text-accent-foreground"
+                        label={
+                            writeLang([
+                                ["en", "Copy"],
+                                ["pt", "Copiar"],
+                            ]) as string
+                        }
+                        onSubmit={handleCopyToClipboard}
+                        state={copyStatus}
+                        disabled={!template.component}
+                    />
+                </div>
                 <div
                     className="text-sm"
                     dangerouslySetInnerHTML={{
                         __html: template.component?.replace(/\n/g, "<br />"),
                     }}
                 />
-                <Input className="mt-4" defaultValue={template.component} />
             </div>
         </Page>
     );

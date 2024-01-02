@@ -10,7 +10,6 @@ import { Separator } from "../../components/ui/separator";
 import { errorToast } from "components/shared/error-toast";
 import { useLanguage } from "components/shared/language-provider";
 import { UserData, useUserData } from "components/shared/user-data-provider";
-import { BASE_API } from "config/constants";
 import { useState } from "react";
 import { Button } from "components/ui/button";
 import { Eye, EyeOff, UploadCloudIcon } from "lucide-react";
