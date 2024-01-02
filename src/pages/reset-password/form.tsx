@@ -43,7 +43,6 @@ export function ResetPasswordForm({ passwordKey }: { passwordKey: string }) {
         });
 
         request.onError((error) => {
-            console.log(error);
             errorToast(error);
         });
     }
