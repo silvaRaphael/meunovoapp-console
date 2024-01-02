@@ -18,13 +18,13 @@ export function LanguageToggle({ userData }: { userData: UserData | null }) {
         if (userData) {
             const menuItems = MenuItems({ userData, writeLang, lang: language.lang });
 
-            const activeItemIndex = menuItems.indexOf(
-                menuItems.find((item) => item.path === window.location.pathname) as any,
-            );
+            const [, path, restPath] = window.location.pathname.split("/");
+
+            const activeItemIndex = menuItems.indexOf(menuItems.find((item) => item.path === `/${path}`) as any);
 
             const newMenuItems = MenuItems({ userData, writeLang, lang: newLanguage.lang });
 
-            redirect = newMenuItems[activeItemIndex].path;
+            redirect = `${newMenuItems[activeItemIndex].path}${restPath ? `/${restPath}` : ""}`;
         }
 
         setLanguage(newLanguage);
