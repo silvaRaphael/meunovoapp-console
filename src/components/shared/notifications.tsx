@@ -16,12 +16,32 @@ import { languages } from "config/languages";
 import { cn } from "lib/utils";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { HandleRequest } from "lib/handle-request";
+import { errorToast } from "./error-toast";
 
-export function Notifications({ notifications }: { notifications: Notification[] }) {
+export function Notifications({
+    notifications,
+    setNotifications,
+}: {
+    notifications: Notification[];
+    setNotifications: React.Dispatch<React.SetStateAction<Notification[] | null>>;
+}) {
     const { language, writeLang } = useLanguage();
 
     const [open, onOpenChange] = useState<boolean>(false);
     const [time, setTime] = useState<Date | null>(null);
+
+    async function handleMarkAsRead() {
+        const request = await new HandleRequest({}).put("/notifications");
+
+        request.onDone(() => {
+            setNotifications([]);
+        });
+
+        request.onError((error) => {
+            errorToast(error);
+        });
+    }
 
     useEffect(() => {
         const controller = new AbortController();
@@ -135,6 +155,19 @@ export function Notifications({ notifications }: { notifications: Notification[]
                         })
                     )}
                 </DropdownMenuGroup>
+                {notificationsLength > 0 && (
+                    <>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={handleMarkAsRead}>
+                            <span className="text-xs mx-auto text-blue-700 dark:text-blue-500">
+                                {writeLang([
+                                    ["en", "Mark all as read"],
+                                    ["pt", "Marcar todas como lida"],
+                                ])}
+                            </span>
+                        </DropdownMenuItem>
+                    </>
+                )}
             </DropdownMenuContent>
         </DropdownMenu>
     );

@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { cn } from "lib/utils";
 import { ArrowLeft } from "lucide-react";
 
@@ -22,20 +22,22 @@ export function SectionHeader({
         ? `${title} - Console | MeuNovoApp`
         : `${tree?.at(-1)?.label} - Console | MeuNovoApp`;
 
+    const navigate = useNavigate();
+
     return (
         <div className="w-full pt-4">
             <div className="flex min-h-20 items-center px-4">
                 <div className="flex flex-col text-2xl space-y-1">
-                    <Link
-                        to={pathname}
+                    <span
                         className={cn(
-                            "flex items-center font-semibold",
+                            "flex items-center font-semibold cursor-pointer",
                             tree?.length ? "text-sm text-muted-foreground" : "",
                         )}
+                        onClick={() => navigate(-1)}
                     >
                         {tree?.length && <ArrowLeft size={16} className="me-1" />}
                         {title}
-                    </Link>
+                    </span>
                     <div className="flex space-x-1">
                         {tree?.map((item, i, arr) =>
                             item.pathname ? (

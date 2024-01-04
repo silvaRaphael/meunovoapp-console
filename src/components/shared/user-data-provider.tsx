@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import Cookies from "js-cookie";
-import { addMinutes } from "date-fns";
+import { addHours } from "date-fns";
 import { Role } from "config/roles";
 
 export interface UserData {
@@ -38,7 +38,7 @@ export function UserDataProvider({ children, storageKey = "meunovoapp-user-data"
         userData,
         setUserData: (userData: UserData) => {
             Cookies.set(storageKey, JSON.stringify(userData), {
-                expires: addMinutes(new Date(), 90),
+                expires: addHours(new Date(), 12),
             });
             setUserData(userData);
         },

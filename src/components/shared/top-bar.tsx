@@ -126,7 +126,7 @@ export function TopBar({ pathname, toggleSideBar, isOpen }: { pathname: string; 
                     <div className="flex items-center space-x-1">
                         <LanguageToggle userData={userData} />
                         <ThemeToggle />
-                        <Notifications notifications={notifications ?? []} />
+                        <Notifications notifications={notifications ?? []} setNotifications={setNotifications} />
                         <MessageNotifications messages={messages ?? []} />
                     </div>
                     <UserNav />
