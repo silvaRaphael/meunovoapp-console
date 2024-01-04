@@ -1,13 +1,12 @@
-import { Section } from "components/shared/section";
 import { Logo } from "components/shared/logo";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { HandleRequest } from "lib/handle-request";
 import { useUserData } from "components/shared/user-data-provider";
 import { toast } from "components/ui/toast/use-toast";
 import { ResetPasswordForm } from "./form";
-import { Button } from "components/ui/button";
 import { useLanguage } from "components/shared/language-provider";
+import { AuthScreen } from "components/shared/auth-screen";
 
 export function ResetPassword() {
     document.title = "Recuperar Senha - Console | MeuNovoApp";
@@ -64,19 +63,25 @@ export function ResetPassword() {
     if (!passwordKey || loading) return <></>;
 
     return (
-        <div className="flex min-h-screen items-center w-full">
-            <Section size="tiny" className="space-y-6">
-                <div className="space-y-10">
-                    <div className="space-y-3 w-full">
-                        <Logo className="justify-center" />
-                        <h4 className="text-muted-foreground leading-5 text-center mx-auto">Defina sua senha</h4>
-                    </div>
-                    <ResetPasswordForm passwordKey={passwordKey} />
-                </div>
-                <Button variant="outline" className="w-full text-muted-foreground" asChild>
-                    <Link to="/login">Fazer login</Link>
-                </Button>
-            </Section>
-        </div>
+        <AuthScreen
+            quote={
+                writeLang([
+                    ["en", "Set your new password to access your account."],
+                    ["pt", "Defina sua nova senha para acessar sua conta."],
+                ]) as string
+            }
+            className="h-96 flex justify-start"
+        >
+            <div className="flex flex-col space-y-2 mb-2 text-center">
+                <Logo className="justify-center" />
+                <p className="text-sm text-muted-foreground">
+                    {writeLang([
+                        ["en", "Reset your password"],
+                        ["pt", "Restaure sua senha"],
+                    ])}
+                </p>
+            </div>
+            <ResetPasswordForm passwordKey={passwordKey} />
+        </AuthScreen>
     );
 }

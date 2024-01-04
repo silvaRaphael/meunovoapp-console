@@ -31,33 +31,37 @@ export const updateUserSchema = z
     });
 export type UpdateUserSchema = z.infer<typeof updateUserSchema>;
 
-export const completeUserSchema = z
-    .object({
-        name: z
-            .string({
-                required_error: "Nome é necessário.",
-            })
-            .min(1, {
-                message: "Nome é necessário.",
-            }),
-        email: z
-            .string({
-                required_error: "E-mail é necessário.",
-            })
-            .email({ message: "Digite um e-mail válido" }),
-        password: z
-            .string({ required_error: "Senha é necessária." })
-            .min(5, { message: "Digite uma senha maior." })
-            .max(20, { message: "Digite uma senha menor." }),
-        confirm_password: z.string({
-            required_error: "Confirme sua senha.",
+export const completeUserSchema = z.object({
+    name: z
+        .string({
+            required_error: "Nome é necessário.",
+        })
+        .min(1, {
+            message: "Nome é necessário.",
         }),
-    })
-    .refine((data) => data.password === data.confirm_password, {
-        message: "As senhas devem ser iguais.",
-        path: ["confirm_password"],
-    });
+    email: z
+        .string({
+            required_error: "E-mail é necessário.",
+        })
+        .email({ message: "Digite um e-mail válido" }),
+    // password: z
+    //     .string({ required_error: "Senha é necessária." })
+    //     .min(5, { message: "Digite uma senha maior." })
+    //     .max(20, { message: "Digite uma senha menor." }),
+    // confirm_password: z.string({
+    //     required_error: "Confirme sua senha.",
+    // }),
+});
+// .refine((data) => data.password === data.confirm_password, {
+//     message: "As senhas devem ser iguais.",
+//     path: ["confirm_password"],
+// });
 export type CompleteUserSchema = z.infer<typeof completeUserSchema>;
+
+export const avatarSchema = z.object({
+    avatar: z.string({ required_error: "Imagem é necessária." }).optional(),
+});
+export type AvatarSchema = z.infer<typeof avatarSchema>;
 
 export const updatePasswordSchema = z
     .object({

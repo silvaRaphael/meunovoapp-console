@@ -8,7 +8,13 @@ import { useNavigate } from "react-router-dom";
 import { MenuItems } from "config/site";
 import { UserData } from "./user-data-provider";
 
-export function LanguageToggle({ userData = null }: { userData?: UserData | null }) {
+export function LanguageToggle({
+    userData = null,
+    noRedirect = false,
+}: {
+    userData?: UserData | null;
+    noRedirect?: boolean;
+}) {
     const { language, setLanguage, writeLang } = useLanguage();
     const navigate = useNavigate();
 
@@ -29,7 +35,7 @@ export function LanguageToggle({ userData = null }: { userData?: UserData | null
 
         setLanguage(newLanguage);
 
-        navigate(redirect);
+        if (!noRedirect) navigate(redirect);
     }
 
     return (
