@@ -12,9 +12,11 @@ import { SubmitButton } from "components/shared/submit-button";
 import { ContentAlert } from "components/shared/content-alert";
 
 export function SendResetPasswordForm({
+    label,
     open,
     setOpen,
 }: {
+    label: string;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
@@ -70,14 +72,7 @@ export function SendResetPasswordForm({
                     ["pt", "Digite o seu e-mail abaixo, que enviaremos uma mensagem com instruções."],
                 ]) as string
             }
-            triggerButton={
-                <span className=" text-sm text-muted-foreground hover:text-accent-foreground cursor-pointer">
-                    {writeLang([
-                        ["en", "Forgot your password?"],
-                        ["pt", "Esqueceu sua senha?"],
-                    ])}
-                </span>
-            }
+            triggerButton={<>{label}</>}
             hideCloseButton
         >
             <Form {...form}>
@@ -92,8 +87,8 @@ export function SendResetPasswordForm({
                                         <Input
                                             placeholder={
                                                 writeLang([
-                                                    ["en", "Email"],
-                                                    ["pt", "E-mail"],
+                                                    ["en", "name@example.com"],
+                                                    ["pt", "nome@exemplo.com.br"],
                                                 ]) as string
                                             }
                                             maxLength={50}

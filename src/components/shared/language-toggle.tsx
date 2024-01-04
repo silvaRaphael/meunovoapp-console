@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { MenuItems } from "config/site";
 import { UserData } from "./user-data-provider";
 
-export function LanguageToggle({ userData }: { userData: UserData | null }) {
+export function LanguageToggle({ userData = null }: { userData?: UserData | null }) {
     const { language, setLanguage, writeLang } = useLanguage();
     const navigate = useNavigate();
 

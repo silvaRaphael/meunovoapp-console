@@ -28,9 +28,9 @@ export function ConfirmationAlert({ open, onOpenChange, triggerButton, title, de
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>{triggerButton}</DialogTrigger>
             <DialogContent className="max-w-[90%] sm:max-w-[360px]">
-                <DialogHeader>
+                <DialogHeader className="space-y-3">
                     <DialogTitle className="me-5 mb-4">{title}</DialogTitle>
-                    <DialogDescription>{description}</DialogDescription>
+                    <DialogDescription className="text-black/75 dark:text-white/75">{description}</DialogDescription>
                 </DialogHeader>
                 <DialogFooter className="mt-2">
                     <DialogClose asChild>

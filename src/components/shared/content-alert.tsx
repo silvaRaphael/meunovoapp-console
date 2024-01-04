@@ -35,10 +35,10 @@ export function ContentAlert({
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>{triggerButton}</DialogTrigger>
-            <DialogContent className="max-w-[90%] sm:max-w-[425px]">
-                <DialogHeader>
+            <DialogContent className="max-w-[90%] sm:max-w-[425px] space-y-1">
+                <DialogHeader className="space-y-3">
                     <DialogTitle>{title}</DialogTitle>
-                    <DialogDescription>{description}</DialogDescription>
+                    <DialogDescription className="text-black/75 dark:text-white/75">{description}</DialogDescription>
                 </DialogHeader>
                 {children}
                 {!hideCloseButton && !!confirmButton && (

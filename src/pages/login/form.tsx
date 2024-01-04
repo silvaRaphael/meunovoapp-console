@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Loader, Eye, EyeOff } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Loader } from "lucide-react";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "components/ui/form";
-import { Button } from "components/ui/button";
+import { Button, buttonVariants } from "components/ui/button";
 import { Input } from "components/ui/input";
 import { toast } from "components/ui/toast/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,6 +12,9 @@ import { UserData, useUserData } from "components/shared/user-data-provider";
 import { HandleRequest } from "lib/handle-request";
 import { errorToast } from "components/shared/error-toast";
 import { useLanguage } from "components/shared/language-provider";
+import { Logo } from "components/shared/logo";
+import { cn } from "lib/utils";
+import { PasswordInput } from "components/shared/password-input";
 
 export function LoginInForm() {
     const { language, writeLang } = useLanguage();
@@ -52,70 +55,99 @@ export function LoginInForm() {
     }
 
     return (
-        <Form {...form}>
-            <form className="space-y-3" onSubmit={form.handleSubmit(onSubmit)}>
-                <div className="grid grid-cols-12 gap-4">
-                    <div className="col-span-12">
-                        <FormField
-                            control={form.control}
-                            name="email"
-                            render={({ field }) => (
-                                <FormItem className="flex flex-col">
-                                    <FormControl>
-                                        <Input
-                                            type="email"
-                                            placeholder="Seu e-mail"
-                                            onChange={field.onChange}
-                                            value={field.value || ""}
-                                        />
-                                    </FormControl>
-                                    <div className="flex">
-                                        <FormMessage />
-                                    </div>
-                                </FormItem>
-                            )}
-                        />
-                    </div>
-                    <div className="col-span-12">
-                        <FormField
-                            control={form.control}
-                            name="password"
-                            render={({ field }) => (
-                                <FormItem className="flex flex-col">
-                                    <FormControl>
-                                        <div className="flex space-x-2">
+        <>
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <div className="grid grid-cols-12 gap-1">
+                        <div className="col-span-12">
+                            <FormField
+                                control={form.control}
+                                name="email"
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-col">
+                                        <FormControl>
                                             <Input
-                                                type={!passwordVisible ? "password" : "text"}
-                                                placeholder="Sua senha"
-                                                maxLength={20}
+                                                type="email"
+                                                placeholder={
+                                                    writeLang([
+                                                        ["en", "name@example.com"],
+                                                        ["pt", "nome@exemplo.com.br"],
+                                                    ]) as string
+                                                }
+                                                autoCapitalize="none"
+                                                autoComplete="email"
+                                                autoCorrect="off"
                                                 onChange={field.onChange}
                                                 value={field.value || ""}
                                             />
-                                            <Button
-                                                type="button"
-                                                variant="outline"
-                                                className="bg-muted/80"
-                                                onClick={() => setPasswordVisible(!passwordVisible)}
-                                            >
-                                                {!passwordVisible ? <Eye size={14} /> : <EyeOff size={14} />}
-                                            </Button>
+                                        </FormControl>
+                                        <div className="flex">
+                                            <FormMessage />
                                         </div>
-                                    </FormControl>
-                                    <div className="flex">
-                                        <FormMessage />
-                                    </div>
-                                </FormItem>
-                            )}
-                        />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                        <div className="col-span-12">
+                            <FormField
+                                control={form.control}
+                                name="password"
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-col">
+                                        <FormControl>
+                                            <PasswordInput
+                                                passwordVisible={passwordVisible}
+                                                setPasswordVisible={setPasswordVisible}
+                                                onChange={field.onChange}
+                                                value={field.value || ""}
+                                                placeholder={
+                                                    writeLang([
+                                                        ["en", "Your password"],
+                                                        ["pt", "Sua senha"],
+                                                    ]) as string
+                                                }
+                                            />
+                                        </FormControl>
+                                        <div className="flex">
+                                            <FormMessage />
+                                        </div>
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
                     </div>
+                    <div className="w-full text-end pt-2">
+                        <Button className="gap-x-1 w-full" disabled={form.formState.isSubmitting}>
+                            {form.formState.isSubmitting && <Loader size={14} className="animate-spin" />}
+                            {writeLang([
+                                ["en", "Sign In with Email"],
+                                ["pt", "Entrar com E-mail"],
+                            ])}
+                        </Button>
+                    </div>
+                </form>
+            </Form>
+            <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t" />
                 </div>
-                <div className="w-full text-end pt-4">
-                    <Button className="gap-x-1 w-full" disabled={form.formState.isSubmitting}>
-                        {form.formState.isSubmitting && <Loader size={14} className="animate-spin" />}
-                        Entrar
-                    </Button>
+                <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-background px-2 text-muted-foreground">
+                        {writeLang([
+                            ["en", "Or Go To"],
+                            ["pt", "Ou Ir para"],
+                        ])}
+                    </span>
                 </div>
-            </form>
-        </Form>
+            </div>
+            <Link
+                to="https://meunovoapp.com.br"
+                target="_blank"
+                className={cn(buttonVariants({ variant: "outline" }), "font-semibold text-xs")}
+            >
+                <Logo iconOnly />
+                MeuNovoApp
+            </Link>
+        </>
     );
 }
