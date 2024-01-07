@@ -7,6 +7,7 @@ export interface Project {
     description: string;
     client: Client;
     status: Status;
+    budget: number | null;
     tasks: any[];
     due: Date;
 }

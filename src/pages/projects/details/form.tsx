@@ -24,6 +24,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "c
 import { GetStatus, statuses, statusesColors, statusesIcons } from "../data/status";
 import { HandlePermission, hasPermission } from "lib/handle-permission";
 import { useState } from "react";
+import { CurrencyInput } from "react-currency-mask";
 
 export function ProjectForm({ project }: { project: Project }) {
     const { language, writeLang } = useLanguage();
@@ -41,6 +42,7 @@ export function ProjectForm({ project }: { project: Project }) {
             description: project.description ?? "",
             client_id: project.client.id,
             status: project.status,
+            budget: project.budget ?? undefined,
             due: new Date(project.due),
         },
         mode: "onChange",
@@ -193,6 +195,40 @@ export function ProjectForm({ project }: { project: Project }) {
                                             ))}
                                         </SelectContent>
                                     </Select>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="budget"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-col">
+                                    <FormDescription>
+                                        {writeLang([
+                                            ["en", "Project budget"],
+                                            ["pt", "Orçamento do projeto"],
+                                        ])}
+                                    </FormDescription>
+                                    <FormControl>
+                                        <CurrencyInput
+                                            value={field.value}
+                                            locale={language.locale}
+                                            currency={language.currency}
+                                            onChangeValue={(_, value) => field.onChange(value)}
+                                            InputElement={
+                                                <Input
+                                                    placeholder={
+                                                        writeLang([
+                                                            ["en", "Project budget"],
+                                                            ["pt", "Orçamento do projeto"],
+                                                        ]) as string
+                                                    }
+                                                    disabled={!isEditable}
+                                                />
+                                            }
+                                        />
+                                    </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}

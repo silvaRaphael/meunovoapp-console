@@ -24,6 +24,11 @@ export const createProjectSchema = z.object({
             required_error: "Status é necessário.",
         })
         .optional(),
+    budget: z
+        .number({
+            required_error: "Orçamento é necessária.",
+        })
+        .optional(),
     due: z.date({
         required_error: "Prazo é necessário.",
     }),

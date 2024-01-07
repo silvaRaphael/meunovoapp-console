@@ -1,4 +1,4 @@
-import { Langs } from "config/languages";
+import { Langs, languages } from "config/languages";
 import { ReactNode, createContext, useContext, useEffect, useState } from "react";
 
 export type Language = {
@@ -23,11 +23,7 @@ type LanguageProviderState = {
 };
 
 const initialState: LanguageProviderState = {
-    language: {
-        lang: "en",
-        locale: "en-US",
-        currency: "USD",
-    },
+    language: languages[0],
     setLanguage: () => null,
     writeLang: () => "",
 };
@@ -36,12 +32,8 @@ const LanguageProviderContext = createContext<LanguageProviderState>(initialStat
 
 export function LanguageProvider({
     children,
-    defaultLanguage = {
-        lang: "en",
-        locale: "en-US",
-        currency: "USD",
-    },
-    storageKey = "quat-language",
+    defaultLanguage = languages[0],
+    storageKey = "meunovoapp-language",
     ...props
 }: LanguageProviderProps) {
     const [language, setLanguage] = useState<Pick<Language, "lang" | "locale" | "currency">>(
