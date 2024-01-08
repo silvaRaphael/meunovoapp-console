@@ -168,17 +168,6 @@ export const SideMenu = ({
                             ) as string,
                             icon: <ListTodo className="mr-1" size={14} />,
                         },
-                        // {
-                        //     label: writeLang([
-                        //         ["en", "Schedule"],
-                        //         ["pt", "Calendário"],
-                        //     ], lang) as string,
-                        //     path: writeLang([
-                        //         ["en", "/schedule"],
-                        //         ["pt", "/calendario"],
-                        //     ], lang) as string,
-                        //     icon: <Calendar className="mr-1" size={14} />,
-                        // },
                     ],
                 },
                 {
@@ -299,17 +288,6 @@ export const SideMenu = ({
                             ) as string,
                             icon: <ListTodo className="mr-1" size={14} />,
                         },
-                        // {
-                        //     label: writeLang([
-                        //         ["en", "Schedule"],
-                        //         ["pt", "Calendário"],
-                        //     ], lang) as string,
-                        //     path: writeLang([
-                        //         ["en", "/schedule"],
-                        //         ["pt", "/calendario"],
-                        //     ], lang) as string,
-                        //     icon: <Calendar className="mr-1" size={14} />,
-                        // },
                     ],
                 },
                 {

@@ -1,52 +1,20 @@
-import { errorToast } from "components/shared/error-toast";
-import { Language } from "components/shared/language-provider";
 import { Langs } from "config/languages";
-import { HandleRequest } from "lib/handle-request";
-import { useEffect, useState } from "react";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
 export function ProjectsCard({
-    language,
+    projects,
     writeLang,
 }: {
-    language: Pick<Language, "locale" | "lang" | "currency">;
+    projects: {
+        name: string;
+        progress: number;
+    }[];
     writeLang: (texts: [Langs, React.ReactNode][]) => React.ReactNode;
 }) {
-    const [data, setData] = useState<
-        {
-            name: string;
-            progress: number;
-        }[]
-    >([]);
-
-    async function getData() {
-        const request = await new HandleRequest().get(`/dashboard/projects`, { language });
-
-        request.onDone((response) => {
-            setData(response);
-        });
-
-        request.onError((error) => {
-            errorToast(error);
-        });
-    }
-
-    useEffect(() => {
-        const controller = new AbortController();
-
-        getData();
-
-        return () => {
-            controller.abort();
-        };
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
     return (
         <ResponsiveContainer width="100%" height={200}>
-            {data.length ? (
-                <BarChart layout="vertical" data={data}>
+            {projects.length ? (
+                <BarChart layout="vertical" data={projects}>
                     <XAxis type="number" tickLine={false} axisLine={false} tickFormatter={(value) => `${value}%`} />
                     <YAxis
                         dataKey="name"

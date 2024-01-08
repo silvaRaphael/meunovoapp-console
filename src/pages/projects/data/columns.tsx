@@ -56,7 +56,7 @@ export const projectColumns = (
                 />
             ),
             cell: ({ row }) => {
-                const date: Date = row.original.due;
+                const date: Date = row.original.due ?? new Date();
 
                 const isLate = new Date(date) < new Date() && !["completed", "cancelled"].includes(row.original.status);
 
@@ -137,7 +137,8 @@ export const projectColumns = (
                 />
             ),
             cell: ({ row }) => {
-                const date: string = row.getValue("due");
+                const date: Date = row.original.due;
+
                 const formatted = format(new Date(date), "PPP", {
                     locale: languages.find((item) => item.lang === language.lang)?.dateLocale,
                 });

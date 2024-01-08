@@ -83,7 +83,7 @@ export function Chats() {
     useEffect(() => {
         const controller = new AbortController();
 
-        (async () => Promise.all([getChats(), getContacts()]))();
+        (() => Promise.all([getChats(), getContacts()]))();
 
         return () => {
             controller.abort();
