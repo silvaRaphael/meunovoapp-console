@@ -1,5 +1,5 @@
 import format from "date-fns/format";
-import { buttonVariants } from "components/ui/button";
+import { Button, buttonVariants } from "components/ui/button";
 import { Separator } from "components/ui/separator";
 import { Textarea } from "components/ui/textarea";
 import { useLanguage } from "components/shared/language-provider";
@@ -16,7 +16,7 @@ import { Badge } from "components/ui/badge";
 import { useEffect, useRef, useState } from "react";
 import { Chat } from "pages/chat/data/chat";
 import { formatDistanceToNow } from "date-fns";
-import { Loader } from "lucide-react";
+import { ArrowLeft, Loader } from "lucide-react";
 import { errorToast } from "components/shared/error-toast";
 import { useNavigate } from "react-router-dom";
 import { useUserData } from "components/shared/user-data-provider";
@@ -26,16 +26,25 @@ import { socket } from "./websocket";
 export function ChatDisplay({
     chat,
     chats,
+    isCollapsed,
+    setChat,
     setChats,
+    setIsCollapsed,
     isNewChat = false,
 }: {
     chat: Chat | null;
     chats: Chat[];
+    isCollapsed: boolean;
+    setChat: React.Dispatch<React.SetStateAction<Chat | null>>;
     setChats: React.Dispatch<React.SetStateAction<Chat[]>>;
+    setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
     isNewChat?: boolean;
 }) {
     const { userData } = useUserData();
+    const { writeLang } = useLanguage();
     const navigate = useNavigate();
+
+    const isMobile = window.screen.availWidth <= 768;
 
     useEffect(() => {
         if (!chat) return;
@@ -56,6 +65,26 @@ export function ChatDisplay({
 
     return (
         <div className="flex h-full flex-col">
+            {isMobile && isCollapsed && (
+                <div className="flex items-start p-4 py-2 gap-x-2">
+                    <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => {
+                            setIsCollapsed(false);
+                            setChat(null);
+                            socket.emit("logoutChats");
+                        }}
+                    >
+                        <ArrowLeft size={16} className="me-1" />
+                        {writeLang([
+                            ["en", "Go back"],
+                            ["pt", "Voltar"],
+                        ])}
+                    </Button>
+                </div>
+            )}
+            <Separator />
             {chat && !isNewChat ? (
                 <MailContent chat={chat} chats={chats} setChats={setChats} />
             ) : (
@@ -223,6 +252,7 @@ const MessageList = ({ items, chat }: { items: Message[] | null; chat: Chat }) =
 
     const scrollRef = useRef<HTMLDivElement>(null);
 
+    const isMobile = window.screen.availWidth <= 768;
     const locale = languages.find((item) => item.lang === language.lang)?.dateLocale;
 
     useEffect(() => {
@@ -246,8 +276,9 @@ const MessageList = ({ items, chat }: { items: Message[] | null; chat: Chat }) =
                         <div
                             key={i}
                             className={cn(
-                                "flex flex-col items-start gap-3 rounded-lg border p-3 text-left text-sm transition-all w-5/6",
+                                "flex flex-col items-start gap-3 rounded-lg border p-3 text-left text-sm transition-all",
                                 item.user.email === chat.user.email ? "bg-accent/25 ml-auto" : "",
+                                isMobile ? "w-full" : "w-5/6",
                             )}
                         >
                             <div className="flex w-full flex-col gap-1">
@@ -257,6 +288,7 @@ const MessageList = ({ items, chat }: { items: Message[] | null; chat: Chat }) =
                                         email={item.user.email}
                                         name={item.user.name}
                                         isManager={item.user.is_manager}
+                                        className="max-w-[140px] sm:max-w-full"
                                     />
                                     <div
                                         className={cn(
@@ -394,7 +426,7 @@ const MailFooter = ({
                         )}
                     />
                     <div className="flex items-center">
-                        <div className="flex space-x-2">
+                        <div className="flex space-y-1 flex-wrap">
                             {messageLabelTypes.map((item, i) => (
                                 <Badge
                                     key={i}
@@ -405,7 +437,7 @@ const MailFooter = ({
                                             !contains ? [...labels, item] : labels.filter((label) => label !== item),
                                         );
                                     }}
-                                    className="cursor-pointer select-none"
+                                    className="cursor-pointer select-none me-2"
                                 >
                                     <GetMessageLabel messageLabel={item} />
                                 </Badge>

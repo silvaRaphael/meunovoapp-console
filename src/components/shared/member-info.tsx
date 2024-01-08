@@ -1,6 +1,7 @@
 import { BASE_FILES } from "config/constants";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Verified } from "lucide-react";
+import { cn } from "lib/utils";
 
 interface Props {
     absoluteAvatar?: string;
@@ -8,9 +9,10 @@ interface Props {
     name: string;
     email: string;
     isManager?: boolean;
+    className?: string;
 }
 
-export function MemberInfo({ absoluteAvatar, avatar, name, email, isManager = false }: Props) {
+export function MemberInfo({ absoluteAvatar, avatar, name, email, isManager = false, className }: Props) {
     const nameSplitted = name?.split(" ");
     const nameInitials = name
         ? [
@@ -30,7 +32,7 @@ export function MemberInfo({ absoluteAvatar, avatar, name, email, isManager = fa
         : "";
 
     return (
-        <div className="flex items-center space-x-2">
+        <div className={cn("flex items-center space-x-2", className)}>
             <Avatar className="h-8 w-8 border">
                 <AvatarImage
                     src={absoluteAvatar ?? (avatar ? `${BASE_FILES}/${avatar}` : "")}
@@ -44,7 +46,7 @@ export function MemberInfo({ absoluteAvatar, avatar, name, email, isManager = fa
                     {name}
                     {isManager && <Verified size={14} className="ms-1 text-green-700 dark:text-green-400" />}
                 </span>
-                <span className="text-xs text-muted-foreground">{email}</span>
+                <span className="text-xs text-muted-foreground text-ellipsis">{email}</span>
             </div>
         </div>
     );

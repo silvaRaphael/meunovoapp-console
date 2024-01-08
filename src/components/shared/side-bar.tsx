@@ -91,17 +91,27 @@ export function SideBar({ pathname, isOpen }: { pathname: string; isOpen: boolea
                         </div>
                     ))}
                 </nav>
-                <div
-                    className="flex items-center text-xs font-medium px-4 border-t h-10 text-muted-foreground hover:text-primary cursor-pointer"
-                    onClick={handleLogout}
-                >
-                    <LogOutIcon className="me-1" size={12} />
-                    {isOpen &&
-                        writeLang([
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <div
+                            className="flex items-center text-xs font-medium px-4 border-t h-10 text-muted-foreground hover:text-primary cursor-pointer"
+                            onClick={handleLogout}
+                        >
+                            <LogOutIcon className="me-1" size={12} />
+                            {isOpen &&
+                                writeLang([
+                                    ["en", "Log out"],
+                                    ["pt", "Sair"],
+                                ])}
+                        </div>
+                    </TooltipTrigger>
+                    <TooltipContent side="right" hidden={!!isOpen}>
+                        {writeLang([
                             ["en", "Log out"],
                             ["pt", "Sair"],
                         ])}
-                </div>
+                    </TooltipContent>
+                </Tooltip>
             </div>
         </div>
     );

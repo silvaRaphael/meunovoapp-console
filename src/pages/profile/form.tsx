@@ -13,11 +13,12 @@ import { useUserData } from "components/shared/user-data-provider";
 import { BASE_FILES } from "config/constants";
 import { useState } from "react";
 import { Button } from "components/ui/button";
-import { Eye, EyeOff, UploadCloudIcon } from "lucide-react";
+import { UploadCloudIcon } from "lucide-react";
 import { UpdateUserSchema, updateUserSchema } from "adapters/user";
 import { Avatar, AvatarFallback, AvatarImage } from "components/ui/avatar";
 import { convertToBase64 } from "lib/helper";
 import { User } from "pages/users/data/user";
+import { PasswordInput } from "components/shared/password-input";
 
 let emailTimeout: any;
 
@@ -299,30 +300,20 @@ export function ProfileForm({ user }: { user: User }) {
                             render={({ field }) => (
                                 <FormItem className="flex flex-col">
                                     <FormControl>
-                                        <div className="flex space-x-2">
-                                            <Input
-                                                type={!passwordVisible[0] ? "password" : "text"}
-                                                placeholder={
-                                                    writeLang([
-                                                        ["en", "Old password"],
-                                                        ["pt", "Senha antiga"],
-                                                    ]) as string
-                                                }
-                                                maxLength={20}
-                                                onChange={field.onChange}
-                                                value={field.value || ""}
-                                            />
-                                            <Button
-                                                type="button"
-                                                variant="outline"
-                                                className="bg-muted/80"
-                                                onClick={() =>
-                                                    setPasswordVisible([!passwordVisible[0], passwordVisible[1]])
-                                                }
-                                            >
-                                                {!passwordVisible[0] ? <Eye size={14} /> : <EyeOff size={14} />}
-                                            </Button>
-                                        </div>
+                                        <PasswordInput
+                                            passwordVisible={passwordVisible[0]}
+                                            setPasswordVisible={() =>
+                                                setPasswordVisible([!passwordVisible[0], passwordVisible[1]])
+                                            }
+                                            onChange={field.onChange}
+                                            value={field.value || ""}
+                                            placeholder={
+                                                writeLang([
+                                                    ["en", "Old password"],
+                                                    ["pt", "Senha antiga"],
+                                                ]) as string
+                                            }
+                                        />
                                     </FormControl>
                                     <div className="flex">
                                         <FormMessage />
@@ -336,30 +327,20 @@ export function ProfileForm({ user }: { user: User }) {
                             render={({ field }) => (
                                 <FormItem className="flex flex-col">
                                     <FormControl>
-                                        <div className="flex space-x-2">
-                                            <Input
-                                                type={!passwordVisible[1] ? "password" : "text"}
-                                                placeholder={
-                                                    writeLang([
-                                                        ["en", "New password"],
-                                                        ["pt", "Nova senha"],
-                                                    ]) as string
-                                                }
-                                                maxLength={20}
-                                                onChange={field.onChange}
-                                                value={field.value || ""}
-                                            />
-                                            <Button
-                                                type="button"
-                                                variant="outline"
-                                                className="bg-muted/80"
-                                                onClick={() =>
-                                                    setPasswordVisible([passwordVisible[0], !passwordVisible[1]])
-                                                }
-                                            >
-                                                {!passwordVisible[1] ? <Eye size={14} /> : <EyeOff size={14} />}
-                                            </Button>
-                                        </div>
+                                        <PasswordInput
+                                            passwordVisible={passwordVisible[1]}
+                                            setPasswordVisible={() =>
+                                                setPasswordVisible([passwordVisible[0], !passwordVisible[1]])
+                                            }
+                                            onChange={field.onChange}
+                                            value={field.value || ""}
+                                            placeholder={
+                                                writeLang([
+                                                    ["en", "New password"],
+                                                    ["pt", "Nova senha"],
+                                                ]) as string
+                                            }
+                                        />
                                     </FormControl>
                                     <div className="flex">
                                         <FormMessage />

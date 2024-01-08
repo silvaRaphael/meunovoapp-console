@@ -182,7 +182,7 @@ export function PreferencesForm({ preferences }: { preferences: PreferencesSchem
                                             name={field.name}
                                             onChange={field.onChange}
                                             defaultValue={field.value}
-                                            className="grid grid-cols-4 gap-4"
+                                            className="grid md:grid-cols-4 grid-cols-3 gap-4"
                                         >
                                             <div>
                                                 <RadioGroupItem value="system" id="system" className="peer sr-only" />

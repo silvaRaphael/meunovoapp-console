@@ -188,7 +188,11 @@ export function CompleteProfileForm({
                                                         ["pt", "Seu nome"],
                                                     ]) as string
                                                 }
-                                                {...field}
+                                                name={field.name}
+                                                value={field.value || ""}
+                                                onChange={field.onChange}
+                                                onBlur={field.onBlur}
+                                                ref={field.ref}
                                             />
                                         </FormControl>
                                         <div className="flex">
@@ -227,7 +231,7 @@ export function CompleteProfileForm({
                                                     clearTimeout(emailTimeout);
                                                     emailTimeout = setTimeout(() => checkEmailAvailability(e), 1000);
                                                 }}
-                                                value={field.value || ""}
+                                                value={field.value}
                                                 onBlur={field.onBlur}
                                                 ref={field.ref}
                                             />

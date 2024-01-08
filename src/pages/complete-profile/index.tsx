@@ -59,7 +59,7 @@ export function CompleteProfile() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    if (!id || loading) return <></>;
+    if (!id || !userEmail || loading) return <></>;
 
     return (
         <AuthScreen
