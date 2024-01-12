@@ -6,5 +6,5 @@ export const BASE_FILES = process.env.REACT_APP_BASE_FILES || "https://api.meuno
 export const SENDER_EMAIL = process.env.REACT_APP_SENDER_EMAIL;
 
 export const headers = {
-    "Content-Type": "application/json",
+  "Content-Type": "application/json",
 };

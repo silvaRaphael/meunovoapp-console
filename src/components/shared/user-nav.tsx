@@ -2,13 +2,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { useLanguage } from "./language-provider";
 import { useUserData } from "./user-data-provider";
@@ -17,101 +17,99 @@ import { toast } from "components/ui/toast/use-toast";
 import { HandleRequest } from "lib/handle-request";
 
 export function UserNav() {
-    const navigate = useNavigate();
-    const { userData, removeUserData } = useUserData();
-    const { language, writeLang } = useLanguage();
+  const navigate = useNavigate();
+  const { userData, removeUserData } = useUserData();
+  const { language, writeLang } = useLanguage();
 
-    const nameSplitted = userData?.name.split(" ") ?? "";
-    const userInitials = [
-        nameSplitted[0][0],
-        nameSplitted.length === 1
-            ? nameSplitted[0][nameSplitted[0].length - 1]
-            : nameSplitted[nameSplitted.length - 1][0],
-    ]
-        .join("")
-        .toUpperCase();
+  const nameSplitted = userData?.name.split(" ") ?? "";
+  const userInitials = [
+    nameSplitted[0][0],
+    nameSplitted.length === 1 ? nameSplitted[0][nameSplitted[0].length - 1] : nameSplitted[nameSplitted.length - 1][0],
+  ]
+    .join("")
+    .toUpperCase();
 
-    async function handleLogout() {
-        const request = await new HandleRequest().get(`/auth/sign-out`, { language });
+  async function handleLogout() {
+    const request = await new HandleRequest().get(`/auth/sign-out`, { language });
 
-        request.onDone(() => {
-            removeUserData();
+    request.onDone(() => {
+      removeUserData();
 
-            toast({
-                title: writeLang([
-                    ["en", "You left console!"],
-                    ["pt", "Você saiu do console!"],
-                ]) as string,
-            });
+      toast({
+        title: writeLang([
+          ["en", "You left console!"],
+          ["pt", "Você saiu do console!"],
+        ]) as string,
+      });
 
-            return navigate("/");
-        });
-    }
+      return navigate("/");
+    });
+  }
 
-    return (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                    <Avatar className="h-8 w-8 border">
-                        <AvatarImage
-                            src={userData?.avatar ? `${BASE_FILES}/${userData?.avatar}` : ""}
-                            alt={`${userData?.name}`}
-                            className="object-cover"
-                        />
-                        <AvatarFallback>{userInitials}</AvatarFallback>
-                    </Avatar>
-                </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="end" forceMount>
-                <DropdownMenuLabel className="font-normal">
-                    <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">{userData?.name}</p>
-                        <p className="text-xs leading-none text-muted-foreground">{userData?.email}</p>
-                    </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                    <DropdownMenuItem className="cursor-pointer" asChild>
-                        <Link
-                            to={
-                                writeLang([
-                                    ["en", "/profile"],
-                                    ["pt", "/perfil"],
-                                ]) as string
-                            }
-                        >
-                            {writeLang([
-                                ["en", "Profile"],
-                                ["pt", "Perfil"],
-                            ])}
-                        </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="cursor-pointer" asChild>
-                        <Link
-                            to={
-                                writeLang([
-                                    ["en", "/preferences"],
-                                    ["pt", "/preferencias"],
-                                ]) as string
-                            }
-                        >
-                            {writeLang([
-                                ["en", "Preferences"],
-                                ["pt", "Preferências"],
-                            ])}
-                        </Link>
-                    </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className="cursor-pointer" asChild>
-                    <span onClick={handleLogout}>
-                        {writeLang([
-                            ["en", "Log out"],
-                            ["pt", "Sair"],
-                        ])}
-                    </span>
-                </DropdownMenuItem>
-            </DropdownMenuContent>
-        </DropdownMenu>
-    );
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+          <Avatar className="h-8 w-8 border">
+            <AvatarImage
+              src={userData?.avatar ? `${BASE_FILES}/${userData?.avatar}` : ""}
+              alt={`${userData?.name}`}
+              className="object-cover"
+            />
+            <AvatarFallback>{userInitials}</AvatarFallback>
+          </Avatar>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56" align="end" forceMount>
+        <DropdownMenuLabel className="font-normal">
+          <div className="flex flex-col space-y-1">
+            <p className="text-sm font-medium leading-none">{userData?.name}</p>
+            <p className="text-xs leading-none text-muted-foreground">{userData?.email}</p>
+          </div>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem className="cursor-pointer" asChild>
+            <Link
+              to={
+                writeLang([
+                  ["en", "/profile"],
+                  ["pt", "/perfil"],
+                ]) as string
+              }
+            >
+              {writeLang([
+                ["en", "Profile"],
+                ["pt", "Perfil"],
+              ])}
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem className="cursor-pointer" asChild>
+            <Link
+              to={
+                writeLang([
+                  ["en", "/preferences"],
+                  ["pt", "/preferencias"],
+                ]) as string
+              }
+            >
+              {writeLang([
+                ["en", "Preferences"],
+                ["pt", "Preferências"],
+              ])}
+            </Link>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem className="cursor-pointer" asChild>
+          <span onClick={handleLogout}>
+            {writeLang([
+              ["en", "Log out"],
+              ["pt", "Sair"],
+            ])}
+          </span>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 }

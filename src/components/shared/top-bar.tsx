@@ -21,118 +21,118 @@ import { useLanguage } from "./language-provider";
 import { MessageNotifications } from "./message-notifications";
 
 export function TopBar({ pathname, toggleSideBar, isOpen }: { pathname: string; toggleSideBar: any; isOpen: boolean }) {
-    const { userData } = useUserData();
-    const { language, writeLang } = useLanguage();
-    const navigate = useNavigate();
-    const location = useLocation();
+  const { userData } = useUserData();
+  const { language, writeLang } = useLanguage();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-    const [notifications, setNotifications] = useState<Notification[] | null>(null);
-    const [messages, setMessages] = useState<Message[] | null>(null);
+  const [notifications, setNotifications] = useState<Notification[] | null>(null);
+  const [messages, setMessages] = useState<Message[] | null>(null);
 
-    async function getNotifications() {
-        const request = await new HandleRequest().get(`/notifications`, { language });
+  async function getNotifications() {
+    const request = await new HandleRequest().get(`/notifications`, { language });
 
-        request.onDone((response) => {
-            setNotifications(response);
-        });
+    request.onDone((response) => {
+      setNotifications(response);
+    });
 
-        request.onError((error) => {
-            setNotifications(null);
-            if (error.redirect) navigate(error.redirect);
-        });
+    request.onError((error) => {
+      setNotifications(null);
+      if (error.redirect) navigate(error.redirect);
+    });
+  }
+
+  async function getMessages() {
+    const request = await new HandleRequest().get(`/messages`, { language });
+
+    request.onDone((response) => {
+      setMessages(response);
+    });
+
+    request.onError((error) => {
+      setMessages(null);
+      if (error.redirect) navigate(error.redirect);
+    });
+  }
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    getNotifications();
+    getMessages();
+
+    socket.on("offlineMessage", (message: Message) => {
+      toast({
+        variant: "message",
+        title: `${
+          writeLang([
+            ["en", "New message from"],
+            ["pt", "Nova mensagem de"],
+          ]) as string
+        } ${message.user.name}`,
+        description: <div className="line-clamp-2 text-xs">{message.text.substring(0, 200)}</div>,
+        action: (
+          <ToastAction
+            altText={
+              writeLang([
+                ["en", "Open chat."],
+                ["pt", "Abrir chat"],
+              ]) as string
+            }
+            onClick={() => {
+              navigate(`/chat`);
+            }}
+          >
+            {writeLang([
+              ["en", "Open chat."],
+              ["pt", "Abrir chat"],
+            ])}
+          </ToastAction>
+        ),
+      });
+
+      setMessages([message, ...(messages ?? [])]);
+    });
+
+    if (location.pathname !== "/chat") {
+      socket.emit("logoutChats");
     }
 
-    async function getMessages() {
-        const request = await new HandleRequest().get(`/messages`, { language });
+    return () => {
+      controller.abort();
+    };
 
-        request.onDone((response) => {
-            setMessages(response);
-        });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-        request.onError((error) => {
-            setMessages(null);
-            if (error.redirect) navigate(error.redirect);
-        });
-    }
-
-    useEffect(() => {
-        const controller = new AbortController();
-
-        getNotifications();
-        getMessages();
-
-        socket.on("offlineMessage", (message: Message) => {
-            toast({
-                variant: "message",
-                title: `${
-                    writeLang([
-                        ["en", "New message from"],
-                        ["pt", "Nova mensagem de"],
-                    ]) as string
-                } ${message.user.name}`,
-                description: <div className="line-clamp-2 text-xs">{message.text.substring(0, 200)}</div>,
-                action: (
-                    <ToastAction
-                        altText={
-                            writeLang([
-                                ["en", "Open chat."],
-                                ["pt", "Abrir chat"],
-                            ]) as string
-                        }
-                        onClick={() => {
-                            navigate(`/chat`);
-                        }}
-                    >
-                        {writeLang([
-                            ["en", "Open chat."],
-                            ["pt", "Abrir chat"],
-                        ])}
-                    </ToastAction>
-                ),
-            });
-
-            setMessages([message, ...(messages ?? [])]);
-        });
-
-        if (location.pathname !== "/chat") {
-            socket.emit("logoutChats");
-        }
-
-        return () => {
-            controller.abort();
-        };
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    return (
-        <>
-            <div className="flex w-full h-12 items-center border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 fixed top-0 z-50">
-                <div
-                    className="flex justify-between items-center px-4 h-full border-r"
-                    style={{
-                        width: sideBarWidth,
-                    }}
-                >
-                    <Link to="/" className="flex items-center text-sm font-medium">
-                        <Logo scale={0.75} />
-                    </Link>
-                    <Button variant="ghost" size="sm" className="p-2" onClick={toggleSideBar}>
-                        {isOpen ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
-                    </Button>
-                </div>
-                <MainNav pathname={pathname} />
-                <div className="flex items-center justify-end space-x-2 ps-2 pe-4 border-l h-full">
-                    <div className="flex items-center space-x-1">
-                        <LanguageToggle userData={userData} />
-                        <ThemeToggle />
-                        <Notifications notifications={notifications ?? []} setNotifications={setNotifications} />
-                        <MessageNotifications messages={messages ?? []} />
-                    </div>
-                    <UserNav />
-                </div>
-            </div>
-            <div className="h-12"></div>
-        </>
-    );
+  return (
+    <>
+      <div className="flex w-full h-12 items-center border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 fixed top-0 z-50">
+        <div
+          className="flex justify-between items-center px-4 h-full border-r"
+          style={{
+            width: sideBarWidth,
+          }}
+        >
+          <Link to="/" className="flex items-center text-sm font-medium">
+            <Logo scale={0.75} />
+          </Link>
+          <Button variant="ghost" size="sm" className="p-2" onClick={toggleSideBar}>
+            {isOpen ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
+          </Button>
+        </div>
+        <MainNav pathname={pathname} />
+        <div className="flex items-center justify-end space-x-2 ps-2 pe-4 border-l h-full">
+          <div className="flex items-center space-x-1">
+            <LanguageToggle userData={userData} />
+            <ThemeToggle />
+            <Notifications notifications={notifications ?? []} setNotifications={setNotifications} />
+            <MessageNotifications messages={messages ?? []} />
+          </div>
+          <UserNav />
+        </div>
+      </div>
+      <div className="h-12"></div>
+    </>
+  );
 }

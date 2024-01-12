@@ -4,61 +4,61 @@ import { addHours } from "date-fns";
 import { Role } from "config/roles";
 
 export interface UserData {
-    name: string;
-    email: string;
-    role: Role;
-    avatar?: string;
+  name: string;
+  email: string;
+  role: Role;
+  avatar?: string;
 }
 
 type UserDataProviderProps = {
-    children: React.ReactNode;
-    storageKey?: string;
+  children: React.ReactNode;
+  storageKey?: string;
 };
 
 type UserDataProviderState = {
-    userData: UserData | null;
-    setUserData: (userData: UserData) => void;
-    removeUserData: () => void;
+  userData: UserData | null;
+  setUserData: (userData: UserData) => void;
+  removeUserData: () => void;
 };
 
 const initialState: UserDataProviderState = {
-    userData: null,
-    setUserData: () => null,
-    removeUserData: () => null,
+  userData: null,
+  setUserData: () => null,
+  removeUserData: () => null,
 };
 
 const UserDataProviderContext = createContext<UserDataProviderState>(initialState);
 
 export function UserDataProvider({ children, storageKey = "meunovoapp-user-data", ...props }: UserDataProviderProps) {
-    const [userData, setUserData] = useState<UserData | null>(
-        () => JSON.parse(Cookies.get(storageKey) || "{}") as UserData,
-    );
+  const [userData, setUserData] = useState<UserData | null>(
+    () => JSON.parse(Cookies.get(storageKey) || "{}") as UserData,
+  );
 
-    const value = {
-        userData,
-        setUserData: (userData: UserData) => {
-            Cookies.set(storageKey, JSON.stringify(userData), {
-                expires: addHours(new Date(), 12),
-            });
-            setUserData(userData);
-        },
-        removeUserData: async () => {
-            Cookies.remove(storageKey);
-            setUserData(null);
-        },
-    };
+  const value = {
+    userData,
+    setUserData: (userData: UserData) => {
+      Cookies.set(storageKey, JSON.stringify(userData), {
+        expires: addHours(new Date(), 12),
+      });
+      setUserData(userData);
+    },
+    removeUserData: async () => {
+      Cookies.remove(storageKey);
+      setUserData(null);
+    },
+  };
 
-    return (
-        <UserDataProviderContext.Provider {...props} value={value}>
-            {children}
-        </UserDataProviderContext.Provider>
-    );
+  return (
+    <UserDataProviderContext.Provider {...props} value={value}>
+      {children}
+    </UserDataProviderContext.Provider>
+  );
 }
 
 export const useUserData = () => {
-    const context = useContext(UserDataProviderContext);
+  const context = useContext(UserDataProviderContext);
 
-    if (context === undefined) throw new Error("useUserData must be used within a UserDataProvider");
+  if (context === undefined) throw new Error("useUserData must be used within a UserDataProvider");
 
-    return context;
+  return context;
 };

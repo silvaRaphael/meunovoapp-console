@@ -10,61 +10,61 @@ import { UserData } from "./user-data-provider";
 import { Tooltip, TooltipContent, TooltipTrigger } from "components/ui/tooltip";
 
 export function LanguageToggle({
-    userData = null,
-    noRedirect = false,
+  userData = null,
+  noRedirect = false,
 }: {
-    userData?: UserData | null;
-    noRedirect?: boolean;
+  userData?: UserData | null;
+  noRedirect?: boolean;
 }) {
-    const { language, setLanguage, writeLang } = useLanguage();
-    const navigate = useNavigate();
+  const { language, setLanguage, writeLang } = useLanguage();
+  const navigate = useNavigate();
 
-    function handleChangeLanguage(newLanguage: Language) {
-        let redirect = "/";
+  function handleChangeLanguage(newLanguage: Language) {
+    let redirect = "/";
 
-        if (userData) {
-            const menuItems = MenuItems({ userData, writeLang, lang: language.lang });
+    if (userData) {
+      const menuItems = MenuItems({ userData, writeLang, lang: language.lang });
 
-            const [, path, restPath] = window.location.pathname.split("/");
+      const [, path, restPath] = window.location.pathname.split("/");
 
-            const activeItemIndex = menuItems.indexOf(menuItems.find((item) => item.path === `/${path}`) as any);
+      const activeItemIndex = menuItems.indexOf(menuItems.find((item) => item.path === `/${path}`) as any);
 
-            const newMenuItems = MenuItems({ userData, writeLang, lang: newLanguage.lang });
+      const newMenuItems = MenuItems({ userData, writeLang, lang: newLanguage.lang });
 
-            redirect = `${newMenuItems[activeItemIndex].path}${restPath ? `/${restPath}` : ""}`;
-        }
-
-        setLanguage(newLanguage);
-
-        if (!noRedirect) navigate(redirect);
+      redirect = `${newMenuItems[activeItemIndex].path}${restPath ? `/${restPath}` : ""}`;
     }
 
-    return (
-        <Tooltip>
-            <DropdownMenu>
-                <TooltipTrigger asChild>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm" className="p-2">
-                            <Globe size={16} />
-                            <span className="sr-only">Toggle language</span>
-                        </Button>
-                    </DropdownMenuTrigger>
-                </TooltipTrigger>
-                <DropdownMenuContent align="end">
-                    {languages.map((item, i) => (
-                        <DropdownMenuItem key={i} onClick={() => handleChangeLanguage(item)} className="cursor-pointer">
-                            <img src={item.flag} className="w-4 me-2" alt="Flag" />
-                            {item.label}
-                        </DropdownMenuItem>
-                    ))}
-                </DropdownMenuContent>
-            </DropdownMenu>
-            <TooltipContent sideOffset={14}>
-                {writeLang([
-                    ["en", "Change Language"],
-                    ["pt", "Alterar Idioma"],
-                ])}
-            </TooltipContent>
-        </Tooltip>
-    );
+    setLanguage(newLanguage);
+
+    if (!noRedirect) navigate(redirect);
+  }
+
+  return (
+    <Tooltip>
+      <DropdownMenu>
+        <TooltipTrigger asChild>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="sm" className="p-2">
+              <Globe size={16} />
+              <span className="sr-only">Toggle language</span>
+            </Button>
+          </DropdownMenuTrigger>
+        </TooltipTrigger>
+        <DropdownMenuContent align="end">
+          {languages.map((item, i) => (
+            <DropdownMenuItem key={i} onClick={() => handleChangeLanguage(item)} className="cursor-pointer">
+              <img src={item.flag} className="w-4 me-2" alt="Flag" />
+              {item.label}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <TooltipContent sideOffset={14}>
+        {writeLang([
+          ["en", "Change Language"],
+          ["pt", "Alterar Idioma"],
+        ])}
+      </TooltipContent>
+    </Tooltip>
+  );
 }
