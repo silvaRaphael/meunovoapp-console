@@ -9,20 +9,20 @@ import { TooltipProvider } from "components/ui/tooltip";
 import { languages } from "config/languages";
 
 const Layout = () => {
-    const initialLanguage = languages.find((item) => item.locale.startsWith(navigator.language.split("-")[0]));
+  const initialLanguage = languages.find((item) => item.locale.startsWith(navigator.language.split("-")[0]));
 
-    return (
-        <UserDataProvider storageKey="meunovoapp-user-data">
-            <ThemeProvider defaultTheme="system" storageKey="meunovoapp-ui-theme">
-                <LanguageProvider defaultLanguage={initialLanguage} storageKey="meunovoapp-language">
-                    <TooltipProvider delayDuration={0}>
-                        <Toaster />
-                        <App />
-                    </TooltipProvider>
-                </LanguageProvider>
-            </ThemeProvider>
-        </UserDataProvider>
-    );
+  return (
+    <UserDataProvider storageKey="meunovoapp-user-data">
+      <ThemeProvider defaultTheme="system" storageKey="meunovoapp-ui-theme">
+        <LanguageProvider defaultLanguage={initialLanguage} storageKey="meunovoapp-language">
+          <TooltipProvider delayDuration={0}>
+            <Toaster />
+            <App />
+          </TooltipProvider>
+        </LanguageProvider>
+      </ThemeProvider>
+    </UserDataProvider>
+  );
 };
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
