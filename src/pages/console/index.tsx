@@ -14,13 +14,16 @@ import { addMonths } from "date-fns";
 import { NotificationsPreferencesForm } from "./cards/notification-preferences";
 import { PreferencesSchema } from "adapters/preferences";
 import { Loader } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export function Console() {
   const { language, writeLang } = useLanguage();
+  const navigate = useNavigate();
 
   const [isLoading, setIsloading] = useState<boolean>(true);
   const [projects, setProjects] = useState<
     {
+      id: string;
       name: string;
       progress: number;
       due: Date;
@@ -135,6 +138,17 @@ export function Console() {
                 toMonth={addMonths(new Date(), 12)}
                 numberOfMonths={2}
                 selected={projects.map((item) => new Date(item.due))}
+                onDayClick={(day) => {
+                  const project = projects.find((item) => new Date(item.due) === day);
+                  if (project?.due) {
+                    navigate(
+                      `${writeLang([
+                        ["en", "/projects"],
+                        ["pt", "/projetos"],
+                      ])}/${project.id}`,
+                    );
+                  }
+                }}
               />
             </CardContent>
           </Card>
