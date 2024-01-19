@@ -48,7 +48,7 @@ export function ProjectsCard({
             dataKey="progress"
             fill="currentColor"
             radius={[0, 4, 4, 0]}
-            className="fill-primary"
+            className="fill-primary cursor-pointer"
             onClick={goToProject}
           />
         </BarChart>
