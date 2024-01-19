@@ -42,6 +42,7 @@ export function ProjectsCard({
             tickMargin={20}
             width={125}
             allowDuplicatedCategory
+            className="cursor-pointer"
             onClick={goToProject}
           />
           <Bar
