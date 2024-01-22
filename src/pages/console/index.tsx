@@ -128,15 +128,11 @@ export function Console() {
         <div className="flex flex-wrap gap-4">
           <Card>
             <CardContent className="pt-2">
-              {isLoading ? (
-                <Loading />
-              ) : (
-                <CalendarCard
-                  locale={languages.find((item) => item.lang === language.lang)?.dateLocale}
-                  projects={projects}
-                  writeLang={writeLang}
-                />
-              )}
+              <CalendarCard
+                locale={languages.find((item) => item.lang === language.lang)?.dateLocale}
+                projects={projects}
+                writeLang={writeLang}
+              />
             </CardContent>
           </Card>
           <Card className="h-full">
