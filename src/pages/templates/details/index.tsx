@@ -13,134 +13,124 @@ import { toast } from "components/ui/toast/use-toast";
 import { Input } from "components/ui/input";
 
 export function TemplateDetails() {
-    const { userData } = useUserData();
-    const { language, writeLang } = useLanguage();
-    const navigate = useNavigate();
-    const { id } = useParams();
+  const { userData } = useUserData();
+  const { language, writeLang } = useLanguage();
+  const navigate = useNavigate();
+  const { id } = useParams();
 
-    const template = templates.find((item) => item.id === id);
+  const template = templates.find((item) => item.id === id);
 
-    const [status, setStatus] = useState<"initial" | "loading">("initial");
-    const [copyStatus, setCopyStatus] = useState<"initial" | "loading">("initial");
+  const [status, setStatus] = useState<"initial" | "loading">("initial");
+  const [copyStatus, setCopyStatus] = useState<"initial" | "loading">("initial");
 
-    async function sendTestEmail() {
-        if (!template?.component) return;
+  async function sendTestEmail() {
+    if (!template?.component) return;
 
-        setStatus("loading");
+    setStatus("loading");
 
-        const request = await new HandleRequest({
-            name: "Teste",
-            from: SENDER_EMAIL,
-            to: [userData?.email],
-            subject: `E-mail de teste - MeuNovoApp`,
-            html: template?.component,
-            no_save: true,
-        }).post(`/emails`, { language });
+    const request = await new HandleRequest({
+      name: "Teste",
+      from: SENDER_EMAIL,
+      to: [userData?.email],
+      subject: `E-mail de teste - MeuNovoApp`,
+      html: template?.component,
+      no_save: true,
+    }).post(`/emails`, { language });
 
-        request.onDone(() => {
-            toast({
-                title: writeLang([
-                    ["en", "Test sent successfully!"],
-                    ["pt", "Teste enviado com sucesso!"],
-                ]) as string,
-                description: writeLang([
-                    ["en", `Sent to ${userData?.email}`],
-                    ["pt", `Enviado para ${userData?.email}`],
-                ]) as string,
-            });
-        });
+    request.onDone(() => {
+      toast({
+        title: writeLang([
+          ["en", "Test sent successfully!"],
+          ["pt", "Teste enviado com sucesso!"],
+        ]) as string,
+        description: writeLang([
+          ["en", `Sent to ${userData?.email}`],
+          ["pt", `Enviado para ${userData?.email}`],
+        ]) as string,
+      });
+    });
 
-        request.onError((error) => {
-            errorToast(error);
-            if (error.redirect) navigate(error.redirect);
-        });
+    request.onError((error) => {
+      errorToast(error);
+      if (error.redirect) navigate(error.redirect);
+    });
 
-        setStatus("initial");
-    }
+    setStatus("initial");
+  }
 
-    async function handleCopyToClipboard() {
-        if (!template?.component) return;
+  async function handleCopyToClipboard() {
+    if (!template?.component) return;
 
-        setCopyStatus("loading");
+    setCopyStatus("loading");
 
-        await navigator.clipboard.writeText(template.component);
+    await navigator.clipboard.writeText(template.component);
 
-        toast({
-            title: writeLang([
-                ["en", "Template copied successfully!"],
-                ["pt", "Modelo copiado com sucesso!"],
-            ]) as string,
-        });
+    toast({
+      title: writeLang([
+        ["en", "Template copied successfully!"],
+        ["pt", "Modelo copiado com sucesso!"],
+      ]) as string,
+    });
 
-        setCopyStatus("initial");
-    }
+    setCopyStatus("initial");
+  }
 
-    if (!template) return <></>;
+  if (!template) return <></>;
 
-    return (
-        <Page
-            pathname={
-                writeLang([
-                    ["en", "/templates"],
-                    ["pt", "/modelos"],
-                ]) as string
-            }
-            header={
-                <SectionHeader
-                    title={
-                        writeLang([
-                            ["en", "Templates"],
-                            ["pt", "Modelos"],
-                        ]) as string
-                    }
-                    pathname={
-                        writeLang([
-                            ["en", "/templates"],
-                            ["pt", "/modelos"],
-                        ]) as string
-                    }
-                    tree={!!template ? [{ label: template.name }] : []}
-                >
-                    <SubmitButton
-                        label={
-                            writeLang([
-                                ["en", "Send Test"],
-                                ["pt", "Enviar Teste"],
-                            ]) as string
-                        }
-                        onSubmit={sendTestEmail}
-                        state={status}
-                    />
-                </SectionHeader>
-            }
+  return (
+    <Page
+      pathname={
+        writeLang([
+          ["en", "/templates"],
+          ["pt", "/modelos"],
+        ]) as string
+      }
+      header={
+        <SectionHeader
+          title={
+            writeLang([
+              ["en", "Templates"],
+              ["pt", "Modelos"],
+            ]) as string
+          }
+          tree={!!template ? [{ label: template.name }] : []}
         >
-            <div className="space-y-6 pb-40">
-                <div className="flex space-x-4">
-                    <Input
-                        defaultValue={template.component}
-                        className="text-muted-foreground"
-                        disabled={!template.component}
-                    />
-                    <SubmitButton
-                        className="border-input bg-muted/50 hover:bg-muted text-accent-foreground"
-                        label={
-                            writeLang([
-                                ["en", "Copy"],
-                                ["pt", "Copiar"],
-                            ]) as string
-                        }
-                        onSubmit={handleCopyToClipboard}
-                        state={copyStatus}
-                        disabled={!template.component}
-                    />
-                </div>
-                <div
-                    className="text-sm"
-                    dangerouslySetInnerHTML={{
-                        __html: template.component?.replace(/\n/g, "<br />"),
-                    }}
-                />
-            </div>
-        </Page>
-    );
+          <SubmitButton
+            label={
+              writeLang([
+                ["en", "Send Test"],
+                ["pt", "Enviar Teste"],
+              ]) as string
+            }
+            onSubmit={sendTestEmail}
+            state={status}
+          />
+        </SectionHeader>
+      }
+    >
+      <div className="space-y-6 pb-10">
+        <div className="flex space-x-4">
+          <Input defaultValue={template.component} className="text-muted-foreground" disabled={!template.component} />
+          <SubmitButton
+            className="border-input bg-muted/50 hover:bg-muted text-accent-foreground"
+            label={
+              writeLang([
+                ["en", "Copy"],
+                ["pt", "Copiar"],
+              ]) as string
+            }
+            onSubmit={handleCopyToClipboard}
+            state={copyStatus}
+            disabled={!template.component}
+          />
+        </div>
+        <div
+          className="text-sm"
+          dangerouslySetInnerHTML={{
+            __html: template.component?.replace(/\n/g, "<br />"),
+          }}
+        />
+      </div>
+    </Page>
+  );
 }

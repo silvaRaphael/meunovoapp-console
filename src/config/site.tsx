@@ -4,6 +4,7 @@ import {
   FileCode,
   LayoutDashboard,
   ListTodo,
+  LucideScrollText,
   Mail,
   MessageCircle,
   Settings2,
@@ -179,6 +180,23 @@ export const SideMenu = ({
             lang,
           ) as string,
           menu: [
+            {
+              label: writeLang(
+                [
+                  ["en", "Notes"],
+                  ["pt", "Notas"],
+                ],
+                lang,
+              ) as string,
+              path: writeLang(
+                [
+                  ["en", "/notes"],
+                  ["pt", "/notas"],
+                ],
+                lang,
+              ) as string,
+              icon: <LucideScrollText className="mr-1" size={14} />,
+            },
             {
               label: writeLang(
                 [

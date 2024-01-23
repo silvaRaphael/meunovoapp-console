@@ -1,24 +1,24 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { SectionHeader } from "../../../components/shared/section-header";
-import { TaskForm } from "./form";
+import { NoteForm } from "./form";
 import { Page } from "../../../components/shared/page";
-import { Task } from "../data/task";
+import { Note } from "../data/note";
 import { HandleRequest } from "../../../lib/handle-request";
 import { useLanguage } from "../../../components/shared/language-provider";
 import { errorToast } from "components/shared/error-toast";
 
-export function TaskDetails() {
+export function NoteDetails() {
   const { language, writeLang } = useLanguage();
   const { id } = useParams();
 
-  const [task, setTask] = useState<Task>();
+  const [note, setNote] = useState<Note>();
 
-  async function getTask(id?: string) {
-    const request = await new HandleRequest().get(`/tasks/${id}`, { language });
+  async function getNote(id?: string) {
+    const request = await new HandleRequest().get(`/notes/${id}`, { language });
 
     request.onDone((response) => {
-      setTask(response);
+      setNote(response);
     });
 
     request.onError((error) => {
@@ -29,7 +29,7 @@ export function TaskDetails() {
   useEffect(() => {
     const controller = new AbortController();
 
-    getTask(id);
+    getNote(id);
 
     return () => {
       controller.abort();
@@ -38,13 +38,13 @@ export function TaskDetails() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  if (!task) return <></>;
+  if (!note) return <></>;
 
   return (
     <Page
       pathname={
         writeLang([
-          ["en", "/tasks"],
+          ["en", "/notes"],
           ["pt", "/tarefas"],
         ]) as string
       }
@@ -52,16 +52,16 @@ export function TaskDetails() {
         <SectionHeader
           title={
             writeLang([
-              ["en", "Tasks"],
+              ["en", "Notes"],
               ["pt", "Tarefas"],
             ]) as string
           }
-          tree={!!task ? [{ label: task.name }] : []}
+          tree={!!note ? [{ label: note.title }] : []}
         ></SectionHeader>
       }
     >
       <div className="space-y-6 pb-10">
-        <TaskForm task={task} />
+        <NoteForm note={note} />
       </div>
     </Page>
   );

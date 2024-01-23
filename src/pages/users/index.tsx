@@ -10,62 +10,56 @@ import { userColumns } from "./data/columns";
 import { User } from "./data/user";
 
 export function Users() {
-    const { language, writeLang } = useLanguage();
-    const navigate = useNavigate();
+  const { language, writeLang } = useLanguage();
+  const navigate = useNavigate();
 
-    const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
 
-    async function getUsers() {
-        const request = await new HandleRequest().get(`/users`, { language });
+  async function getUsers() {
+    const request = await new HandleRequest().get(`/users`, { language });
 
-        request.onDone((response) => {
-            setUsers(response);
-        });
+    request.onDone((response) => {
+      setUsers(response);
+    });
 
-        request.onError((error) => {
-            errorToast(error);
-            if (error.redirect) navigate(error.redirect);
-        });
-    }
+    request.onError((error) => {
+      errorToast(error);
+      if (error.redirect) navigate(error.redirect);
+    });
+  }
 
-    useEffect(() => {
-        const controller = new AbortController();
+  useEffect(() => {
+    const controller = new AbortController();
 
-        getUsers();
+    getUsers();
 
-        return () => {
-            controller.abort();
-        };
+    return () => {
+      controller.abort();
+    };
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-    return (
-        <Page
-            pathname={
-                writeLang([
-                    ["en", "/users"],
-                    ["pt", "/usuarios"],
-                ]) as string
-            }
-            header={
-                <SectionHeader
-                    title={
-                        writeLang([
-                            ["en", `Users (${users.length})`],
-                            ["pt", `Usuários (${users.length})`],
-                        ]) as string
-                    }
-                    pathname={
-                        writeLang([
-                            ["en", "/users"],
-                            ["pt", "/usuarios"],
-                        ]) as string
-                    }
-                ></SectionHeader>
-            }
-        >
-            <DataTable columns={userColumns(language, writeLang)} data={users} />
-        </Page>
-    );
+  return (
+    <Page
+      pathname={
+        writeLang([
+          ["en", "/users"],
+          ["pt", "/usuarios"],
+        ]) as string
+      }
+      header={
+        <SectionHeader
+          title={
+            writeLang([
+              ["en", `Users (${users.length})`],
+              ["pt", `Usuários (${users.length})`],
+            ]) as string
+          }
+        ></SectionHeader>
+      }
+    >
+      <DataTable columns={userColumns(language, writeLang)} data={users} />
+    </Page>
+  );
 }

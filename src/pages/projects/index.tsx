@@ -13,77 +13,71 @@ import { Client } from "pages/clients/data/client";
 import { HandlePermission } from "lib/handle-permission";
 
 export function Projects() {
-    const { userData } = useUserData();
-    const { language, writeLang } = useLanguage();
+  const { userData } = useUserData();
+  const { language, writeLang } = useLanguage();
 
-    const [projects, setProjects] = useState<Project[]>([]);
-    const [clients, setClients] = useState<Client[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [clients, setClients] = useState<Client[]>([]);
 
-    async function getProjects() {
-        const request = await new HandleRequest().get(`/projects`, { language });
+  async function getProjects() {
+    const request = await new HandleRequest().get(`/projects`, { language });
 
-        request.onDone((response) => {
-            setProjects(response);
-        });
+    request.onDone((response) => {
+      setProjects(response);
+    });
 
-        request.onError((error) => {
-            errorToast(error);
-        });
-    }
+    request.onError((error) => {
+      errorToast(error);
+    });
+  }
 
-    async function getClients() {
-        const request = await new HandleRequest().get(`/clients`, { language });
+  async function getClients() {
+    const request = await new HandleRequest().get(`/clients`, { language });
 
-        request.onDone((response) => {
-            setClients(response);
-        });
+    request.onDone((response) => {
+      setClients(response);
+    });
 
-        request.onError((error) => {
-            errorToast(error);
-        });
-    }
+    request.onError((error) => {
+      errorToast(error);
+    });
+  }
 
-    useEffect(() => {
-        const controller = new AbortController();
+  useEffect(() => {
+    const controller = new AbortController();
 
-        getProjects();
-        if (userData && userData.role === "master") getClients();
+    getProjects();
+    if (userData && userData.role === "master") getClients();
 
-        return () => {
-            controller.abort();
-        };
+    return () => {
+      controller.abort();
+    };
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-    return (
-        <Page
-            pathname={
-                writeLang([
-                    ["en", "/projects"],
-                    ["pt", "/projetos"],
-                ]) as string
-            }
-            header={
-                <SectionHeader
-                    title={
-                        writeLang([
-                            ["en", `Projects (${projects.length})`],
-                            ["pt", `Projetos (${projects.length})`],
-                        ]) as string
-                    }
-                    pathname={
-                        writeLang([
-                            ["en", "/projects"],
-                            ["pt", "/projetos"],
-                        ]) as string
-                    }
-                >
-                    {HandlePermission(<CreateProjectForm clients={clients} onCreated={getProjects} />)}
-                </SectionHeader>
-            }
+  return (
+    <Page
+      pathname={
+        writeLang([
+          ["en", "/projects"],
+          ["pt", "/projetos"],
+        ]) as string
+      }
+      header={
+        <SectionHeader
+          title={
+            writeLang([
+              ["en", `Projects (${projects.length})`],
+              ["pt", `Projetos (${projects.length})`],
+            ]) as string
+          }
         >
-            <DataTable columns={projectColumns(language, writeLang)} data={projects} />
-        </Page>
-    );
+          {HandlePermission(<CreateProjectForm clients={clients} onCreated={getProjects} />)}
+        </SectionHeader>
+      }
+    >
+      <DataTable columns={projectColumns(language, writeLang)} data={projects} />
+    </Page>
+  );
 }

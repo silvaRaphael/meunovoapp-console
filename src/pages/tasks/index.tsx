@@ -12,76 +12,70 @@ import { Project } from "pages/projects/data/project";
 import { HandlePermission } from "lib/handle-permission";
 
 export function Tasks() {
-    const { language, writeLang } = useLanguage();
+  const { language, writeLang } = useLanguage();
 
-    const [tasks, setTasks] = useState<Task[]>([]);
-    const [projects, setProjects] = useState<Project[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
 
-    async function getTasks() {
-        const request = await new HandleRequest().get(`/tasks`, { language });
+  async function getTasks() {
+    const request = await new HandleRequest().get(`/tasks`, { language });
 
-        request.onDone((response) => {
-            setTasks(response);
-        });
+    request.onDone((response) => {
+      setTasks(response);
+    });
 
-        request.onError((error) => {
-            errorToast(error);
-        });
-    }
+    request.onError((error) => {
+      errorToast(error);
+    });
+  }
 
-    async function getProjects() {
-        const request = await new HandleRequest().get(`/projects`, { language });
+  async function getProjects() {
+    const request = await new HandleRequest().get(`/projects`, { language });
 
-        request.onDone((response) => {
-            setProjects(response.filter((item: Project) => !["completed", "cancelled"].includes(item.status)));
-        });
+    request.onDone((response) => {
+      setProjects(response.filter((item: Project) => !["completed", "cancelled"].includes(item.status)));
+    });
 
-        request.onError((error) => {
-            errorToast(error);
-        });
-    }
+    request.onError((error) => {
+      errorToast(error);
+    });
+  }
 
-    useEffect(() => {
-        const controller = new AbortController();
+  useEffect(() => {
+    const controller = new AbortController();
 
-        getTasks();
-        getProjects();
+    getTasks();
+    getProjects();
 
-        return () => {
-            controller.abort();
-        };
+    return () => {
+      controller.abort();
+    };
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-    return (
-        <Page
-            pathname={
-                writeLang([
-                    ["en", "/tasks"],
-                    ["pt", "/tarefas"],
-                ]) as string
-            }
-            header={
-                <SectionHeader
-                    title={
-                        writeLang([
-                            ["en", `Tasks (${tasks.length})`],
-                            ["pt", `Tarefas (${tasks.length})`],
-                        ]) as string
-                    }
-                    pathname={
-                        writeLang([
-                            ["en", "/tasks"],
-                            ["pt", "/tarefas"],
-                        ]) as string
-                    }
-                >
-                    {HandlePermission(<CreateTaskForm projects={projects} onCreated={getTasks} />)}
-                </SectionHeader>
-            }
+  return (
+    <Page
+      pathname={
+        writeLang([
+          ["en", "/tasks"],
+          ["pt", "/tarefas"],
+        ]) as string
+      }
+      header={
+        <SectionHeader
+          title={
+            writeLang([
+              ["en", `Tasks (${tasks.length})`],
+              ["pt", `Tarefas (${tasks.length})`],
+            ]) as string
+          }
         >
-            <DataTable columns={taskColumns(language, writeLang)} data={tasks} />
-        </Page>
-    );
+          {HandlePermission(<CreateTaskForm projects={projects} onCreated={getTasks} />)}
+        </SectionHeader>
+      }
+    >
+      <DataTable columns={taskColumns(language, writeLang)} data={tasks} />
+    </Page>
+  );
 }

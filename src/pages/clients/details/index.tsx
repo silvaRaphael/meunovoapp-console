@@ -14,119 +14,108 @@ import { ClientProjects } from "./projects";
 import { CreateProjectForm } from "pages/projects/forms/create";
 
 export function ClientDetails() {
-    const { language, writeLang } = useLanguage();
-    const { id } = useParams();
+  const { language, writeLang } = useLanguage();
+  const { id } = useParams();
 
-    const [client, setClient] = useState<Client>();
-    const [inviteUserOpen, setInviteUserOpen] = useState<boolean>(false);
-    const [tab, setTab] = useState<string>(new URL(window.location.href).searchParams.get("tab") ?? "0");
+  const [client, setClient] = useState<Client>();
+  const [inviteUserOpen, setInviteUserOpen] = useState<boolean>(false);
+  const [tab, setTab] = useState<string>(new URL(window.location.href).searchParams.get("tab") ?? "0");
 
-    async function getClient(id?: string) {
-        const request = await new HandleRequest().get(`/clients/${id}`, { language });
+  async function getClient(id?: string) {
+    const request = await new HandleRequest().get(`/clients/${id}`, { language });
 
-        request.onDone((response) => {
-            setClient(response);
-        });
+    request.onDone((response) => {
+      setClient(response);
+    });
 
-        request.onError((error) => {
-            errorToast(error);
-        });
-    }
+    request.onError((error) => {
+      errorToast(error);
+    });
+  }
 
-    useEffect(() => {
-        const controller = new AbortController();
+  useEffect(() => {
+    const controller = new AbortController();
 
-        getClient(id);
+    getClient(id);
 
-        return () => {
-            controller.abort();
-        };
+    return () => {
+      controller.abort();
+    };
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
-    if (!client) return <></>;
+  if (!client) return <></>;
 
-    return (
-        <Page
-            pathname={
-                writeLang([
-                    ["en", "/clients"],
-                    ["pt", "/clientes"],
-                ]) as string
-            }
-            header={
-                <SectionHeader
-                    title={
-                        writeLang([
-                            ["en", "Clients"],
-                            ["pt", "Clientes"],
-                        ]) as string
-                    }
-                    pathname={
-                        writeLang([
-                            ["en", "/clients"],
-                            ["pt", "/clientes"],
-                        ]) as string
-                    }
-                    tree={!!client ? [{ label: client.company }] : []}
-                >
-                    {tab === "1" && (
-                        <InviteUserForm
-                            client={client}
-                            setClient={setClient}
-                            open={inviteUserOpen}
-                            setOpen={setInviteUserOpen}
-                        />
-                    )}
-                    {tab === "2" && (
-                        <CreateProjectForm
-                            label={
-                                writeLang([
-                                    ["en", "Create project"],
-                                    ["pt", "Novo projeto"],
-                                ]) as string
-                            }
-                            client_id={client.id}
-                            onCreated={() => getClient(id)}
-                        />
-                    )}
-                </SectionHeader>
-            }
+  return (
+    <Page
+      pathname={
+        writeLang([
+          ["en", "/clients"],
+          ["pt", "/clientes"],
+        ]) as string
+      }
+      header={
+        <SectionHeader
+          title={
+            writeLang([
+              ["en", "Clients"],
+              ["pt", "Clientes"],
+            ]) as string
+          }
+          tree={!!client ? [{ label: client.company }] : []}
         >
-            <div className="space-y-6 pb-40">
-                <Tabs defaultValue="0" className="w-full" value={tab} onValueChange={(tab) => changeTab(tab, setTab)}>
-                    <TabsList className="sm:w-min w-full flex mx-auto">
-                        <TabsTrigger value="0" className="w-full sm:w-36">
-                            {writeLang([
-                                ["en", "Client"],
-                                ["pt", "Cliente"],
-                            ])}
-                        </TabsTrigger>
-                        <TabsTrigger value="1" className="w-full sm:w-36">
-                            {writeLang([
-                                ["en", "Users"],
-                                ["pt", "Usuários"],
-                            ])}
-                        </TabsTrigger>
-                        <TabsTrigger value="2" className="w-full sm:w-36">
-                            {writeLang([
-                                ["en", "Projects"],
-                                ["pt", "Projetos"],
-                            ])}
-                        </TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="0" className="pt-3">
-                        <ClientForm client={client} />
-                    </TabsContent>
-                    <TabsContent value="1" className="pt-3">
-                        <ClientUsers client={client} />
-                    </TabsContent>
-                    <TabsContent value="2" className="pt-3">
-                        <ClientProjects client={client} />
-                    </TabsContent>
-                </Tabs>
-            </div>
-        </Page>
-    );
+          {tab === "1" && (
+            <InviteUserForm client={client} setClient={setClient} open={inviteUserOpen} setOpen={setInviteUserOpen} />
+          )}
+          {tab === "2" && (
+            <CreateProjectForm
+              label={
+                writeLang([
+                  ["en", "Create project"],
+                  ["pt", "Novo projeto"],
+                ]) as string
+              }
+              client_id={client.id}
+              onCreated={() => getClient(id)}
+            />
+          )}
+        </SectionHeader>
+      }
+    >
+      <div className="space-y-6 pb-10">
+        <Tabs defaultValue="0" className="w-full" value={tab} onValueChange={(tab) => changeTab(tab, setTab)}>
+          <TabsList className="sm:w-min w-full flex mx-auto">
+            <TabsTrigger value="0" className="w-full sm:w-36">
+              {writeLang([
+                ["en", "Client"],
+                ["pt", "Cliente"],
+              ])}
+            </TabsTrigger>
+            <TabsTrigger value="1" className="w-full sm:w-36">
+              {writeLang([
+                ["en", "Users"],
+                ["pt", "Usuários"],
+              ])}
+            </TabsTrigger>
+            <TabsTrigger value="2" className="w-full sm:w-36">
+              {writeLang([
+                ["en", "Projects"],
+                ["pt", "Projetos"],
+              ])}
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="0" className="pt-3">
+            <ClientForm client={client} />
+          </TabsContent>
+          <TabsContent value="1" className="pt-3">
+            <ClientUsers client={client} />
+          </TabsContent>
+          <TabsContent value="2" className="pt-3">
+            <ClientProjects client={client} />
+          </TabsContent>
+        </Tabs>
+      </div>
+    </Page>
+  );
 }

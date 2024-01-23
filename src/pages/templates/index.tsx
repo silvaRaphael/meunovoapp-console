@@ -6,34 +6,28 @@ import { templateColumns } from "./data/column";
 import { templates } from "./data/data";
 
 export function Templates() {
-    const { writeLang } = useLanguage();
+  const { writeLang } = useLanguage();
 
-    return (
-        <Page
-            pathname={
-                writeLang([
-                    ["en", "/templates"],
-                    ["pt", "/modelos"],
-                ]) as string
-            }
-            header={
-                <SectionHeader
-                    title={
-                        writeLang([
-                            ["en", `Templates (${templates.length})`],
-                            ["pt", `Modelos (${templates.length})`],
-                        ]) as string
-                    }
-                    pathname={
-                        writeLang([
-                            ["en", "/templates"],
-                            ["pt", "/modelos"],
-                        ]) as string
-                    }
-                ></SectionHeader>
-            }
-        >
-            <DataTable columns={templateColumns(writeLang)} data={templates} />
-        </Page>
-    );
+  return (
+    <Page
+      pathname={
+        writeLang([
+          ["en", "/templates"],
+          ["pt", "/modelos"],
+        ]) as string
+      }
+      header={
+        <SectionHeader
+          title={
+            writeLang([
+              ["en", `Templates (${templates.length})`],
+              ["pt", `Modelos (${templates.length})`],
+            ]) as string
+          }
+        ></SectionHeader>
+      }
+    >
+      <DataTable columns={templateColumns(writeLang)} data={templates} />
+    </Page>
+  );
 }

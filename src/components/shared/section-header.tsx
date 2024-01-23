@@ -6,13 +6,11 @@ import { ArrowLeft } from "lucide-react";
 export function SectionHeader({
   isRoot = false,
   title,
-  pathname,
   tree,
   children,
 }: {
   isRoot?: boolean;
-  title: string;
-  pathname: string;
+  title?: string;
   tree?: { label: string; pathname?: string }[];
   children?: ReactNode;
 }) {
@@ -26,18 +24,20 @@ export function SectionHeader({
 
   return (
     <div className="w-full pt-4">
-      <div className="flex min-h-20 items-center px-4">
+      <div className="flex items-center px-4">
         <div className="flex flex-col text-2xl space-y-1">
-          <span
-            className={cn(
-              "flex items-center font-semibold cursor-pointer",
-              tree?.length ? "text-sm text-muted-foreground" : "",
-            )}
-            onClick={() => navigate(-1)}
-          >
-            {tree?.length && <ArrowLeft size={16} className="me-1" />}
-            {title}
-          </span>
+          {title && (
+            <span
+              className={cn(
+                "flex items-center font-semibold cursor-pointer",
+                tree?.length ? "text-sm text-muted-foreground" : "",
+              )}
+              onClick={() => navigate(-1)}
+            >
+              {tree?.length && <ArrowLeft size={16} className="me-1" />}
+              {title}
+            </span>
+          )}
           <div className="flex space-x-1">
             {tree?.map((item, i, arr) =>
               item.pathname ? (

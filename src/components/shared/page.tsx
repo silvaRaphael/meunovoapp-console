@@ -22,19 +22,19 @@ export function Page({ pathname, header, children }: Props) {
     <>
       <TopBar pathname={pathname} isOpen={!isClose} toggleSideBar={toggleSideBar} />
       <div>
-        <div className="flex pb-20">
+        <div className="flex">
           <SideBar pathname={pathname} isOpen={!isClose} />
           <Section
-            className="min-h-screen h-full"
+            className="min-h-[calc(100vh-88px)] h-full flex flex-col"
             style={{
               paddingLeft: !isClose ? sideBarWidth : sideBarWidthCollapsed,
             }}
           >
-            {header}
-            <div className="p-4 h-full">{children}</div>
+            <div className="flex flex-grow-0">{header}</div>
+            <div className="p-4 h-full flex flex-col flex-1">{children}</div>
           </Section>
         </div>
-        <div className="flex items-center justify-end w-full border-t h-10 mt-20 pe-4">
+        <div className="flex items-center justify-end w-full border-t h-10 pe-4">
           <p className="text-xs text-muted-foreground">
             {new Date().getFullYear()} &copy;{" "}
             <a href="//meunovoapp.com.br" target="_blank" rel="noreferrer">

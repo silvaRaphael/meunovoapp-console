@@ -51,12 +51,11 @@ export function EmailDetails() {
               ["pt", "E-mails"],
             ]) as string
           }
-          pathname="/emails"
           tree={Array.isArray(email.to) ? email.to.map((to) => ({ label: to })) : [{ label: email.to }]}
         ></SectionHeader>
       }
     >
-      <div className="space-y-6 pb-40">
+      <div className="space-y-6 pb-10">
         <EmailSearch email={email} />
       </div>
     </Page>

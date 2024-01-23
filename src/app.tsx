@@ -23,6 +23,7 @@ import { Chats } from "pages/chat";
 import { useEffect } from "react";
 import { socket } from "pages/chat/components/websocket";
 import { ResetPassword } from "pages/reset-password";
+import { Notes } from "pages/notes";
 
 export function App() {
   const { writeLang } = useLanguage();
@@ -118,6 +119,15 @@ export function App() {
                   <Route path="" element={<Tasks />} />
                   <Route path=":id" element={<TaskDetails />} />
                 </Route>
+                <Route
+                  path={
+                    writeLang([
+                      ["en", "/notes"],
+                      ["pt", "/notas"],
+                    ]) as string
+                  }
+                  element={<Notes />}
+                />
                 <Route
                   path={
                     writeLang([

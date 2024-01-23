@@ -95,7 +95,7 @@ export function Console() {
   );
 
   return (
-    <Page pathname="/" header={<SectionHeader isRoot title={`Console`} pathname="/"></SectionHeader>}>
+    <Page pathname="/" header={<SectionHeader isRoot title={`Console`}></SectionHeader>}>
       <div className="space-y-8">
         <div className="grid grid-cols-12 gap-4">
           <Card className="lg:col-span-7 sm:col-span-6 col-span-12">

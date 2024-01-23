@@ -14,103 +14,97 @@ import { hasPermission } from "lib/handle-permission";
 import { useUserData } from "components/shared/user-data-provider";
 
 export function ProjectDetails() {
-    const { id } = useParams();
-    const { language, writeLang } = useLanguage();
-    const { userData } = useUserData();
+  const { id } = useParams();
+  const { language, writeLang } = useLanguage();
+  const { userData } = useUserData();
 
-    const [project, setProject] = useState<Project>();
-    const [tab, setTab] = useState<string>(new URL(window.location.href).searchParams.get("tab") ?? "0");
+  const [project, setProject] = useState<Project>();
+  const [tab, setTab] = useState<string>(new URL(window.location.href).searchParams.get("tab") ?? "0");
 
-    async function getProject(id?: string) {
-        const request = await new HandleRequest().get(`/projects/${id}`, { language });
+  async function getProject(id?: string) {
+    const request = await new HandleRequest().get(`/projects/${id}`, { language });
 
-        request.onDone((response) => {
-            setProject(response);
-        });
+    request.onDone((response) => {
+      setProject(response);
+    });
 
-        request.onError((error) => {
-            errorToast(error);
-        });
-    }
+    request.onError((error) => {
+      errorToast(error);
+    });
+  }
 
-    useEffect(() => {
-        const controller = new AbortController();
+  useEffect(() => {
+    const controller = new AbortController();
 
-        getProject(id);
+    getProject(id);
 
-        return () => {
-            controller.abort();
-        };
+    return () => {
+      controller.abort();
+    };
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
-    if (!project) return <></>;
+  if (!project) return <></>;
 
-    return (
-        <Page
-            pathname={
-                writeLang([
-                    ["en", "/projects"],
-                    ["pt", "/projetos"],
-                ]) as string
-            }
-            header={
-                <SectionHeader
-                    title={
-                        writeLang([
-                            ["en", "Projects"],
-                            ["pt", "Projetos"],
-                        ]) as string
-                    }
-                    pathname={
-                        writeLang([
-                            ["en", "/projects"],
-                            ["pt", "/projetos"],
-                        ]) as string
-                    }
-                    tree={!!project ? [{ label: project.name }] : []}
-                >
-                    {tab === "1" && !["completed", "cancelled"].includes(project.status) && hasPermission(userData) && (
-                        <CreateTaskForm
-                            label={
-                                writeLang([
-                                    ["en", "Create task"],
-                                    ["pt", "Nova tarefa"],
-                                ]) as string
-                            }
-                            project_id={project.id}
-                            onCreated={() => getProject(id)}
-                        />
-                    )}
-                </SectionHeader>
-            }
+  return (
+    <Page
+      pathname={
+        writeLang([
+          ["en", "/projects"],
+          ["pt", "/projetos"],
+        ]) as string
+      }
+      header={
+        <SectionHeader
+          title={
+            writeLang([
+              ["en", "Projects"],
+              ["pt", "Projetos"],
+            ]) as string
+          }
+          tree={!!project ? [{ label: project.name }] : []}
         >
-            <div className="space-y-6 pb-40">
-                <Tabs defaultValue="0" className="w-full" value={tab} onValueChange={(tab) => changeTab(tab, setTab)}>
-                    {/* <Tabs defaultValue="0" className="w-full"> */}
-                    <TabsList className="sm:w-min w-full flex mx-auto">
-                        <TabsTrigger value="0" className="w-full sm:w-36">
-                            {writeLang([
-                                ["en", "Project"],
-                                ["pt", "Projeto"],
-                            ])}
-                        </TabsTrigger>
-                        <TabsTrigger value="1" className="w-full sm:w-36">
-                            {writeLang([
-                                ["en", "Tasks"],
-                                ["pt", "Tarefas"],
-                            ])}
-                        </TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="0" className="pt-3">
-                        <ProjectForm project={project} />
-                    </TabsContent>
-                    <TabsContent value="1" className="pt-3">
-                        <ProjectTasks project={project} />
-                    </TabsContent>
-                </Tabs>
-            </div>
-        </Page>
-    );
+          {tab === "1" && !["completed", "cancelled"].includes(project.status) && hasPermission(userData) && (
+            <CreateTaskForm
+              label={
+                writeLang([
+                  ["en", "Create task"],
+                  ["pt", "Nova tarefa"],
+                ]) as string
+              }
+              project_id={project.id}
+              onCreated={() => getProject(id)}
+            />
+          )}
+        </SectionHeader>
+      }
+    >
+      <div className="space-y-6 pb-10">
+        <Tabs defaultValue="0" className="w-full" value={tab} onValueChange={(tab) => changeTab(tab, setTab)}>
+          {/* <Tabs defaultValue="0" className="w-full"> */}
+          <TabsList className="sm:w-min w-full flex mx-auto">
+            <TabsTrigger value="0" className="w-full sm:w-36">
+              {writeLang([
+                ["en", "Project"],
+                ["pt", "Projeto"],
+              ])}
+            </TabsTrigger>
+            <TabsTrigger value="1" className="w-full sm:w-36">
+              {writeLang([
+                ["en", "Tasks"],
+                ["pt", "Tarefas"],
+              ])}
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="0" className="pt-3">
+            <ProjectForm project={project} />
+          </TabsContent>
+          <TabsContent value="1" className="pt-3">
+            <ProjectTasks project={project} />
+          </TabsContent>
+        </Tabs>
+      </div>
+    </Page>
+  );
 }

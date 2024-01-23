@@ -8,62 +8,56 @@ import { HandleRequest } from "lib/handle-request";
 import { errorToast } from "components/shared/error-toast";
 
 export function Preferences() {
-    const { language, writeLang } = useLanguage();
+  const { language, writeLang } = useLanguage();
 
-    const [preferences, setPreferences] = useState<PreferencesSchema>();
+  const [preferences, setPreferences] = useState<PreferencesSchema>();
 
-    async function getPreferences() {
-        const request = await new HandleRequest().get(`/preferences`, { language });
+  async function getPreferences() {
+    const request = await new HandleRequest().get(`/preferences`, { language });
 
-        request.onDone((response) => {
-            setPreferences(response);
-        });
+    request.onDone((response) => {
+      setPreferences(response);
+    });
 
-        request.onError((error) => {
-            errorToast(error);
-        });
-    }
+    request.onError((error) => {
+      errorToast(error);
+    });
+  }
 
-    useEffect(() => {
-        const controller = new AbortController();
+  useEffect(() => {
+    const controller = new AbortController();
 
-        getPreferences();
+    getPreferences();
 
-        return () => {
-            controller.abort();
-        };
+    return () => {
+      controller.abort();
+    };
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-    if (!preferences) return <></>;
+  if (!preferences) return <></>;
 
-    return (
-        <Page
-            pathname={
-                writeLang([
-                    ["en", "/preferences"],
-                    ["pt", "/preferencias"],
-                ]) as string
-            }
-            header={
-                <SectionHeader
-                    title={
-                        writeLang([
-                            ["en", "Preferences"],
-                            ["pt", "Preferências"],
-                        ]) as string
-                    }
-                    pathname={
-                        writeLang([
-                            ["en", "/preferences"],
-                            ["pt", "/preferencias"],
-                        ]) as string
-                    }
-                ></SectionHeader>
-            }
-        >
-            <PreferencesForm preferences={preferences} />
-        </Page>
-    );
+  return (
+    <Page
+      pathname={
+        writeLang([
+          ["en", "/preferences"],
+          ["pt", "/preferencias"],
+        ]) as string
+      }
+      header={
+        <SectionHeader
+          title={
+            writeLang([
+              ["en", "Preferences"],
+              ["pt", "Preferências"],
+            ]) as string
+          }
+        ></SectionHeader>
+      }
+    >
+      <PreferencesForm preferences={preferences} />
+    </Page>
+  );
 }

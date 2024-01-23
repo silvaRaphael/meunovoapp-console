@@ -10,62 +10,56 @@ import { errorToast } from "components/shared/error-toast";
 import { useNavigate } from "react-router-dom";
 
 export function Emails() {
-    const { language, writeLang } = useLanguage();
-    const navigate = useNavigate();
+  const { language, writeLang } = useLanguage();
+  const navigate = useNavigate();
 
-    const [emails, setEmails] = useState<Email[]>([]);
+  const [emails, setEmails] = useState<Email[]>([]);
 
-    async function getEmails() {
-        const request = await new HandleRequest().get(`/emails`, { language });
+  async function getEmails() {
+    const request = await new HandleRequest().get(`/emails`, { language });
 
-        request.onDone((response) => {
-            setEmails(response as unknown as Email[]);
-        });
+    request.onDone((response) => {
+      setEmails(response as unknown as Email[]);
+    });
 
-        request.onError((error) => {
-            errorToast(error);
-            if (error.redirect) navigate(error.redirect);
-        });
-    }
+    request.onError((error) => {
+      errorToast(error);
+      if (error.redirect) navigate(error.redirect);
+    });
+  }
 
-    useEffect(() => {
-        const controller = new AbortController();
+  useEffect(() => {
+    const controller = new AbortController();
 
-        getEmails();
+    getEmails();
 
-        return () => {
-            controller.abort();
-        };
+    return () => {
+      controller.abort();
+    };
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-    return (
-        <Page
-            pathname={
-                writeLang([
-                    ["en", "/emails"],
-                    ["pt", "/emails"],
-                ]) as string
-            }
-            header={
-                <SectionHeader
-                    title={
-                        writeLang([
-                            ["en", `Emails (${emails.length})`],
-                            ["pt", `E-mails (${emails.length})`],
-                        ]) as string
-                    }
-                    pathname={
-                        writeLang([
-                            ["en", "/email"],
-                            ["pt", "/email"],
-                        ]) as string
-                    }
-                ></SectionHeader>
-            }
-        >
-            <DataTable columns={emailsColumns(writeLang)} data={emails} />
-        </Page>
-    );
+  return (
+    <Page
+      pathname={
+        writeLang([
+          ["en", "/emails"],
+          ["pt", "/emails"],
+        ]) as string
+      }
+      header={
+        <SectionHeader
+          title={
+            writeLang([
+              ["en", `Emails (${emails.length})`],
+              ["pt", `E-mails (${emails.length})`],
+            ]) as string
+          }
+        ></SectionHeader>
+      }
+    >
+      <DataTable columns={emailsColumns(writeLang)} data={emails} />
+    </Page>
+  );
 }

@@ -12,79 +12,73 @@ import { InviteManagerForm } from "./forms/invite-manager";
 import { useNavigate } from "react-router-dom";
 
 export interface ClientRow extends Client {
-    inviteAction?: (props: Client) => any;
+  inviteAction?: (props: Client) => any;
 }
 
 export function Clients() {
-    const { language, writeLang } = useLanguage();
-    const navigate = useNavigate();
+  const { language, writeLang } = useLanguage();
+  const navigate = useNavigate();
 
-    const [clients, setClients] = useState<ClientRow[]>([]);
-    const [client, setClient] = useState<Client | null>(null);
+  const [clients, setClients] = useState<ClientRow[]>([]);
+  const [client, setClient] = useState<Client | null>(null);
 
-    async function getClients() {
-        const request = await new HandleRequest().get(`/clients`, { language });
+  async function getClients() {
+    const request = await new HandleRequest().get(`/clients`, { language });
 
-        request.onDone((response) => {
-            setClients(
-                (response as any).map(
-                    (item: Client): ClientRow => ({
-                        ...item,
-                        inviteAction(item) {
-                            setClient(item);
-                        },
-                    }),
-                ),
-            );
-        });
+    request.onDone((response) => {
+      setClients(
+        (response as any).map(
+          (item: Client): ClientRow => ({
+            ...item,
+            inviteAction(item) {
+              setClient(item);
+            },
+          }),
+        ),
+      );
+    });
 
-        request.onError((error) => {
-            errorToast(error);
-            if (error.redirect) navigate(error.redirect);
-        });
-    }
+    request.onError((error) => {
+      errorToast(error);
+      if (error.redirect) navigate(error.redirect);
+    });
+  }
 
-    useEffect(() => {
-        const controller = new AbortController();
+  useEffect(() => {
+    const controller = new AbortController();
 
-        getClients();
+    getClients();
 
-        return () => {
-            controller.abort();
-        };
+    return () => {
+      controller.abort();
+    };
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-    return (
-        <Page
-            pathname={
-                writeLang([
-                    ["en", "/clients"],
-                    ["pt", "/clientes"],
-                ]) as string
-            }
-            header={
-                <SectionHeader
-                    title={
-                        writeLang([
-                            ["en", `Clients (${clients.length})`],
-                            ["pt", `Clientes (${clients.length})`],
-                        ]) as string
-                    }
-                    pathname={
-                        writeLang([
-                            ["en", "/clients"],
-                            ["pt", "/clientes"],
-                        ]) as string
-                    }
-                >
-                    <CreateClientForm onCreated={getClients} />
-                </SectionHeader>
-            }
+  return (
+    <Page
+      pathname={
+        writeLang([
+          ["en", "/clients"],
+          ["pt", "/clientes"],
+        ]) as string
+      }
+      header={
+        <SectionHeader
+          title={
+            writeLang([
+              ["en", `Clients (${clients.length})`],
+              ["pt", `Clientes (${clients.length})`],
+            ]) as string
+          }
         >
-            <DataTable columns={clientColumns(writeLang)} data={clients} />
-            <InviteManagerForm client={client} setClient={setClient} />
-        </Page>
-    );
+          <CreateClientForm onCreated={getClients} />
+        </SectionHeader>
+      }
+    >
+      <DataTable columns={clientColumns(writeLang)} data={clients} />
+      <InviteManagerForm client={client} setClient={setClient} />
+    </Page>
+  );
 }
