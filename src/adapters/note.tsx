@@ -1,13 +1,6 @@
 import { z } from "zod";
 
 export const createNoteSchema = z.object({
-  user_id: z
-    .string({
-      required_error: "ID do usuário é necessário.",
-    })
-    .uuid({
-      message: "ID válido é necessário.",
-    }),
   title: z
     .string({
       required_error: "Título é necessário.",
@@ -21,11 +14,11 @@ export const createNoteSchema = z.object({
     .optional(),
   markers: z
     .array(
-      z
-        .string({
+      z.object({
+        value: z.string({
           required_error: "Marcador é necessário.",
-        })
-        .optional(),
+        }),
+      }),
     )
     .optional(),
 });

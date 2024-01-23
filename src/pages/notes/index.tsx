@@ -29,7 +29,7 @@ export function Notes() {
   useEffect(() => {
     const controller = new AbortController();
 
-    // getNotes();
+    getNotes();
 
     return () => {
       controller.abort();
@@ -60,23 +60,17 @@ export function Notes() {
       }
     >
       <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pb-10">
-        {[1, 1, 1, 1, 1, 1, 1, 1, 1].map((item, i) => (
+        {notes.map((item, i) => (
           <Card key={i} className="h-min">
             <CardHeader>
-              <CardTitle>Note Title</CardTitle>
+              <CardTitle>{item.title}</CardTitle>
             </CardHeader>
             <CardContent className="text-start space-y-4">
-              <CardDescription>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem, ad eveniet quam a, eligendi dolores
-                reprehenderit saepe temporibus non cum odit dicta corrupti fugiat? Provident, quam.
-                {i % 3 === 0
-                  ? "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam, qu olor sit amet consectetur adipisicing elit. Quam, qu olor sit amet consectetur adipisicing elit. Quam, quos."
-                  : ""}
-              </CardDescription>
+              <CardDescription>{item.content}</CardDescription>
               <CardFooter className="gap-2 p-0">
-                {[1, 2, 0].map((item, i) => (
+                {item.markers.map((item, i) => (
                   <Badge key={i} variant={i === 0 ? "default" : "outline"} className="pointer-events-none">
-                    Marcador
+                    {item}
                   </Badge>
                 ))}
               </CardFooter>

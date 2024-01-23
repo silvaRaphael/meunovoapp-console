@@ -1,5 +1,5 @@
 import { CreateNoteSchema, createNoteSchema } from "adapters/note";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HandleRequest } from "lib/handle-request";
 import { useLanguage } from "components/shared/language-provider";
@@ -29,11 +29,25 @@ export function CreateNoteForm({
 
   const form = useForm<CreateNoteSchema>({
     resolver: zodResolver(createNoteSchema),
+    defaultValues: {
+      markers: [{ value: "" }],
+    },
     mode: "onChange",
   });
 
+  const { fields, append } = useFieldArray({
+    name: "markers",
+    control: form.control,
+    rules: {
+      minLength: 1,
+    },
+  });
+
   async function onSubmit(data: CreateNoteSchema) {
-    const request = await new HandleRequest(data).post(`/Notes`, { language });
+    const request = await new HandleRequest({
+      ...data,
+      markers: data.markers?.map((item) => item.value).filter((item) => item.trim()) ?? [],
+    }).post(`/notes`, { language });
 
     request.onDone(() => {
       toast({
@@ -123,6 +137,39 @@ export function CreateNoteForm({
                 </FormItem>
               )}
             />
+            <div className="flex space-x-3 items-end">
+              <div className="space-y-3">
+                {fields.map((field, index) => (
+                  <FormField
+                    control={form.control}
+                    key={field.id}
+                    name={`markers.${index}.value`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input
+                            placeholder={
+                              writeLang([
+                                ["en", "Marker"],
+                                ["pt", "Marcador"],
+                              ]) as string
+                            }
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                ))}
+              </div>
+              <Button type="button" variant="outline" onClick={() => append({ value: "" })}>
+                {writeLang([
+                  ["en", "Add marker"],
+                  ["pt", "Adicionar marcador"],
+                ])}
+              </Button>
+            </div>
             <SubmitButton
               label={
                 writeLang([
