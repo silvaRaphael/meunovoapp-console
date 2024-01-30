@@ -12,6 +12,8 @@ import { ProjectTasks } from "./tasks";
 import { CreateTaskForm } from "pages/tasks/forms/create";
 import { hasPermission } from "lib/handle-permission";
 import { useUserData } from "components/shared/user-data-provider";
+import { Alert, AlertDescription, AlertTitle } from "components/ui/alert";
+import { AlarmClockOff } from "lucide-react";
 
 export function ProjectDetails() {
   const { id } = useParams();
@@ -81,8 +83,24 @@ export function ProjectDetails() {
       }
     >
       <div className="space-y-6 pb-10">
+        {new Date(project.due) < new Date() && !["completed", "cancelled"].includes(project.status) && (
+          <Alert className="bg-destructive text-white [&>svg]:text-white">
+            <AlarmClockOff className="h-4 w-4" />
+            <AlertTitle>
+              {writeLang([
+                ["en", "Heads up!"],
+                ["pt", "Atenção!"],
+              ])}
+            </AlertTitle>
+            <AlertDescription>
+              {writeLang([
+                ["en", "This project is late!"],
+                ["pt", "Este projeto está atrasado!"],
+              ])}
+            </AlertDescription>
+          </Alert>
+        )}
         <Tabs defaultValue="0" className="w-full" value={tab} onValueChange={(tab) => changeTab(tab, setTab)}>
-          {/* <Tabs defaultValue="0" className="w-full"> */}
           <TabsList className="sm:w-min w-full flex mx-auto">
             <TabsTrigger value="0" className="w-full sm:w-36">
               {writeLang([
