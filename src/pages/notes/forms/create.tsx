@@ -1,10 +1,9 @@
-import { CreateNoteSchema, createNoteSchema } from "adapters/note";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { api } from "lib/axios";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { HandleRequest } from "lib/handle-request";
+import { CreateNoteSchema, createNoteSchema } from "adapters/note";
 import { useLanguage } from "components/shared/language-provider";
-import { toast } from "components/ui/toast/use-toast";
-import { errorToast } from "components/shared/error-toast";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "components/ui/form";
 import { Input } from "components/ui/input";
 import { SubmitButton } from "components/shared/submit-button";
@@ -13,19 +12,14 @@ import { Button } from "components/ui/button";
 import { useState } from "react";
 import { Project } from "pages/projects/data/project";
 import { Textarea } from "components/ui/textarea";
+import { Note } from "../data/note";
 
-export function CreateNoteForm({
-  label,
-  onCreated,
-}: {
-  label?: string;
-  project_id?: string;
-  projects?: Project[];
-  onCreated: Function;
-}) {
+export function CreateNoteForm({ label }: { label?: string; project_id?: string; projects?: Project[] }) {
   const { language, writeLang } = useLanguage();
 
   const [open, setOpen] = useState<boolean>(false);
+
+  const queryClient = useQueryClient();
 
   const form = useForm<CreateNoteSchema>({
     resolver: zodResolver(createNoteSchema),
@@ -43,29 +37,41 @@ export function CreateNoteForm({
     },
   });
 
-  async function onSubmit(data: CreateNoteSchema) {
-    const request = await new HandleRequest({
-      ...data,
-      markers: data.markers?.map((item) => item.value).filter((item) => item.trim()) ?? [],
-    }).post(`/notes`, { language });
+  const createNote = async (data: CreateNoteSchema) => {
+    return await api.post(
+      `/notes`,
+      {
+        ...data,
+        markers: data.markers?.map((item) => item.value).filter((item) => item.trim()) ?? [],
+      },
+      { headers: { "Content-Language": language.locale } },
+    );
+  };
 
-    request.onDone(() => {
-      toast({
-        title: writeLang([
-          ["en", "Note has been created successfully!"],
-          ["pt", "Nota foi criada com sucesso!"],
-        ]) as string,
-      });
-
-      form.reset();
-
+  const { mutate: createNoteFn } = useMutation({
+    mutationKey: ["notes"],
+    mutationFn: createNote,
+    onSuccess(data, variables) {
+      queryClient.setQueryData(["notes"], (items: Note[]) => [
+        ...items,
+        {
+          id: (data as any).data.id,
+          title: variables.title,
+          content: variables.content,
+          markers: variables.markers?.map((item) => item.value).filter((item) => item.trim()) ?? [],
+        },
+      ]);
       setOpen(false);
-      onCreated();
-    });
+      form.reset({
+        title: "",
+        content: "",
+        markers: [{ value: "" }],
+      });
+    },
+  });
 
-    request.onError((error) => {
-      errorToast(error);
-    });
+  function onSubmit(data: CreateNoteSchema) {
+    createNoteFn(data);
   }
 
   return (

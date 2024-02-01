@@ -1,56 +1,50 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { api } from "lib/axios";
 import { SectionHeader } from "components/shared/section-header";
 import { Page } from "components/shared/page";
 import { useLanguage } from "components/shared/language-provider";
-import { HandleRequest } from "lib/handle-request";
-import { errorToast } from "components/shared/error-toast";
 import { Note } from "./data/note";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "components/ui/card";
 import { Badge } from "components/ui/badge";
 import { CreateNoteForm } from "./forms/create";
 import { ConfirmationAlert } from "components/shared/confirmation-alert";
 import { Button, buttonVariants } from "components/ui/button";
-import { Loader, Trash2 } from "lucide-react";
+import { Ban, Loader, Trash2 } from "lucide-react";
 import { SubmitButton } from "components/shared/submit-button";
-import { useQuery } from "@tanstack/react-query";
+import { Alert, AlertDescription } from "components/ui/alert";
 
 export function Notes() {
   const { language, writeLang } = useLanguage();
 
-  // const [notes, setNotes] = useState<Note[]>([]);
   const [deleteIsOpen, setDeleteIsOpen] = useState<boolean>(false);
 
-  const getNotes = async () => (await new HandleRequest<Note[]>().get(`/notes`, { language })).response;
+  const queryClient = useQueryClient();
+
+  const getNotes = async (): Promise<Note[]> =>
+    (await api.get("/notes", { headers: { "Content-Language": language.locale } })).data;
 
   const { data: notes, isLoading } = useQuery({
     queryKey: ["notes"],
     queryFn: getNotes,
   });
 
-  async function handleDelete(id: string) {
-    const request = await new HandleRequest().delete(`/notes/${id}`, { language });
+  const deleteNote = async (id: string) => {
+    return await api.delete(`/notes/${id}`, { headers: { "Content-Language": language.locale } });
+  };
 
-    request.onDone(() => {
-      // setNotes(notes?.filter((item) => item.id !== id));
+  const { mutate: deleteNoteFn } = useMutation({
+    mutationKey: ["notes"],
+    mutationFn: deleteNote,
+    onSuccess(_, variables) {
+      queryClient.setQueryData(["notes"], (items: Note[]) => items.filter((item) => item.id !== variables));
       setDeleteIsOpen(false);
-    });
+    },
+  });
 
-    request.onError((error) => {
-      errorToast(error);
-    });
+  function handleDelete(id: string) {
+    deleteNoteFn(id);
   }
-
-  // useEffect(() => {
-  //   const controller = new AbortController();
-
-  //   getNotes();
-
-  //   return () => {
-  //     controller.abort();
-  //   };
-
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
 
   const Loading = () => (
     <div className="flex w-full h-[500px] justify-center items-center">
@@ -75,12 +69,22 @@ export function Notes() {
             ]) as string
           }
         >
-          <CreateNoteForm onCreated={getNotes} />
+          <CreateNoteForm />
         </SectionHeader>
       }
     >
       {isLoading ? (
         <Loading />
+      ) : !notes?.length ? (
+        <Alert>
+          <Ban className="h-4 w-4" />
+          <AlertDescription className="mt-[.35rem]">
+            {writeLang([
+              ["en", "No notes yet!"],
+              ["pt", "Nenhuma nota ainda!"],
+            ])}
+          </AlertDescription>
+        </Alert>
       ) : (
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pb-10">
           {notes?.map((item, i) => (
@@ -109,7 +113,7 @@ export function Notes() {
                     confirmButton={
                       <SubmitButton
                         type="button"
-                        onSubmit={() => handleDelete(item.id)}
+                        onSubmit={async () => handleDelete(item.id)}
                         className={buttonVariants({ variant: "destructive" })}
                         label={
                           writeLang([

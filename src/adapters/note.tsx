@@ -5,6 +5,7 @@ export const createNoteSchema = z.object({
     .string({
       required_error: "Título é necessário.",
     })
+    .min(1, { message: "Título é necessário." })
     .max(50, { message: "O título deve ter ao máximo 50 digitos." }),
   content: z
     .string({

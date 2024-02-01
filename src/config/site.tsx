@@ -320,6 +320,23 @@ export const SideMenu = ({
             {
               label: writeLang(
                 [
+                  ["en", "Notes"],
+                  ["pt", "Notas"],
+                ],
+                lang,
+              ) as string,
+              path: writeLang(
+                [
+                  ["en", "/notes"],
+                  ["pt", "/notas"],
+                ],
+                lang,
+              ) as string,
+              icon: <LucideScrollText className="mr-1" size={14} />,
+            },
+            {
+              label: writeLang(
+                [
                   ["en", "Profile"],
                   ["pt", "Perfil"],
                 ],
