@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { api } from "lib/axios";
 import { SectionHeader } from "components/shared/section-header";
 import { Page } from "components/shared/page";
@@ -13,13 +13,12 @@ import { Button, buttonVariants } from "components/ui/button";
 import { Ban, Loader, Trash2 } from "lucide-react";
 import { SubmitButton } from "components/shared/submit-button";
 import { Alert, AlertDescription } from "components/ui/alert";
+import { queryClient } from "components/shared/query";
 
 export function Notes() {
   const { language, writeLang } = useLanguage();
 
   const [deleteIsOpen, setDeleteIsOpen] = useState<boolean>(false);
-
-  const queryClient = useQueryClient();
 
   const getNotes = async (): Promise<Note[]> =>
     (await api.get("/notes", { headers: { "Content-Language": language.locale } })).data;

@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { api } from "lib/axios";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,13 +13,12 @@ import { useState } from "react";
 import { Project } from "pages/projects/data/project";
 import { Textarea } from "components/ui/textarea";
 import { Note } from "../data/note";
+import { queryClient } from "components/shared/query";
 
 export function CreateNoteForm({ label }: { label?: string; project_id?: string; projects?: Project[] }) {
   const { language, writeLang } = useLanguage();
 
   const [open, setOpen] = useState<boolean>(false);
-
-  const queryClient = useQueryClient();
 
   const form = useForm<CreateNoteSchema>({
     resolver: zodResolver(createNoteSchema),
