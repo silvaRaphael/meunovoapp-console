@@ -1,15 +1,14 @@
-import { useEffect, useState } from "react";
 import { DataTable } from "../../components/ui/data-table/data-table";
 import { SectionHeader } from "../../components/shared/section-header";
 import { Page } from "../../components/shared/page";
 import { Client } from "./data/client";
 import { clientColumns } from "./data/columns";
-import { HandleRequest } from "../../lib/handle-request";
 import { useLanguage } from "../../components/shared/language-provider";
 import { CreateClientForm } from "./forms/create";
-import { errorToast } from "components/shared/error-toast";
-import { InviteManagerForm } from "./forms/invite-manager";
-import { useNavigate } from "react-router-dom";
+import { Ban, Loader } from "lucide-react";
+import { api } from "lib/axios";
+import { useQuery } from "@tanstack/react-query";
+import { Alert, AlertDescription } from "components/ui/alert";
 
 export interface ClientRow extends Client {
   inviteAction?: (props: Client) => any;
@@ -17,44 +16,20 @@ export interface ClientRow extends Client {
 
 export function Clients() {
   const { language, writeLang } = useLanguage();
-  const navigate = useNavigate();
 
-  const [clients, setClients] = useState<ClientRow[]>([]);
-  const [client, setClient] = useState<Client | null>(null);
+  const getClients = async (): Promise<Client[]> =>
+    (await api.get("/clients", { headers: { "Content-Language": language.locale } })).data;
 
-  async function getClients() {
-    const request = await new HandleRequest().get(`/clients`, { language });
+  const { data: clients, isLoading } = useQuery({
+    queryKey: ["clients"],
+    queryFn: getClients,
+  });
 
-    request.onDone((response) => {
-      setClients(
-        (response as any).map(
-          (item: Client): ClientRow => ({
-            ...item,
-            inviteAction(item) {
-              setClient(item);
-            },
-          }),
-        ),
-      );
-    });
-
-    request.onError((error) => {
-      errorToast(error);
-      if (error.redirect) navigate(error.redirect);
-    });
-  }
-
-  useEffect(() => {
-    const controller = new AbortController();
-
-    getClients();
-
-    return () => {
-      controller.abort();
-    };
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const Loading = () => (
+    <div className="flex w-full h-[500px] justify-center items-center">
+      <Loader size={16} className="animate-spin" />
+    </div>
+  );
 
   return (
     <Page
@@ -68,17 +43,30 @@ export function Clients() {
         <SectionHeader
           title={
             writeLang([
-              ["en", `Clients (${clients.length})`],
-              ["pt", `Clientes (${clients.length})`],
+              ["en", `Clients (${clients?.length ?? 0})`],
+              ["pt", `Clientes (${clients?.length ?? 0})`],
             ]) as string
           }
         >
-          <CreateClientForm onCreated={getClients} />
+          <CreateClientForm />
         </SectionHeader>
       }
     >
-      <DataTable columns={clientColumns(writeLang)} data={clients} />
-      <InviteManagerForm client={client} setClient={setClient} />
+      {isLoading ? (
+        <Loading />
+      ) : !clients?.length ? (
+        <Alert>
+          <Ban className="h-4 w-4" />
+          <AlertDescription className="mt-[.35rem]">
+            {writeLang([
+              ["en", "No clients yet!"],
+              ["pt", "Nenhum cliente ainda!"],
+            ])}
+          </AlertDescription>
+        </Alert>
+      ) : (
+        <DataTable columns={clientColumns(writeLang)} data={clients} />
+      )}
     </Page>
   );
 }
