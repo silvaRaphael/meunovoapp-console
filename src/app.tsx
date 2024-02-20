@@ -1,47 +1,47 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { Login } from "pages/login";
-import { NotFound } from "pages/not-found";
-import { Console } from "pages/console";
-import { Clients } from "pages/clients";
-import { ClientDetails } from "pages/clients/details";
-import { Projects } from "pages/projects";
-import { Tasks } from "pages/tasks";
-import { ProjectDetails } from "pages/projects/details";
-import { TaskDetails } from "pages/tasks/details";
-import { Profile } from "pages/profile";
-import { Preferences } from "pages/preferences";
-import { useLanguage } from "components/shared/language-provider";
-import { useUserData } from "components/shared/user-data-provider";
-import { Emails } from "pages/emails";
-import { EmailDetails } from "pages/emails/details";
-import { CompleteProfile } from "pages/complete-profile";
-import { Templates } from "pages/templates";
-import { TemplateDetails } from "pages/templates/details";
-import { Users } from "pages/users";
-import { UserDetails } from "pages/users/details";
-import { Chats } from "pages/chat";
-import { useEffect } from "react";
-import { socket } from "pages/chat/components/websocket";
-import { ResetPassword } from "pages/reset-password";
-import { Notes } from "pages/notes";
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { Login } from 'pages/login'
+import { NotFound } from 'pages/not-found'
+import { Console } from 'pages/console'
+import { Clients } from 'pages/clients'
+import { ClientDetails } from 'pages/clients/details'
+import { Projects } from 'pages/projects'
+import { Tasks } from 'pages/tasks'
+import { ProjectDetails } from 'pages/projects/details'
+import { TaskDetails } from 'pages/tasks/details'
+import { Profile } from 'pages/profile'
+import { Preferences } from 'pages/preferences'
+import { useLanguage } from 'components/shared/language-provider'
+import { useUserData } from 'components/shared/user-data-provider'
+import { Emails } from 'pages/emails'
+import { EmailDetails } from 'pages/emails/details'
+import { CompleteProfile } from 'pages/complete-profile'
+import { Templates } from 'pages/templates'
+import { TemplateDetails } from 'pages/templates/details'
+import { Users } from 'pages/users'
+import { UserDetails } from 'pages/users/details'
+import { Chats } from 'pages/chat'
+import { useEffect } from 'react'
+import { socket } from 'pages/chat/components/websocket'
+import { ResetPassword } from 'pages/reset-password'
+import { Notes } from 'pages/notes'
 
 export function App() {
-  const { writeLang } = useLanguage();
-  const { userData } = useUserData();
+  const { writeLang } = useLanguage()
+  const { userData } = useUserData()
 
   useEffect(() => {
     if (userData?.email) {
-      socket.connect();
+      socket.connect()
     } else {
-      socket.disconnect();
+      socket.disconnect()
     }
 
     return () => {
-      socket.disconnect();
-    };
+      socket.disconnect()
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userData, window.location.href]);
+  }, [userData, window.location.href])
 
   return (
     <BrowserRouter>
@@ -56,14 +56,14 @@ export function App() {
         }
         {!!userData?.email && (
           <Route>
-            {["master"].includes(userData.role) && (
+            {['master'].includes(userData.role) && (
               <Route path="/">
                 <Route path="" element={<Console />} />
                 <Route
                   path={
                     writeLang([
-                      ["en", "/clients"],
-                      ["pt", "/clientes"],
+                      ['en', '/clients'],
+                      ['pt', '/clientes']
                     ]) as string
                   }
                 >
@@ -73,8 +73,8 @@ export function App() {
                 <Route
                   path={
                     writeLang([
-                      ["en", "/users"],
-                      ["pt", "/usuarios"],
+                      ['en', '/users'],
+                      ['pt', '/usuarios']
                     ]) as string
                   }
                 >
@@ -89,8 +89,8 @@ export function App() {
                 <Route
                   path={
                     writeLang([
-                      ["en", "/templates"],
-                      ["pt", "/modelos"],
+                      ['en', '/templates'],
+                      ['pt', '/modelos']
                     ]) as string
                   }
                 >
@@ -100,8 +100,8 @@ export function App() {
                 <Route
                   path={
                     writeLang([
-                      ["en", "/projects"],
-                      ["pt", "/projetos"],
+                      ['en', '/projects'],
+                      ['pt', '/projetos']
                     ]) as string
                   }
                 >
@@ -111,8 +111,8 @@ export function App() {
                 <Route
                   path={
                     writeLang([
-                      ["en", "/tasks"],
-                      ["pt", "/tarefas"],
+                      ['en', '/tasks'],
+                      ['pt', '/tarefas']
                     ]) as string
                   }
                 >
@@ -122,8 +122,8 @@ export function App() {
                 <Route
                   path={
                     writeLang([
-                      ["en", "/notes"],
-                      ["pt", "/notas"],
+                      ['en', '/notes'],
+                      ['pt', '/notas']
                     ]) as string
                   }
                   element={<Notes />}
@@ -131,8 +131,8 @@ export function App() {
                 <Route
                   path={
                     writeLang([
-                      ["en", "/profile"],
-                      ["pt", "/perfil"],
+                      ['en', '/profile'],
+                      ['pt', '/perfil']
                     ]) as string
                   }
                   element={<Profile />}
@@ -140,8 +140,8 @@ export function App() {
                 <Route
                   path={
                     writeLang([
-                      ["en", "/preferences"],
-                      ["pt", "/preferencias"],
+                      ['en', '/preferences'],
+                      ['pt', '/preferencias']
                     ]) as string
                   }
                   element={<Preferences />}
@@ -150,14 +150,14 @@ export function App() {
                 <Route path="*" element={<NotFound />} />
               </Route>
             )}
-            {["client", "admin"].includes(userData.role) && (
+            {['client', 'admin'].includes(userData.role) && (
               <Route path="/">
                 <Route path="" element={<Console />} />
                 <Route
                   path={
                     writeLang([
-                      ["en", "/projects"],
-                      ["pt", "/projetos"],
+                      ['en', '/projects'],
+                      ['pt', '/projetos']
                     ]) as string
                   }
                 >
@@ -167,8 +167,8 @@ export function App() {
                 <Route
                   path={
                     writeLang([
-                      ["en", "/tasks"],
-                      ["pt", "/tarefas"],
+                      ['en', '/tasks'],
+                      ['pt', '/tarefas']
                     ]) as string
                   }
                 >
@@ -178,8 +178,8 @@ export function App() {
                 <Route
                   path={
                     writeLang([
-                      ["en", "/profile"],
-                      ["pt", "/perfil"],
+                      ['en', '/profile'],
+                      ['pt', '/perfil']
                     ]) as string
                   }
                   element={<Profile />}
@@ -187,8 +187,8 @@ export function App() {
                 <Route
                   path={
                     writeLang([
-                      ["en", "/preferences"],
-                      ["pt", "/preferencias"],
+                      ['en', '/preferences'],
+                      ['pt', '/preferencias']
                     ]) as string
                   }
                   element={<Preferences />}
@@ -201,5 +201,5 @@ export function App() {
         )}
       </Routes>
     </BrowserRouter>
-  );
+  )
 }

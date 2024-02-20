@@ -1,4 +1,4 @@
-import { Button, buttonVariants } from "../ui/button";
+import { Button, buttonVariants } from '../ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -6,66 +6,66 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import { Bell } from "lucide-react";
-import { Notification, notificationsIcons } from "../../config/notifications";
-import { format } from "date-fns";
-import { useLanguage } from "./language-provider";
-import { languages } from "config/languages";
-import { cn } from "lib/utils";
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { HandleRequest } from "lib/handle-request";
-import { errorToast } from "./error-toast";
-import { Tooltip, TooltipContent, TooltipTrigger } from "components/ui/tooltip";
+  DropdownMenuTrigger
+} from '../ui/dropdown-menu'
+import { Bell } from 'lucide-react'
+import { Notification, notificationsIcons } from '../../config/notifications'
+import { format } from 'date-fns'
+import { useLanguage } from './language-provider'
+import { languages } from 'config/languages'
+import { cn } from 'lib/utils'
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { HandleRequest } from 'lib/handle-request'
+import { errorToast } from './error-toast'
+import { Tooltip, TooltipContent, TooltipTrigger } from 'components/ui/tooltip'
 
 export function Notifications({
   notifications,
-  setNotifications,
+  setNotifications
 }: {
-  notifications: Notification[];
-  setNotifications: React.Dispatch<React.SetStateAction<Notification[] | null>>;
+  notifications: Notification[]
+  setNotifications: React.Dispatch<React.SetStateAction<Notification[] | null>>
 }) {
-  const { language, writeLang } = useLanguage();
+  const { language, writeLang } = useLanguage()
 
-  const [open, onOpenChange] = useState<boolean>(false);
-  const [time, setTime] = useState<Date | null>(null);
+  const [open, onOpenChange] = useState<boolean>(false)
+  const [time, setTime] = useState<Date | null>(null)
 
   async function handleMarkAsRead() {
-    const request = await new HandleRequest({}).put("/notifications");
+    const request = await new HandleRequest({}).put('/notifications')
 
     request.onDone(() => {
-      setNotifications([]);
-    });
+      setNotifications([])
+    })
 
     request.onError((error) => {
-      errorToast(error);
-    });
+      errorToast(error)
+    })
   }
 
   useEffect(() => {
-    const controller = new AbortController();
+    const controller = new AbortController()
 
-    let currentTime: any;
+    let currentTime: any
 
     if (open) {
       currentTime = setInterval(() => {
-        setTime(new Date());
-      }, 1000);
+        setTime(new Date())
+      }, 1000)
     }
 
     return () => {
-      clearInterval(currentTime);
-      setTime(null);
+      clearInterval(currentTime)
+      setTime(null)
 
-      controller.abort();
-    };
+      controller.abort()
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  }, [open])
 
-  const notificationsLength = notifications?.length ?? 0;
+  const notificationsLength = notifications?.length ?? 0
 
   return (
     <Tooltip>
@@ -86,31 +86,31 @@ export function Notifications({
               <p className="text-sm font-medium leading-none">
                 {writeLang([
                   [
-                    "en",
-                    `Welcome, ${format(time ?? new Date(), "pp", {
-                      locale: languages.find((item) => item.lang === language.lang)?.dateLocale,
-                    })} now`,
+                    'en',
+                    `Welcome, ${format(time ?? new Date(), 'pp', {
+                      locale: languages.find((item) => item.lang === language.lang)?.dateLocale
+                    })} now`
                   ],
                   [
-                    "pt",
-                    `Bem-vindo, ${format(time ?? new Date(), "pp", {
-                      locale: languages.find((item) => item.lang === language.lang)?.dateLocale,
-                    })} agora`,
-                  ],
+                    'pt',
+                    `Bem-vindo, ${format(time ?? new Date(), 'pp', {
+                      locale: languages.find((item) => item.lang === language.lang)?.dateLocale
+                    })} agora`
+                  ]
                 ])}
               </p>
               <p className="text-xs leading-none text-muted-foreground">
                 {!notificationsLength
                   ? writeLang([
-                      ["en", "You don't have any notifications"],
-                      ["pt", "Você não tem nenhuma notificação"],
+                      ['en', "You don't have any notifications"],
+                      ['pt', 'Você não tem nenhuma notificação']
                     ])
                   : writeLang([
-                      ["en", `You have ${notificationsLength} notifications`],
+                      ['en', `You have ${notificationsLength} notifications`],
                       [
-                        "pt",
-                        `Você tem ${notificationsLength} ${notificationsLength === 1 ? "notificação" : "notificações"}`,
-                      ],
+                        'pt',
+                        `Você tem ${notificationsLength} ${notificationsLength === 1 ? 'notificação' : 'notificações'}`
+                      ]
                     ])}
               </p>
             </div>
@@ -120,8 +120,8 @@ export function Notifications({
             {!notificationsLength ? (
               <p className="text-xs font-medium text-muted-foreground p-2 py-3">
                 {writeLang([
-                  ["en", "No notifications yet"],
-                  ["pt", "Nenhuma notificação ainda"],
+                  ['en', 'No notifications yet'],
+                  ['pt', 'Nenhuma notificação ainda']
                 ])}
               </p>
             ) : (
@@ -130,8 +130,8 @@ export function Notifications({
                   <div className="flex items-center space-x-2 group">
                     <div
                       className={cn(
-                        buttonVariants({ variant: "secondary" }),
-                        "p-0 aspect-square group-hover:bg-background",
+                        buttonVariants({ variant: 'secondary' }),
+                        'p-0 aspect-square group-hover:bg-background'
                       )}
                     >
                       {notificationsIcons[item.type]}
@@ -141,7 +141,7 @@ export function Notifications({
                       <p className="text-xs leading-none text-muted-foreground">{item.description}</p>
                     </div>
                   </div>
-                );
+                )
 
                 return (
                   <DropdownMenuItem key={i} asChild>
@@ -153,7 +153,7 @@ export function Notifications({
                       child
                     )}
                   </DropdownMenuItem>
-                );
+                )
               })
             )}
           </DropdownMenuGroup>
@@ -163,8 +163,8 @@ export function Notifications({
               <DropdownMenuItem onClick={handleMarkAsRead}>
                 <span className="text-xs mx-auto text-blue-700 dark:text-blue-500">
                   {writeLang([
-                    ["en", "Mark all as read"],
-                    ["pt", "Marcar todas como lida"],
+                    ['en', 'Mark all as read'],
+                    ['pt', 'Marcar todas como lida']
                   ])}
                 </span>
               </DropdownMenuItem>
@@ -174,10 +174,10 @@ export function Notifications({
       </DropdownMenu>
       <TooltipContent sideOffset={14}>
         {writeLang([
-          ["en", "Notifications"],
-          ["pt", "Notificações"],
+          ['en', 'Notifications'],
+          ['pt', 'Notificações']
         ])}
       </TooltipContent>
     </Tooltip>
-  );
+  )
 }

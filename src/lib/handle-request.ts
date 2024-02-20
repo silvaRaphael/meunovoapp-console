@@ -1,127 +1,127 @@
-import { Language } from "../components/shared/language-provider";
-import { BASE_API } from "config/constants";
-import { customError } from "components/shared/error-toast";
+import { Language } from '../components/shared/language-provider'
+import { BASE_API } from 'config/constants'
+import { customError } from 'components/shared/error-toast'
 
 export interface IRequestOptions {
-  language?: Pick<Language, "locale">;
+  language?: Pick<Language, 'locale'>
 }
 
 const setHeaders = (option?: IRequestOptions) =>
   new Headers({
-    "Content-Type": "application/json",
-    "Content-Language": option?.language?.locale ?? "",
-  });
+    'Content-Type': 'application/json',
+    'Content-Language': option?.language?.locale ?? ''
+  })
 
 export class HandleRequest<T> {
-  private response: T | null = null;
-  private error?: any;
-  private data?: {};
+  private response: T | null = null
+  private error?: any
+  private data?: {}
 
   constructor(data?: {}) {
-    this.data = data;
+    this.data = data
   }
 
   async get(url: string, option?: IRequestOptions) {
     try {
       const response = await fetch(`${BASE_API}${url}`, {
-        method: "get",
-        credentials: "include",
-        headers: setHeaders(option),
-      });
+        method: 'get',
+        credentials: 'include',
+        headers: setHeaders(option)
+      })
 
-      if (!response.ok) throw await response.json();
+      if (!response.ok) throw await response.json()
 
-      this.response = response.headers.get("Content-Type")?.includes("application/json") ? await response.json() : null;
+      this.response = response.headers.get('Content-Type')?.includes('application/json') ? await response.json() : null
     } catch (error: any) {
-      this.error = error;
+      this.error = error
     }
 
     return {
       response: this.response,
       onDone: (fn: (response: any) => any) => this.onDone(fn),
-      onError: (fn: (error: customError) => any) => this.onError(fn),
-    };
+      onError: (fn: (error: customError) => any) => this.onError(fn)
+    }
   }
 
   async post(url: string, option?: IRequestOptions) {
     try {
-      if (!this.data) throw new Error("Data is not defined");
+      if (!this.data) throw new Error('Data is not defined')
 
       const response = await fetch(`${BASE_API}${url}`, {
-        method: "post",
-        credentials: "include",
+        method: 'post',
+        credentials: 'include',
         headers: setHeaders(option),
-        body: JSON.stringify(this.data),
-      });
+        body: JSON.stringify(this.data)
+      })
 
-      if (!response.ok) throw await response.json();
+      if (!response.ok) throw await response.json()
 
-      this.response = response.headers.get("Content-Type")?.includes("application/json") ? await response.json() : null;
+      this.response = response.headers.get('Content-Type')?.includes('application/json') ? await response.json() : null
     } catch (error: any) {
-      this.error = error;
+      this.error = error
     }
 
     return {
       response: this.response,
       onDone: (fn: (response: any) => any) => this.onDone(fn),
-      onError: (fn: (error: customError) => any) => this.onError(fn),
-    };
+      onError: (fn: (error: customError) => any) => this.onError(fn)
+    }
   }
 
   async put(url: string, option?: IRequestOptions) {
     try {
-      if (!this.data) throw new Error("Data is not defined");
+      if (!this.data) throw new Error('Data is not defined')
 
       const response = await fetch(`${BASE_API}${url}`, {
-        method: "put",
-        credentials: "include",
+        method: 'put',
+        credentials: 'include',
         headers: setHeaders(option),
-        body: JSON.stringify(this.data),
-      });
+        body: JSON.stringify(this.data)
+      })
 
-      if (!response.ok) throw await response.json();
+      if (!response.ok) throw await response.json()
 
-      this.response = response.headers.get("Content-Type")?.includes("application/json") ? await response.json() : null;
+      this.response = response.headers.get('Content-Type')?.includes('application/json') ? await response.json() : null
     } catch (error: any) {
-      this.error = error;
+      this.error = error
     }
 
     return {
       response: this.response,
       onDone: (fn: (response: any) => any) => this.onDone(fn),
-      onError: (fn: (error: customError) => any) => this.onError(fn),
-    };
+      onError: (fn: (error: customError) => any) => this.onError(fn)
+    }
   }
 
   async delete(url: string, option?: IRequestOptions) {
     try {
       const response = await fetch(`${BASE_API}${url}`, {
-        method: "delete",
-        credentials: "include",
-        headers: setHeaders(option),
-      });
+        method: 'delete',
+        credentials: 'include',
+        headers: setHeaders(option)
+      })
 
-      if (!response.ok) throw await response.json();
+      if (!response.ok) throw await response.json()
 
-      this.response = response.headers.get("Content-Type")?.includes("application/json") ? await response.json() : null;
+      this.response = response.headers.get('Content-Type')?.includes('application/json') ? await response.json() : null
     } catch (error: any) {
-      this.error = error;
+      this.error = error
     }
 
     return {
       response: this.response,
       onDone: (fn: (response: any) => any) => this.onDone(fn),
-      onError: (fn: (error: customError) => any) => this.onError(fn),
-    };
+      onError: (fn: (error: customError) => any) => this.onError(fn)
+    }
   }
 
   private onDone(fn: (response: any) => any) {
-    if (this.error) return;
-    return fn(this.response);
+    if (this.error) return
+    return fn(this.response)
   }
 
   private onError(fn: (error: customError) => any) {
-    if (!this.error) return;
-    return fn(this.error);
+    if (!this.error) return
+    return fn(this.error)
   }
 }

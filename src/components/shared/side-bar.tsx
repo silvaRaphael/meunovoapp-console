@@ -1,40 +1,40 @@
-import { Link, useNavigate } from "react-router-dom";
-import { Hash, LogOutIcon } from "lucide-react";
+import { Link, useNavigate } from 'react-router-dom'
+import { Hash, LogOutIcon } from 'lucide-react'
 
-import { DotsHorizontalIcon } from "@radix-ui/react-icons";
-import { SideMenu } from "config/site";
-import { cn } from "lib/utils";
-import { useLanguage } from "./language-provider";
-import { useUserData } from "./user-data-provider";
-import { HandleRequest } from "lib/handle-request";
-import { toast } from "components/ui/toast/use-toast";
-import { Tooltip, TooltipContent, TooltipTrigger } from "components/ui/tooltip";
+import { DotsHorizontalIcon } from '@radix-ui/react-icons'
+import { SideMenu } from 'config/site'
+import { cn } from 'lib/utils'
+import { useLanguage } from './language-provider'
+import { useUserData } from './user-data-provider'
+import { HandleRequest } from 'lib/handle-request'
+import { toast } from 'components/ui/toast/use-toast'
+import { Tooltip, TooltipContent, TooltipTrigger } from 'components/ui/tooltip'
 
-export const sideBarWidth = 200;
-export const sideBarWidthCollapsed = 48;
+export const sideBarWidth = 200
+export const sideBarWidthCollapsed = 48
 
 export function SideBar({ pathname, isOpen }: { pathname: string; isOpen: boolean }) {
-  const navigate = useNavigate();
-  const { language, writeLang } = useLanguage();
-  const { userData, removeUserData } = useUserData();
+  const navigate = useNavigate()
+  const { language, writeLang } = useLanguage()
+  const { userData, removeUserData } = useUserData()
 
-  const menu = SideMenu({ writeLang }).find((item) => item.role.includes(userData?.role || "client"))?.menu ?? [];
+  const menu = SideMenu({ writeLang }).find((item) => item.role.includes(userData?.role || 'client'))?.menu ?? []
 
   async function handleLogout() {
-    const request = await new HandleRequest().get(`/auth/sign-out`, { language });
+    const request = await new HandleRequest().get('/auth/sign-out', { language })
 
     request.onDone(() => {
-      removeUserData();
+      removeUserData()
 
       toast({
         title: writeLang([
-          ["en", "You left console!"],
-          ["pt", "Você saiu do console!"],
-        ]) as string,
-      });
+          ['en', 'You left console!'],
+          ['pt', 'Você saiu do console!']
+        ]) as string
+      })
 
-      return navigate("/");
-    });
+      return navigate('/')
+    })
   }
 
   return (
@@ -42,14 +42,14 @@ export function SideBar({ pathname, isOpen }: { pathname: string; isOpen: boolea
       className="fixed bg-background z-40"
       style={{
         width: isOpen ? sideBarWidth : sideBarWidthCollapsed,
-        height: "calc(100vh - 48px)",
+        height: 'calc(100vh - 48px)'
       }}
     >
       <div className="flex flex-col h-full border-r">
         <nav
           className="flex flex-col pb-5 overflow-y-auto vertical-scrollbar"
           style={{
-            height: "calc(100vh - 48px - 40px)",
+            height: 'calc(100vh - 48px - 40px)'
           }}
         >
           {menu.map((item, i) => (
@@ -57,7 +57,7 @@ export function SideBar({ pathname, isOpen }: { pathname: string; isOpen: boolea
               <div className="text-xs font-semibold px-4 py-3">
                 {isOpen ? item.title : item.title && <DotsHorizontalIcon width={14} className="-ms-[2px] -mt-1 mb-1" />}
               </div>
-              <div className={cn(isOpen ? "px-4 space-y-2" : "px-0 space-y-2")}>
+              <div className={cn(isOpen ? 'px-4 space-y-2' : 'px-0 space-y-2')}>
                 {item.menu.map((item, i) => {
                   return (
                     <Tooltip key={i}>
@@ -65,13 +65,13 @@ export function SideBar({ pathname, isOpen }: { pathname: string; isOpen: boolea
                         <Link
                           to={item.path}
                           className={cn(
-                            "flex items-center text-sm h-6 font-medium transition-colors hover:text-primary border-l-2 border-l-transparent group",
-                            pathname !== item.path ? "text-muted-foreground" : "",
-                            !isOpen ? "justify-center" : "",
-                            !isOpen && pathname === item.path ? "border-l-neutral-800 dark:border-l-neutral-200" : "",
+                            'flex items-center text-sm h-6 font-medium transition-colors hover:text-primary border-l-2 border-l-transparent group',
+                            pathname !== item.path ? 'text-muted-foreground' : '',
+                            !isOpen ? 'justify-center' : '',
+                            !isOpen && pathname === item.path ? 'border-l-neutral-800 dark:border-l-neutral-200' : ''
                           )}
                         >
-                          {<div className={`${!isOpen && "scale-125"}`}>{item?.icon}</div> ?? (
+                          {<div className={`${!isOpen && 'scale-125'}`}>{item?.icon}</div> ?? (
                             <Hash className="mr-1" size={14} />
                           )}
                           {isOpen && item.label}
@@ -81,7 +81,7 @@ export function SideBar({ pathname, isOpen }: { pathname: string; isOpen: boolea
                         {item.label}
                       </TooltipContent>
                     </Tooltip>
-                  );
+                  )
                 })}
               </div>
             </div>
@@ -96,19 +96,19 @@ export function SideBar({ pathname, isOpen }: { pathname: string; isOpen: boolea
               <LogOutIcon className="me-1" size={12} />
               {isOpen &&
                 writeLang([
-                  ["en", "Log out"],
-                  ["pt", "Sair"],
+                  ['en', 'Log out'],
+                  ['pt', 'Sair']
                 ])}
             </div>
           </TooltipTrigger>
           <TooltipContent side="right" hidden={!!isOpen}>
             {writeLang([
-              ["en", "Log out"],
-              ["pt", "Sair"],
+              ['en', 'Log out'],
+              ['pt', 'Sair']
             ])}
           </TooltipContent>
         </Tooltip>
       </div>
     </div>
-  );
+  )
 }

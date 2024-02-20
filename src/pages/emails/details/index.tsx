@@ -1,44 +1,44 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { SectionHeader } from "../../../components/shared/section-header";
-import { Page } from "../../../components/shared/page";
-import { HandleRequest } from "../../../lib/handle-request";
-import { useLanguage } from "../../../components/shared/language-provider";
-import { Email } from "../data/email";
-import { EmailSearch } from "../forms/search-form";
-import { errorToast } from "components/shared/error-toast";
+import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { SectionHeader } from '../../../components/shared/section-header'
+import { Page } from '../../../components/shared/page'
+import { HandleRequest } from '../../../lib/handle-request'
+import { useLanguage } from '../../../components/shared/language-provider'
+import { Email } from '../data/email'
+import { EmailSearch } from '../forms/search-form'
+import { errorToast } from 'components/shared/error-toast'
 
 export function EmailDetails() {
-  const { writeLang } = useLanguage();
+  const { writeLang } = useLanguage()
 
-  const { id } = useParams();
-  const [email, setEmail] = useState<Email>();
+  const { id } = useParams()
+  const [email, setEmail] = useState<Email>()
 
   async function getEmail(id?: string) {
-    const request = await new HandleRequest().get(`/emails/${id}`);
+    const request = await new HandleRequest().get(`/emails/${id}`)
 
     request.onDone((response) => {
-      setEmail(response as unknown as Email);
-    });
+      setEmail(response as unknown as Email)
+    })
 
     request.onError((error) => {
-      errorToast(error);
-    });
+      errorToast(error)
+    })
   }
 
   useEffect(() => {
-    const controller = new AbortController();
+    const controller = new AbortController()
 
-    getEmail(id);
+    getEmail(id)
 
     return () => {
-      controller.abort();
-    };
+      controller.abort()
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [id])
 
-  if (!email) return <></>;
+  if (!email) return <></>
 
   return (
     <Page
@@ -47,8 +47,8 @@ export function EmailDetails() {
         <SectionHeader
           title={
             writeLang([
-              ["en", "Emails"],
-              ["pt", "E-mails"],
+              ['en', 'Emails'],
+              ['pt', 'E-mails']
             ]) as string
           }
           tree={Array.isArray(email.to) ? email.to.map((to) => ({ label: to })) : [{ label: email.to }]}
@@ -59,5 +59,5 @@ export function EmailDetails() {
         <EmailSearch email={email} />
       </div>
     </Page>
-  );
+  )
 }

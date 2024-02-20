@@ -1,37 +1,37 @@
-import { z } from "zod";
+import { z } from 'zod'
 
 export const createNoteSchema = z.object({
   title: z
     .string({
-      required_error: "Título é necessário.",
+      required_error: 'Título é necessário.'
     })
-    .min(1, { message: "Título é necessário." })
-    .max(50, { message: "O título deve ter ao máximo 50 digitos." }),
+    .min(1, { message: 'Título é necessário.' })
+    .max(50, { message: 'O título deve ter ao máximo 50 digitos.' }),
   content: z
     .string({
-      required_error: "Conteúdo é necessário.",
+      required_error: 'Conteúdo é necessário.'
     })
-    .max(500, { message: "O conteúdo deve ter ao máximo 500 digitos." })
+    .max(500, { message: 'O conteúdo deve ter ao máximo 500 digitos.' })
     .optional(),
   markers: z
     .array(
       z.object({
         value: z.string({
-          required_error: "Marcador é necessário.",
-        }),
-      }),
+          required_error: 'Marcador é necessário.'
+        })
+      })
     )
-    .optional(),
-});
-export type CreateNoteSchema = z.infer<typeof createNoteSchema>;
+    .optional()
+})
+export type CreateNoteSchema = z.infer<typeof createNoteSchema>
 
 export const updateNoteSchema = z.object({
   id: z
     .string({
-      required_error: "ID é necessário.",
+      required_error: 'ID é necessário.'
     })
     .uuid({
-      message: "ID válido é necessário.",
-    }),
-});
-export type UpdateNoteSchema = z.infer<typeof updateNoteSchema>;
+      message: 'ID válido é necessário.'
+    })
+})
+export type UpdateNoteSchema = z.infer<typeof updateNoteSchema>

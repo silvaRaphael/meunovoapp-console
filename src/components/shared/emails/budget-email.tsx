@@ -1,5 +1,5 @@
-import { Text } from "@react-email/components";
-import { EmailBase } from "./email-base";
+import { Text } from '@react-email/components'
+import { EmailBase } from './email-base'
 
 export function BudgetEmail({
   name,
@@ -10,21 +10,21 @@ export function BudgetEmail({
   description,
   projectType,
   budget,
-  due,
+  due
 }: {
-  name: string;
-  email: string;
-  phone: string;
-  company: string;
-  role: string;
-  description: string;
-  projectType: string;
-  budget: string;
-  due: string;
+  name: string
+  email: string
+  phone: string
+  company: string
+  role: string
+  description: string
+  projectType: string
+  budget: string
+  due: string
 }) {
   return (
     <EmailBase title="Agradecemos pelo seu Contato">
-      <Text style={{ fontSize: 18 }}>{name ? `Olá ${name},` : "Olá,"}</Text>
+      <Text style={{ fontSize: 18 }}>{name ? `Olá ${name},` : 'Olá,'}</Text>
       <Text>
         Agradecemos por entrar em contato conosco! Sua mensagem foi recebida com sucesso e estamos empolgados em saber
         mais sobre suas necessidades e como podemos ajudar.
@@ -90,5 +90,5 @@ export function BudgetEmail({
         MeuNovoApp
       </Text>
     </EmailBase>
-  );
+  )
 }

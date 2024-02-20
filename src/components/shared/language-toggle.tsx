@@ -1,42 +1,42 @@
-import { Globe } from "lucide-react";
+import { Globe } from 'lucide-react'
 
-import { Button } from "components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "components/ui/dropdown-menu";
-import { Language, useLanguage } from "./language-provider";
-import { languages } from "config/languages";
-import { useNavigate } from "react-router-dom";
-import { MenuItems } from "config/site";
-import { UserData } from "./user-data-provider";
-import { Tooltip, TooltipContent, TooltipTrigger } from "components/ui/tooltip";
+import { Button } from 'components/ui/button'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from 'components/ui/dropdown-menu'
+import { Language, useLanguage } from './language-provider'
+import { languages } from 'config/languages'
+import { useNavigate } from 'react-router-dom'
+import { MenuItems } from 'config/site'
+import { UserData } from './user-data-provider'
+import { Tooltip, TooltipContent, TooltipTrigger } from 'components/ui/tooltip'
 
 export function LanguageToggle({
   userData = null,
-  noRedirect = false,
+  noRedirect = false
 }: {
-  userData?: UserData | null;
-  noRedirect?: boolean;
+  userData?: UserData | null
+  noRedirect?: boolean
 }) {
-  const { language, setLanguage, writeLang } = useLanguage();
-  const navigate = useNavigate();
+  const { language, setLanguage, writeLang } = useLanguage()
+  const navigate = useNavigate()
 
   function handleChangeLanguage(newLanguage: Language) {
-    let redirect = "/";
+    let redirect = '/'
 
     if (userData) {
-      const menuItems = MenuItems({ userData, writeLang, lang: language.lang });
+      const menuItems = MenuItems({ userData, writeLang, lang: language.lang })
 
-      const [, path, restPath] = window.location.pathname.split("/");
+      const [, path, restPath] = window.location.pathname.split('/')
 
-      const activeItemIndex = menuItems.indexOf(menuItems.find((item) => item.path === `/${path}`) as any);
+      const activeItemIndex = menuItems.indexOf(menuItems.find((item) => item.path === `/${path}`) as any)
 
-      const newMenuItems = MenuItems({ userData, writeLang, lang: newLanguage.lang });
+      const newMenuItems = MenuItems({ userData, writeLang, lang: newLanguage.lang })
 
-      redirect = `${newMenuItems[activeItemIndex].path}${restPath ? `/${restPath}` : ""}`;
+      redirect = `${newMenuItems[activeItemIndex].path}${restPath ? `/${restPath}` : ''}`
     }
 
-    setLanguage(newLanguage);
+    setLanguage(newLanguage)
 
-    if (!noRedirect) navigate(redirect);
+    if (!noRedirect) navigate(redirect)
   }
 
   return (
@@ -61,10 +61,10 @@ export function LanguageToggle({
       </DropdownMenu>
       <TooltipContent sideOffset={14}>
         {writeLang([
-          ["en", "Change Language"],
-          ["pt", "Alterar Idioma"],
+          ['en', 'Change Language'],
+          ['pt', 'Alterar Idioma']
         ])}
       </TooltipContent>
     </Tooltip>
-  );
+  )
 }

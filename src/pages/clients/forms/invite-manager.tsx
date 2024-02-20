@@ -1,54 +1,54 @@
-import React, { useState } from "react";
-import { InviteUserSchema, inviteUserSchema } from "adapters/client";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useLanguage } from "components/shared/language-provider";
-import { toast } from "components/ui/toast/use-toast";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "components/ui/form";
-import { Input } from "components/ui/input";
-import { SubmitButton } from "components/shared/submit-button";
-import { ContentAlert } from "components/shared/content-alert";
-import { Client } from "../data/client";
-import { useMutation } from "@tanstack/react-query";
-import { api } from "lib/axios";
-import { queryClient } from "components/shared/query";
+import React, { useState } from 'react'
+import { InviteUserSchema, inviteUserSchema } from 'adapters/client'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useLanguage } from 'components/shared/language-provider'
+import { toast } from 'components/ui/toast/use-toast'
+import { Form, FormControl, FormField, FormItem, FormMessage } from 'components/ui/form'
+import { Input } from 'components/ui/input'
+import { SubmitButton } from 'components/shared/submit-button'
+import { ContentAlert } from 'components/shared/content-alert'
+import { Client } from '../data/client'
+import { useMutation } from '@tanstack/react-query'
+import { api } from 'lib/axios'
+import { queryClient } from 'components/shared/query'
 
 export function InviteManagerForm({
   triggerButton,
-  client,
+  client
 }: {
-  triggerButton: React.ReactElement;
-  client: Client | null;
+  triggerButton: React.ReactElement
+  client: Client | null
 }) {
-  const { language, writeLang } = useLanguage();
+  const { language, writeLang } = useLanguage()
 
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false)
 
   const form = useForm<InviteUserSchema>({
     resolver: zodResolver(inviteUserSchema),
     defaultValues: {},
-    mode: "onChange",
-  });
+    mode: 'onChange'
+  })
 
   const inviteUser = async (data: InviteUserSchema) => {
-    if (!client) return;
+    if (!client) return
 
     return await api.post(
-      `/users`,
+      '/users',
       {
         email: data.email,
         client_id: client.id,
-        is_manager: true,
+        is_manager: true
       },
-      { headers: { "Content-Language": language.locale } },
-    );
-  };
+      { headers: { 'Content-Language': language.locale } }
+    )
+  }
 
   const { mutate: inviteUserFn } = useMutation({
-    mutationKey: ["clients"],
+    mutationKey: ['clients'],
     mutationFn: inviteUser,
     onSuccess(data, variables) {
-      queryClient.setQueryData(["clients"], (items: Client[]) => {
+      queryClient.setQueryData(['clients'], (items: Client[]) => {
         return items.map((item) => {
           if (item.id === client?.id) {
             return {
@@ -58,33 +58,33 @@ export function InviteManagerForm({
                   id: (data as any).data.id,
                   name: null,
                   email: variables.email,
-                  is_manager: true,
-                },
-              ],
-            };
+                  is_manager: true
+                }
+              ]
+            }
           }
 
-          return item;
-        });
-      });
+          return item
+        })
+      })
 
       toast({
         title: writeLang([
-          ["en", "Manager has been invited successfully!"],
-          ["pt", "Responsável foi convidado com sucesso!"],
-        ]) as string,
-      });
+          ['en', 'Manager has been invited successfully!'],
+          ['pt', 'Responsável foi convidado com sucesso!']
+        ]) as string
+      })
 
       form.reset({
-        email: "",
-      });
+        email: ''
+      })
 
-      setOpen(false);
-    },
-  });
+      setOpen(false)
+    }
+  })
 
   function handleInvite(data: InviteUserSchema) {
-    inviteUserFn(data);
+    inviteUserFn(data)
   }
 
   return (
@@ -94,8 +94,8 @@ export function InviteManagerForm({
       onOpenChange={() => setOpen(!open)}
       title={
         writeLang([
-          ["en", "Invite new manager"],
-          ["pt", "Convidar novo responsável"],
+          ['en', 'Invite new manager'],
+          ['pt', 'Convidar novo responsável']
         ]) as string
       }
       hideCloseButton
@@ -112,12 +112,12 @@ export function InviteManagerForm({
                     <Input
                       placeholder={
                         writeLang([
-                          ["en", "Email"],
-                          ["pt", "E-mail"],
+                          ['en', 'Email'],
+                          ['pt', 'E-mail']
                         ]) as string
                       }
                       maxLength={50}
-                      value={field.value || ""}
+                      value={field.value || ''}
                       onChange={field.onChange}
                       ref={field.ref}
                     />
@@ -129,17 +129,17 @@ export function InviteManagerForm({
             <SubmitButton
               label={
                 writeLang([
-                  ["en", "Invite Manager"],
-                  ["pt", "Convidar Responsável"],
+                  ['en', 'Invite Manager'],
+                  ['pt', 'Convidar Responsável']
                 ]) as string
               }
               type="submit"
-              state={form.formState.isSubmitting ? "loading" : "initial"}
+              state={form.formState.isSubmitting ? 'loading' : 'initial'}
               className="w-full"
             />
           </div>
         </form>
       </Form>
     </ContentAlert>
-  );
+  )
 }

@@ -1,33 +1,33 @@
-import { ColumnDef } from "@tanstack/react-table";
-import { DataTableColumnHeader } from "../../../components/ui/data-table/data-table-column-header";
-import { MemberInfo } from "../../../components/shared/member-info";
-import { Badge } from "components/ui/badge";
-import { buttonVariants } from "components/ui/button";
-import { formatDistance } from "date-fns";
-import { Langs, languages } from "config/languages";
-import { Language } from "components/shared/language-provider";
-import { SubmitButton } from "components/shared/submit-button";
-import { cn } from "lib/utils";
-import { User } from "pages/users/data/user";
-import { Link } from "react-router-dom";
-import { Actions } from "components/shared/actions";
-import { toast } from "components/ui/toast/use-toast";
-import { api } from "lib/axios";
+import { ColumnDef } from '@tanstack/react-table'
+import { DataTableColumnHeader } from '../../../components/ui/data-table/data-table-column-header'
+import { MemberInfo } from '../../../components/shared/member-info'
+import { Badge } from 'components/ui/badge'
+import { buttonVariants } from 'components/ui/button'
+import { formatDistance } from 'date-fns'
+import { Langs, languages } from 'config/languages'
+import { Language } from 'components/shared/language-provider'
+import { SubmitButton } from 'components/shared/submit-button'
+import { cn } from 'lib/utils'
+import { User } from 'pages/users/data/user'
+import { Link } from 'react-router-dom'
+import { Actions } from 'components/shared/actions'
+import { toast } from 'components/ui/toast/use-toast'
+import { api } from 'lib/axios'
 
 export const userColumns = (
-  language: Pick<Language, "lang" | "locale" | "currency">,
-  writeLang: (texts: [Langs, React.ReactNode][]) => React.ReactNode,
+  language: Pick<Language, 'lang' | 'locale' | 'currency'>,
+  writeLang: (texts: [Langs, React.ReactNode][]) => React.ReactNode
 ): ColumnDef<User>[] => {
   return [
     {
-      accessorKey: "name",
+      accessorKey: 'name',
       header: ({ column }) => (
         <DataTableColumnHeader
           column={column}
           title={
             writeLang([
-              ["en", "Nome"],
-              ["pt", "Nome"],
+              ['en', 'Nome'],
+              ['pt', 'Nome']
             ]) as string
           }
         />
@@ -39,107 +39,107 @@ export const userColumns = (
             {row.original.is_manager && (
               <Badge variant="outline" className="h-min">
                 {writeLang([
-                  ["en", "Manager"],
-                  ["pt", "Responsável"],
+                  ['en', 'Manager'],
+                  ['pt', 'Responsável']
                 ])}
               </Badge>
             )}
           </div>
-        );
+        )
 
         const link = (
           <Link
             to={
               writeLang([
-                ["en", `/users/${row.original.id}`],
-                ["pt", `/usuarios/${row.original.id}`],
+                ['en', `/users/${row.original.id}`],
+                ['pt', `/usuarios/${row.original.id}`]
               ]) as string
             }
           >
             {child}
           </Link>
-        );
+        )
 
-        return row.original.activated_at ? link : child;
-      },
+        return row.original.activated_at ? link : child
+      }
     },
     {
-      id: "invited_actived_time",
+      id: 'invited_actived_time',
       cell: ({ row }) => {
-        if (!row.original.activated_at && !row.original.invited_at) return <></>;
+        if (!row.original.activated_at && !row.original.invited_at) return <></>
 
         const distanceTime = formatDistance(
           new Date(row.original.activated_at ?? row.original.invited_at ?? new Date()),
           new Date(),
           {
             locale: languages.find((item) => item.lang === language.lang)?.dateLocale,
-            addSuffix: true,
-          },
-        );
+            addSuffix: true
+          }
+        )
 
         return (
           <>
             {writeLang([
-              ["en", row.original.activated_at ? "Active " : "Invited "],
-              ["pt", row.original.activated_at ? "Ativo " : "Convidado "],
-            ])}{" "}
+              ['en', row.original.activated_at ? 'Active ' : 'Invited '],
+              ['pt', row.original.activated_at ? 'Ativo ' : 'Convidado ']
+            ])}{' '}
             {distanceTime}
           </>
-        );
-      },
+        )
+      }
     },
     {
-      id: "reinvite",
+      id: 'reinvite',
       cell: ({ row }) => {
-        if (row.original.activated_at) return <></>;
+        if (row.original.activated_at) return <></>
 
         return (
           <div className="text-right">
             <SubmitButton
-              className={cn(buttonVariants({ variant: "outline", size: "sm" }), "text-text")}
+              className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'text-text')}
               label={
                 writeLang([
-                  ["en", `Reinvite user`],
-                  ["pt", `Reconvidar usuário`],
+                  ['en', 'Reinvite user'],
+                  ['pt', 'Reconvidar usuário']
                 ]) as string
               }
               onSubmit={async () => {
                 await api.post(
                   `/users/invite/${row.original.id}`,
                   {
-                    email: row.original.email,
+                    email: row.original.email
                   },
-                  { headers: { "Content-Language": language.locale } },
-                );
+                  { headers: { 'Content-Language': language.locale } }
+                )
 
                 toast({
                   title: writeLang([
-                    ["en", "User has been reinvited successfully!"],
-                    ["pt", "Usuário foi reconvidado com sucesso!"],
-                  ]) as string,
-                });
+                    ['en', 'User has been reinvited successfully!'],
+                    ['pt', 'Usuário foi reconvidado com sucesso!']
+                  ]) as string
+                })
               }}
             />
           </div>
-        );
-      },
+        )
+      }
     },
     {
-      id: "actions",
+      id: 'actions',
       cell: ({ row }) => {
         return (
           <div className="text-right">
             <Actions.Edit
               to={
                 writeLang([
-                  ["en", `/users/${row.original.id}`],
-                  ["pt", `/usuarios/${row.original.id}`],
+                  ['en', `/users/${row.original.id}`],
+                  ['pt', `/usuarios/${row.original.id}`]
                 ]) as string
               }
             />
           </div>
-        );
-      },
-    },
-  ];
-};
+        )
+      }
+    }
+  ]
+}

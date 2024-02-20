@@ -1,10 +1,10 @@
-import { cn } from "lib/utils";
-import { buttonVariants } from "../button";
-import { Toast, ToastClose, ToastDescription, ToastProvider, ToastTitle, ToastViewport } from "./toast";
-import { useToast } from "./use-toast";
+import { cn } from 'lib/utils'
+import { buttonVariants } from '../button'
+import { Toast, ToastClose, ToastDescription, ToastProvider, ToastTitle, ToastViewport } from './toast'
+import { useToast } from './use-toast'
 
 export function Toaster() {
-  const { toasts } = useToast();
+  const { toasts } = useToast()
 
   return (
     <ToastProvider>
@@ -12,7 +12,7 @@ export function Toaster() {
         return (
           <Toast key={id} {...props}>
             <div className="flex space-x-4 items-center">
-              <span className={cn(buttonVariants({ variant: "outline" }), "p-0 w-9 h-9 pointer-events-none")}>
+              <span className={cn(buttonVariants({ variant: 'outline' }), 'p-0 w-9 h-9 pointer-events-none')}>
                 <img src="/icons/firework-light.gif" alt="" className="w-9 h-9" />
               </span>
               <div className="grid gap-1">
@@ -23,9 +23,9 @@ export function Toaster() {
               <ToastClose />
             </div>
           </Toast>
-        );
+        )
       })}
       <ToastViewport />
     </ToastProvider>
-  );
+  )
 }

@@ -1,5 +1,5 @@
-import { ReactElement, ReactNode } from "react";
-import { Button } from "../ui/button";
+import { ReactElement, ReactNode } from 'react'
+import { Button } from '../ui/button'
 import {
   Sheet,
   SheetClose,
@@ -8,18 +8,18 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
-} from "../ui/sheet";
+  SheetTrigger
+} from '../ui/sheet'
 
 interface Props {
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
-  triggerButton?: ReactElement;
-  title: string;
-  description?: string;
-  children?: ReactNode;
-  closeButton?: boolean;
-  confirmButton?: ReactElement;
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+  triggerButton?: ReactElement
+  title: string
+  description?: string
+  children?: ReactNode
+  closeButton?: boolean
+  confirmButton?: ReactElement
 }
 
 export function CustomSheet({
@@ -30,7 +30,7 @@ export function CustomSheet({
   description,
   children,
   closeButton = true,
-  confirmButton,
+  confirmButton
 }: Props) {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -51,5 +51,5 @@ export function CustomSheet({
         </SheetFooter>
       </SheetContent>
     </Sheet>
-  );
+  )
 }

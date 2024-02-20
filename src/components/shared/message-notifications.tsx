@@ -1,4 +1,4 @@
-import { Button, buttonVariants } from "../ui/button";
+import { Button, buttonVariants } from '../ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -6,47 +6,47 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import { MessageCircle } from "lucide-react";
-import { format } from "date-fns";
-import { useLanguage } from "./language-provider";
-import { languages } from "config/languages";
-import { cn } from "lib/utils";
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { Message } from "pages/chat/data/message";
-import { ChatBubbleIcon } from "@radix-ui/react-icons";
-import { Tooltip, TooltipContent, TooltipTrigger } from "components/ui/tooltip";
+  DropdownMenuTrigger
+} from '../ui/dropdown-menu'
+import { MessageCircle } from 'lucide-react'
+import { format } from 'date-fns'
+import { useLanguage } from './language-provider'
+import { languages } from 'config/languages'
+import { cn } from 'lib/utils'
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { Message } from 'pages/chat/data/message'
+import { ChatBubbleIcon } from '@radix-ui/react-icons'
+import { Tooltip, TooltipContent, TooltipTrigger } from 'components/ui/tooltip'
 
 export function MessageNotifications({ messages }: { messages: Message[] }) {
-  const { language, writeLang } = useLanguage();
+  const { language, writeLang } = useLanguage()
 
-  const [open, onOpenChange] = useState<boolean>(false);
-  const [time, setTime] = useState<Date | null>(null);
+  const [open, onOpenChange] = useState<boolean>(false)
+  const [time, setTime] = useState<Date | null>(null)
 
   useEffect(() => {
-    const controller = new AbortController();
+    const controller = new AbortController()
 
-    let currentTime: any;
+    let currentTime: any
 
     if (open) {
       currentTime = setInterval(() => {
-        setTime(new Date());
-      }, 1000);
+        setTime(new Date())
+      }, 1000)
     }
 
     return () => {
-      clearInterval(currentTime);
-      setTime(null);
+      clearInterval(currentTime)
+      setTime(null)
 
-      controller.abort();
-    };
+      controller.abort()
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  }, [open])
 
-  const messagesLength = messages?.length ?? 0;
+  const messagesLength = messages?.length ?? 0
 
   return (
     <Tooltip>
@@ -67,28 +67,28 @@ export function MessageNotifications({ messages }: { messages: Message[] }) {
               <p className="text-sm font-medium leading-none">
                 {writeLang([
                   [
-                    "en",
-                    `Welcome, ${format(time ?? new Date(), "pp", {
-                      locale: languages.find((item) => item.lang === language.lang)?.dateLocale,
-                    })} now`,
+                    'en',
+                    `Welcome, ${format(time ?? new Date(), 'pp', {
+                      locale: languages.find((item) => item.lang === language.lang)?.dateLocale
+                    })} now`
                   ],
                   [
-                    "pt",
-                    `Bem-vindo, ${format(time ?? new Date(), "pp", {
-                      locale: languages.find((item) => item.lang === language.lang)?.dateLocale,
-                    })} agora`,
-                  ],
+                    'pt',
+                    `Bem-vindo, ${format(time ?? new Date(), 'pp', {
+                      locale: languages.find((item) => item.lang === language.lang)?.dateLocale
+                    })} agora`
+                  ]
                 ])}
               </p>
               <p className="text-xs leading-none text-muted-foreground">
                 {!messagesLength
                   ? writeLang([
-                      ["en", "You don't have any messages"],
-                      ["pt", "Você não tem nenhuma mensagem"],
+                      ['en', "You don't have any messages"],
+                      ['pt', 'Você não tem nenhuma mensagem']
                     ])
                   : writeLang([
-                      ["en", `You have ${messagesLength} messages`],
-                      ["pt", `Você tem ${messagesLength} ${messagesLength === 1 ? "mensagem" : "mensagens"}`],
+                      ['en', `You have ${messagesLength} messages`],
+                      ['pt', `Você tem ${messagesLength} ${messagesLength === 1 ? 'mensagem' : 'mensagens'}`]
                     ])}
               </p>
             </div>
@@ -98,8 +98,8 @@ export function MessageNotifications({ messages }: { messages: Message[] }) {
             {!messagesLength ? (
               <p className="text-xs font-medium text-muted-foreground p-2 py-3">
                 {writeLang([
-                  ["en", "No messages yet"],
-                  ["pt", "Nenhuma mensagem ainda"],
+                  ['en', 'No messages yet'],
+                  ['pt', 'Nenhuma mensagem ainda']
                 ])}
               </p>
             ) : (
@@ -108,8 +108,8 @@ export function MessageNotifications({ messages }: { messages: Message[] }) {
                   <div className="flex items-center space-x-2 group">
                     <div
                       className={cn(
-                        buttonVariants({ variant: "secondary" }),
-                        "p-0 aspect-square group-hover:bg-background",
+                        buttonVariants({ variant: 'secondary' }),
+                        'p-0 aspect-square group-hover:bg-background'
                       )}
                     >
                       <ChatBubbleIcon />
@@ -118,8 +118,8 @@ export function MessageNotifications({ messages }: { messages: Message[] }) {
                       <span className="text-sm font-medium leading-none">
                         {`${
                           writeLang([
-                            ["en", "New message from"],
-                            ["pt", "Nova mensagem de"],
+                            ['en', 'New message from'],
+                            ['pt', 'Nova mensagem de']
                           ]) as string
                         } ${item.user.name}`}
                       </span>
@@ -128,15 +128,15 @@ export function MessageNotifications({ messages }: { messages: Message[] }) {
                       </p>
                     </div>
                   </div>
-                );
+                )
 
                 return (
                   <DropdownMenuItem key={i} asChild>
-                    <Link to={`/chat`} className="cursor-pointer">
+                    <Link to={'/chat'} className="cursor-pointer">
                       {child}
                     </Link>
                   </DropdownMenuItem>
-                );
+                )
               })
             )}
           </DropdownMenuGroup>
@@ -144,10 +144,10 @@ export function MessageNotifications({ messages }: { messages: Message[] }) {
       </DropdownMenu>
       <TooltipContent sideOffset={14}>
         {writeLang([
-          ["en", "Messages"],
-          ["pt", "Mensagens"],
+          ['en', 'Messages'],
+          ['pt', 'Mensagens']
         ])}
       </TooltipContent>
     </Tooltip>
-  );
+  )
 }

@@ -1,11 +1,11 @@
-import { Button } from "components/ui/button";
-import { Input } from "components/ui/input";
-import { Eye, EyeOff } from "lucide-react";
-import React from "react";
+import { Button } from 'components/ui/button'
+import { Input } from 'components/ui/input'
+import { Eye, EyeOff } from 'lucide-react'
+import React from 'react'
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  passwordVisible: boolean;
-  setPasswordVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  passwordVisible: boolean
+  setPasswordVisible: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const PasswordInput = React.forwardRef<HTMLInputElement, InputProps>(
@@ -13,8 +13,8 @@ const PasswordInput = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="flex space-x-2 relative">
         <Input
-          type={!passwordVisible ? "password" : "text"}
-          placeholder={props.placeholder ?? "Sua senha"}
+          type={!passwordVisible ? 'password' : 'text'}
+          placeholder={props.placeholder ?? 'Sua senha'}
           maxLength={20}
           className="pe-10"
           ref={ref}
@@ -30,9 +30,9 @@ const PasswordInput = React.forwardRef<HTMLInputElement, InputProps>(
           {!passwordVisible ? <Eye size={14} /> : <EyeOff size={14} />}
         </Button>
       </div>
-    );
-  },
-);
-Input.displayName = "PasswordInput";
+    )
+  }
+)
+Input.displayName = 'PasswordInput'
 
-export { PasswordInput };
+export { PasswordInput }

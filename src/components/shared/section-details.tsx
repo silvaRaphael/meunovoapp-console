@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react'
 
 export function SectionDetails({ title, subtitle }: { title: string | ReactNode; subtitle?: string | ReactNode }) {
   return (
@@ -6,5 +6,5 @@ export function SectionDetails({ title, subtitle }: { title: string | ReactNode;
       <h3 className="text-lg font-medium">{title}</h3>
       <p className="text-sm text-muted-foreground">{subtitle}</p>
     </div>
-  );
+  )
 }

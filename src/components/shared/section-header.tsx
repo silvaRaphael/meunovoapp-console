@@ -1,26 +1,26 @@
-import { ReactNode } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { cn } from "lib/utils";
-import { ArrowLeft } from "lucide-react";
+import { ReactNode } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { cn } from 'lib/utils'
+import { ArrowLeft } from 'lucide-react'
 
 export function SectionHeader({
   isRoot = false,
   title,
   tree,
-  children,
+  children
 }: {
-  isRoot?: boolean;
-  title?: string;
-  tree?: { label: string; pathname?: string }[];
-  children?: ReactNode;
+  isRoot?: boolean
+  title?: string
+  tree?: { label: string; pathname?: string }[]
+  children?: ReactNode
 }) {
   document.title = isRoot
-    ? "Console | MeuNovoApp"
+    ? 'Console | MeuNovoApp'
     : !tree?.length
-    ? `${title} - Console | MeuNovoApp`
-    : `${tree?.at(-1)?.label} - Console | MeuNovoApp`;
+      ? `${title} - Console | MeuNovoApp`
+      : `${tree?.at(-1)?.label} - Console | MeuNovoApp`
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   return (
     <div className="w-full pt-4">
@@ -29,8 +29,8 @@ export function SectionHeader({
           {title && (
             <span
               className={cn(
-                "flex items-center font-semibold cursor-pointer",
-                tree?.length ? "text-sm text-muted-foreground" : "",
+                'flex items-center font-semibold cursor-pointer',
+                tree?.length ? 'text-sm text-muted-foreground' : ''
               )}
               onClick={() => navigate(-1)}
             >
@@ -44,23 +44,23 @@ export function SectionHeader({
                 <Link
                   key={i}
                   to={item.pathname}
-                  className={cn("text-2xl font-semibold", i < arr.length - 1 ? "text-sm text-muted-foreground" : "")}
+                  className={cn('text-2xl font-semibold', i < arr.length - 1 ? 'text-sm text-muted-foreground' : '')}
                 >
                   {item.label}
                 </Link>
               ) : (
                 <span
                   key={i}
-                  className={cn("text-2xl font-semibold", i < arr.length - 1 ? "text-sm text-muted-foreground" : "")}
+                  className={cn('text-2xl font-semibold', i < arr.length - 1 ? 'text-sm text-muted-foreground' : '')}
                 >
                   {item.label}
                 </span>
-              ),
+              )
             )}
           </div>
         </div>
         <div className="ml-auto flex items-center space-x-4">{children}</div>
       </div>
     </div>
-  );
+  )
 }

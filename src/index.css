@@ -12,18 +12,17 @@
   .vertical-scrollbar::-webkit-scrollbar {
     width: 2px;
   }
-  
+
   .horizontal-scrollbar::-webkit-scrollbar-thumb,
   .vertical-scrollbar::-webkit-scrollbar-thumb {
     background-color: #e0e0e0;
   }
 
-    .dark .horizontal-scrollbar::-webkit-scrollbar-thumb,
-    .dark .vertical-scrollbar::-webkit-scrollbar-thumb {
-      background-color: #1c1c1c;
-    }
+  .dark .horizontal-scrollbar::-webkit-scrollbar-thumb,
+  .dark .vertical-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #1c1c1c;
+  }
 }
-
 
 @layer base {
   :root {
@@ -48,7 +47,7 @@
     --ring: 240 5.9% 10%;
     --radius: 0.5rem;
   }
- 
+
   .dark {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
@@ -71,7 +70,6 @@
     --ring: 240 4.9% 83.9%;
   }
 }
-
 
 @layer base {
   * {

@@ -1,26 +1,26 @@
-import { ReactNode } from "react";
-import { Link } from "react-router-dom";
-import { Button } from "../ui/button";
-import { Eye, Pencil, Trash2, X } from "lucide-react";
-import { cn } from "../../lib/utils";
+import { ReactNode } from 'react'
+import { Link } from 'react-router-dom'
+import { Button } from '../ui/button'
+import { Eye, Pencil, Trash2, X } from 'lucide-react'
+import { cn } from '../../lib/utils'
 
 const ButtonStruct = ({
   onClick,
   to,
   className,
-  children,
+  children
 }: {
-  onClick?: () => void;
-  to?: string;
-  className?: string;
-  children: ReactNode;
+  onClick?: () => void
+  to?: string
+  className?: string
+  children: ReactNode
 }) => {
   return (
-    <Button size="icon" variant="ghost" className={cn("cursor-pointer", className)} asChild>
+    <Button size="icon" variant="ghost" className={cn('cursor-pointer', className)} asChild>
       {to ? <Link to={to}>{children}</Link> : <div onClick={onClick}>{children}</div>}
     </Button>
-  );
-};
+  )
+}
 
 export const Actions = {
   See: ({ onClick, to, className }: { onClick?: () => void; to?: string; className?: string }) => (
@@ -42,5 +42,5 @@ export const Actions = {
     <ButtonStruct to={to} onClick={onClick} className={className}>
       <X size={16} />
     </ButtonStruct>
-  ),
-};
+  )
+}

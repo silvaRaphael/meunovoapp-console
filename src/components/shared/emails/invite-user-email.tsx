@@ -1,5 +1,5 @@
-import { Button, Link, Text } from "@react-email/components";
-import { EmailBase } from "./email-base";
+import { Button, Link, Text } from '@react-email/components'
+import { EmailBase } from './email-base'
 
 export function InviteUserEmail({ userId }: { userId: string }) {
   return (
@@ -24,10 +24,10 @@ export function InviteUserEmail({ userId }: { userId: string }) {
         style={{
           padding: 12,
           borderRadius: 12,
-          backgroundColor: "#18181b",
-          color: "#f4f4f5",
+          backgroundColor: '#18181b',
+          color: '#f4f4f5',
           fontSize: 14,
-          fontWeight: 600,
+          fontWeight: 600
         }}
         href={`https://console.meunovoapp.com.br/comecar?u=${userId}`}
       >
@@ -43,7 +43,7 @@ export function InviteUserEmail({ userId }: { userId: string }) {
         <span style={{ fontWeight: 600 }}>Explorando a Plataforma: </span>
         <Link href="https://console.meunovoapp.com.br" target="_blank">
           Acesse
-        </Link>{" "}
+        </Link>{' '}
         e comece a explorar os recursos disponíveis.
       </Text>
 
@@ -62,5 +62,5 @@ export function InviteUserEmail({ userId }: { userId: string }) {
         MeuNovoApp
       </Text>
     </EmailBase>
-  );
+  )
 }

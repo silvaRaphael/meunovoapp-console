@@ -1,16 +1,16 @@
-import { toast } from "components/ui/toast/use-toast";
-import { Fragment } from "react";
+import { toast } from 'components/ui/toast/use-toast'
+import { Fragment } from 'react'
 
 export interface customError {
   error: {
-    title: string;
-    errors: { message: string; path?: string }[];
-  };
-  redirect?: string;
+    title: string
+    errors: { message: string; path?: string }[]
+  }
+  redirect?: string
 }
 
 export function errorToast({ error }: customError) {
-  const { title, errors } = error;
+  const { title, errors } = error
 
   return toast({
     title,
@@ -23,6 +23,6 @@ export function errorToast({ error }: customError) {
           <br />
         </Fragment>
       )),
-    variant: "destructive",
-  });
+    variant: 'destructive'
+  })
 }

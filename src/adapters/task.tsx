@@ -1,44 +1,44 @@
-import { z } from "zod";
+import { z } from 'zod'
 
 export const createTaskSchema = z.object({
   project_id: z
     .string({
-      required_error: "Projeto é necessário.",
+      required_error: 'Projeto é necessário.'
     })
     .uuid({
-      message: "ID válido é necessário.",
+      message: 'ID válido é necessário.'
     }),
   name: z
     .string({
-      required_error: "Nome é necessário.",
+      required_error: 'Nome é necessário.'
     })
-    .max(50, { message: "O nome deve ter ao máximo 50 digitos." }),
+    .max(50, { message: 'O nome deve ter ao máximo 50 digitos.' }),
   description: z
     .string({
-      required_error: "Descrição é necessária.",
+      required_error: 'Descrição é necessária.'
     })
-    .max(500, { message: "A descrição deve ter ao máximo 500 digitos." })
+    .max(500, { message: 'A descrição deve ter ao máximo 500 digitos.' })
     .optional(),
   status: z
-    .enum(["waiting", "in progress", "completed", "cancelled"], {
-      required_error: "Status é necessário.",
+    .enum(['waiting', 'in progress', 'completed', 'cancelled'], {
+      required_error: 'Status é necessário.'
     })
     .optional(),
   startDate: z.coerce
     .date({
-      required_error: "Data de início é necessária.",
+      required_error: 'Data de início é necessária.'
     })
-    .optional(),
-});
-export type CreateTaskSchema = z.infer<typeof createTaskSchema>;
+    .optional()
+})
+export type CreateTaskSchema = z.infer<typeof createTaskSchema>
 
 export const updateTaskSchema = z.object({
   id: z
     .string({
-      required_error: "ID é necessário.",
+      required_error: 'ID é necessário.'
     })
     .uuid({
-      message: "ID válido é necessário.",
-    }),
-});
-export type UpdateTaskSchema = z.infer<typeof updateTaskSchema>;
+      message: 'ID válido é necessário.'
+    })
+})
+export type UpdateTaskSchema = z.infer<typeof updateTaskSchema>

@@ -1,18 +1,18 @@
-import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { MixerHorizontalIcon } from "@radix-ui/react-icons";
-import { Table } from "@tanstack/react-table";
+import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu'
+import { MixerHorizontalIcon } from '@radix-ui/react-icons'
+import { Table } from '@tanstack/react-table'
 
-import { Button } from "../button";
+import { Button } from '../button'
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
-} from "../dropdown-menu";
+  DropdownMenuSeparator
+} from '../dropdown-menu'
 
 interface DataTableViewOptionsProps<TData> {
-  table: Table<TData>;
+  table: Table<TData>
 }
 
 export function DataTableViewOptions<TData>({ table }: DataTableViewOptionsProps<TData>) {
@@ -29,7 +29,7 @@ export function DataTableViewOptions<TData>({ table }: DataTableViewOptionsProps
         <DropdownMenuSeparator />
         {table
           .getAllColumns()
-          .filter((column) => typeof column.accessorFn !== "undefined" && column.getCanHide())
+          .filter((column) => typeof column.accessorFn !== 'undefined' && column.getCanHide())
           .map((column) => {
             return (
               <DropdownMenuCheckboxItem
@@ -40,9 +40,9 @@ export function DataTableViewOptions<TData>({ table }: DataTableViewOptionsProps
               >
                 {column.id}
               </DropdownMenuCheckboxItem>
-            );
+            )
           })}
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }

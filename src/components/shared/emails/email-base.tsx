@@ -9,15 +9,15 @@ import {
   Preview,
   Row,
   Section,
-  Text,
-} from "@react-email/components";
-import { ReactNode } from "react";
+  Text
+} from '@react-email/components'
+import { ReactNode } from 'react'
 
 export function EmailBase({ title, children }: { title: string; children?: ReactNode }) {
   return (
     <Html
       style={{
-        backgroundColor: "#f4f4f5",
+        backgroundColor: '#f4f4f5'
       }}
     >
       <Head>
@@ -26,18 +26,18 @@ export function EmailBase({ title, children }: { title: string; children?: React
       <Body>
         <Section
           style={{
-            color: "#18181b",
-            backgroundColor: "#f4f4f5",
+            color: '#18181b',
+            backgroundColor: '#f4f4f5'
           }}
         >
           <Container
             style={{
-              textAlign: "center",
+              textAlign: 'center'
             }}
           >
             <Row
               style={{
-                width: "min-content",
+                width: 'min-content'
               }}
             >
               <Column>
@@ -45,7 +45,7 @@ export function EmailBase({ title, children }: { title: string; children?: React
                   style={{
                     fontWeight: 600,
                     fontSize: 20,
-                    width: "min-content",
+                    width: 'min-content'
                   }}
                 >
                   Meu
@@ -56,8 +56,8 @@ export function EmailBase({ title, children }: { title: string; children?: React
                   style={{
                     fontWeight: 600,
                     fontSize: 20,
-                    width: "min-content",
-                    color: "rgb(239, 68, 68)",
+                    width: 'min-content',
+                    color: 'rgb(239, 68, 68)'
                   }}
                 >
                   Novo
@@ -68,7 +68,7 @@ export function EmailBase({ title, children }: { title: string; children?: React
                   style={{
                     fontWeight: 600,
                     fontSize: 20,
-                    width: "min-content",
+                    width: 'min-content'
                   }}
                 >
                   App
@@ -78,9 +78,9 @@ export function EmailBase({ title, children }: { title: string; children?: React
           </Container>
           <Container
             style={{
-              textAlign: "center",
+              textAlign: 'center',
               height: 80,
-              backgroundColor: "#18181b",
+              backgroundColor: '#18181b'
             }}
           >
             <Row>
@@ -89,7 +89,7 @@ export function EmailBase({ title, children }: { title: string; children?: React
                   fontSize: 20,
                   fontWeight: 700,
                   margin: 20,
-                  color: "#f4f4f5",
+                  color: '#f4f4f5'
                 }}
               >
                 {title}
@@ -98,17 +98,17 @@ export function EmailBase({ title, children }: { title: string; children?: React
           </Container>
           <Container
             style={{
-              display: "block",
+              display: 'block',
               padding: 20,
-              backgroundColor: "#fff",
+              backgroundColor: '#fff'
             }}
           >
             {children}
           </Container>
           <Container
             style={{
-              textAlign: "center",
-              backgroundColor: "#18181b",
+              textAlign: 'center',
+              backgroundColor: '#18181b'
             }}
           >
             <Button
@@ -116,7 +116,7 @@ export function EmailBase({ title, children }: { title: string; children?: React
                 fontSize: 14,
                 fontWeight: 500,
                 margin: 16,
-                color: "#f4f4f5",
+                color: '#f4f4f5'
               }}
               href="https://meunovoapp.com.br"
             >
@@ -126,5 +126,5 @@ export function EmailBase({ title, children }: { title: string; children?: React
         </Section>
       </Body>
     </Html>
-  );
+  )
 }

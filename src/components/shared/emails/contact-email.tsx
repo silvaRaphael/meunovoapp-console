@@ -1,20 +1,20 @@
-import { Text } from "@react-email/components";
-import { EmailBase } from "./email-base";
+import { Text } from '@react-email/components'
+import { EmailBase } from './email-base'
 
 export function ContactEmail({
   name,
   email,
   phone,
-  message,
+  message
 }: {
-  name: string;
-  email: string;
-  phone: string;
-  message: string;
+  name: string
+  email: string
+  phone: string
+  message: string
 }) {
   return (
     <EmailBase title="Agradecemos pelo seu Contato">
-      <Text style={{ fontSize: 18 }}>{name ? `Olá ${name},` : "Olá,"}</Text>
+      <Text style={{ fontSize: 18 }}>{name ? `Olá ${name},` : 'Olá,'}</Text>
       <Text>
         Agradecemos por entrar em contato conosco! Sua mensagem foi recebida com sucesso e estamos empolgados em saber
         mais sobre suas necessidades e como podemos ajudar.
@@ -23,7 +23,7 @@ export function ContactEmail({
       <Text style={{ marginBottom: -4 }}>
         {message && (
           <>
-            Mensagem: <div style={{ fontSize: 14, whiteSpace: "pre-wrap" }}>{message}</div>
+            Mensagem: <div style={{ fontSize: 14, whiteSpace: 'pre-wrap' }}>{message}</div>
           </>
         )}
         Nome: {name}
@@ -53,5 +53,5 @@ export function ContactEmail({
         MeuNovoApp
       </Text>
     </EmailBase>
-  );
+  )
 }

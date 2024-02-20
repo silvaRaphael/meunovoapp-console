@@ -1,27 +1,27 @@
-import format from "date-fns/format";
-import { Button, buttonVariants } from "components/ui/button";
-import { Separator } from "components/ui/separator";
-import { Textarea } from "components/ui/textarea";
-import { useLanguage } from "components/shared/language-provider";
-import { MemberInfo } from "components/shared/member-info";
-import { languages } from "config/languages";
-import { SubmitButton } from "components/shared/submit-button";
-import { cn } from "lib/utils";
-import { useForm } from "react-hook-form";
-import { CreateMessageSchema, createMessageSchema } from "adapters/message";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormDescription, FormField, FormItem } from "components/ui/form";
-import { GetMessageLabel, Message, MessageLabel, MessageUser, messageLabelTypes } from "pages/chat/data/message";
-import { Badge } from "components/ui/badge";
-import { useEffect, useRef, useState } from "react";
-import { Chat } from "pages/chat/data/chat";
-import { formatDistanceToNow } from "date-fns";
-import { ArrowLeft, Loader } from "lucide-react";
-import { errorToast } from "components/shared/error-toast";
-import { useNavigate } from "react-router-dom";
-import { useUserData } from "components/shared/user-data-provider";
-import { v4 as v4UUID } from "uuid";
-import { socket } from "./websocket";
+import format from 'date-fns/format'
+import { Button, buttonVariants } from 'components/ui/button'
+import { Separator } from 'components/ui/separator'
+import { Textarea } from 'components/ui/textarea'
+import { useLanguage } from 'components/shared/language-provider'
+import { MemberInfo } from 'components/shared/member-info'
+import { languages } from 'config/languages'
+import { SubmitButton } from 'components/shared/submit-button'
+import { cn } from 'lib/utils'
+import { useForm } from 'react-hook-form'
+import { CreateMessageSchema, createMessageSchema } from 'adapters/message'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Form, FormControl, FormDescription, FormField, FormItem } from 'components/ui/form'
+import { GetMessageLabel, Message, MessageLabel, MessageUser, messageLabelTypes } from 'pages/chat/data/message'
+import { Badge } from 'components/ui/badge'
+import { useEffect, useRef, useState } from 'react'
+import { Chat } from 'pages/chat/data/chat'
+import { formatDistanceToNow } from 'date-fns'
+import { ArrowLeft, Loader } from 'lucide-react'
+import { errorToast } from 'components/shared/error-toast'
+import { useNavigate } from 'react-router-dom'
+import { useUserData } from 'components/shared/user-data-provider'
+import { v4 as v4UUID } from 'uuid'
+import { socket } from './websocket'
 
 export function ChatDisplay({
   chat,
@@ -30,38 +30,38 @@ export function ChatDisplay({
   setChat,
   setChats,
   setIsCollapsed,
-  isNewChat = false,
+  isNewChat = false
 }: {
-  chat: Chat | null;
-  chats: Chat[];
-  isCollapsed: boolean;
-  setChat: React.Dispatch<React.SetStateAction<Chat | null>>;
-  setChats: React.Dispatch<React.SetStateAction<Chat[]>>;
-  setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
-  isNewChat?: boolean;
+  chat: Chat | null
+  chats: Chat[]
+  isCollapsed: boolean
+  setChat: React.Dispatch<React.SetStateAction<Chat | null>>
+  setChats: React.Dispatch<React.SetStateAction<Chat[]>>
+  setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>>
+  isNewChat?: boolean
 }) {
-  const { userData } = useUserData();
-  const { writeLang } = useLanguage();
-  const navigate = useNavigate();
+  const { userData } = useUserData()
+  const { writeLang } = useLanguage()
+  const navigate = useNavigate()
 
-  const isMobile = window.screen.availWidth <= 768;
+  const isMobile = window.screen.availWidth <= 768
 
   useEffect(() => {
-    if (!chat) return;
+    if (!chat) return
 
-    if (!isNewChat) socket.emit("getMessages", chat.id);
+    if (!isNewChat) socket.emit('getMessages', chat.id)
 
-    socket.on("error", (error) => {
-      errorToast(error);
-      if (error.redirect) navigate(error.redirect);
-    });
+    socket.on('error', (error) => {
+      errorToast(error)
+      if (error.redirect) navigate(error.redirect)
+    })
 
     return () => {
-      socket.off("error");
-    };
+      socket.off('error')
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chat]);
+  }, [chat])
 
   return (
     <div className="flex flex-col h-full">
@@ -71,15 +71,15 @@ export function ChatDisplay({
             size="sm"
             variant="outline"
             onClick={() => {
-              setIsCollapsed(false);
-              setChat(null);
-              socket.emit("logoutChats");
+              setIsCollapsed(false)
+              setChat(null)
+              socket.emit('logoutChats')
             }}
           >
             <ArrowLeft size={16} className="me-1" />
             {writeLang([
-              ["en", "Go back"],
-              ["pt", "Voltar"],
+              ['en', 'Go back'],
+              ['pt', 'Voltar']
             ])}
           </Button>
         </div>
@@ -98,9 +98,9 @@ export function ChatDisplay({
                 name: userData.name,
                 email: userData.email,
                 avatar: userData.avatar,
-                is_manager: false,
+                is_manager: false
               } as MessageUser,
-              participant: chat.participant,
+              participant: chat.participant
             }}
             chats={chats}
             setChats={setChats}
@@ -109,70 +109,70 @@ export function ChatDisplay({
         )
       )}
     </div>
-  );
+  )
 }
 
 const MailContent = ({
   chat,
   chats,
   setChats,
-  isNewChat = false,
+  isNewChat = false
 }: {
-  chat: Chat;
-  chats: Chat[];
-  setChats: React.Dispatch<React.SetStateAction<Chat[]>>;
-  isNewChat?: boolean;
+  chat: Chat
+  chats: Chat[]
+  setChats: React.Dispatch<React.SetStateAction<Chat[]>>
+  isNewChat?: boolean
 }) => {
-  const { language, writeLang } = useLanguage();
-  const navigate = useNavigate();
+  const { language, writeLang } = useLanguage()
+  const navigate = useNavigate()
 
-  const [messages, setMessages] = useState<Message[] | null>(isNewChat ? [] : null);
+  const [messages, setMessages] = useState<Message[] | null>(isNewChat ? [] : null)
 
   const addMessage = (message: Message, messages?: Message[]) => {
-    setMessages([...(messages ?? []), message]);
-  };
+    setMessages([...(messages ?? []), message])
+  }
 
   const sendMessage = (message: Message) => {
-    socket.emit("createMessage", message, chat.participant.id);
+    socket.emit('createMessage', message, chat.participant.id)
 
     const updateChats = chats.map((item) => {
       if (item.id === chat?.id)
         return {
           ...item,
-          last_message: message,
-        };
+          last_message: message
+        }
 
-      return item;
-    });
+      return item
+    })
 
-    setChats(updateChats);
+    setChats(updateChats)
 
-    addMessage(message, messages ?? []);
-  };
+    addMessage(message, messages ?? [])
+  }
 
   const markAsReadMessage = (message: Message) => {
     if (message.user.id === chat.participant.id) {
-      socket.emit("markAsRead", message);
+      socket.emit('markAsRead', message)
     }
-  };
+  }
 
   useEffect(() => {
-    socket.on("messages", (response: Message[]) => {
+    socket.on('messages', (response: Message[]) => {
       setMessages(
         response.map((item: Message) => {
-          return item;
-        }),
-      );
+          return item
+        })
+      )
 
-      const lastMessage = response[response.length - 1];
+      const lastMessage = response[response.length - 1]
 
-      if (lastMessage) markAsReadMessage(lastMessage);
-    });
+      if (lastMessage) markAsReadMessage(lastMessage)
+    })
 
-    socket.on("message", (response: Message) => {
-      addMessage(response, messages || []);
+    socket.on('message', (response: Message) => {
+      addMessage(response, messages || [])
 
-      markAsReadMessage(response);
+      markAsReadMessage(response)
 
       const updateChats = chats.map((item) => {
         if (item.id === chat?.id)
@@ -180,40 +180,40 @@ const MailContent = ({
             ...item,
             last_message: {
               ...response,
-              read: true,
-            },
-          };
+              read: true
+            }
+          }
 
-        return item;
-      });
+        return item
+      })
 
-      setChats(updateChats);
-    });
+      setChats(updateChats)
+    })
 
-    socket.on("messageRead", () => {
+    socket.on('messageRead', () => {
       setMessages(
         [...(messages ?? [])].map((item: Message) => {
           return {
             ...item,
-            read: true,
-          };
-        }),
-      );
-    });
+            read: true
+          }
+        })
+      )
+    })
 
-    socket.on("error", (error) => {
-      errorToast(error);
-      if (error.redirect) navigate(error.redirect);
-    });
+    socket.on('error', (error) => {
+      errorToast(error)
+      if (error.redirect) navigate(error.redirect)
+    })
 
     return () => {
-      socket.off("error");
-      socket.off("messages");
-      socket.off("message");
-    };
+      socket.off('error')
+      socket.off('messages')
+      socket.off('message')
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [messages, chat]);
+  }, [messages, chat])
 
   return (
     <div className="flex flex-1 flex-col">
@@ -228,13 +228,13 @@ const MailContent = ({
           <div className="ml-auto text-xs text-muted-foreground text-end">
             <span className="me-1">
               {writeLang([
-                ["en", "Last message in"],
-                ["pt", "Última mensagem em"],
+                ['en', 'Last message in'],
+                ['pt', 'Última mensagem em']
               ])}
             </span>
             {chat.last_message?.date &&
-              format(new Date(chat.last_message?.date), "PPp", {
-                locale: languages.find((item) => item.lang === language.lang)?.dateLocale,
+              format(new Date(chat.last_message?.date), 'PPp', {
+                locale: languages.find((item) => item.lang === language.lang)?.dateLocale
               })}
           </div>
         )}
@@ -244,23 +244,23 @@ const MailContent = ({
       <Separator className="mt-auto" />
       <MailFooter chat={chat} sendMessage={sendMessage} name={chat.participant.name} />
     </div>
-  );
-};
+  )
+}
 
 const MessageList = ({ items, chat }: { items: Message[] | null; chat: Chat }) => {
-  const { language, writeLang } = useLanguage();
+  const { language, writeLang } = useLanguage()
 
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null)
 
-  const isMobile = window.screen.availWidth <= 768;
-  const locale = languages.find((item) => item.lang === language.lang)?.dateLocale;
+  const isMobile = window.screen.availWidth <= 768
+  const locale = languages.find((item) => item.lang === language.lang)?.dateLocale
 
   useEffect(() => {
-    const domNode = scrollRef.current;
+    const domNode = scrollRef.current
     if (domNode) {
-      domNode.scrollTop = domNode.scrollHeight;
+      domNode.scrollTop = domNode.scrollHeight
     }
-  }, [items]);
+  }, [items])
 
   return (
     <div
@@ -273,9 +273,9 @@ const MessageList = ({ items, chat }: { items: Message[] | null; chat: Chat }) =
             <div
               key={i}
               className={cn(
-                "flex flex-col items-start gap-3 rounded-lg border p-3 text-left text-sm transition-all",
-                item.user.email === chat.user.email ? "bg-accent/25 ml-auto" : "",
-                isMobile ? "w-full" : "w-5/6",
+                'flex flex-col items-start gap-3 rounded-lg border p-3 text-left text-sm transition-all',
+                item.user.email === chat.user.email ? 'bg-accent/25 ml-auto' : '',
+                isMobile ? 'w-full' : 'w-5/6'
               )}
             >
               <div className="flex w-full flex-col gap-1">
@@ -289,8 +289,8 @@ const MessageList = ({ items, chat }: { items: Message[] | null; chat: Chat }) =
                   />
                   <div
                     className={cn(
-                      "flex items-center ml-auto text-xs text-end",
-                      item.user.email === chat.user.email ? "text-foreground" : "text-muted-foreground",
+                      'flex items-center ml-auto text-xs text-end',
+                      item.user.email === chat.user.email ? 'text-foreground' : 'text-muted-foreground'
                     )}
                   >
                     {!item.read && item.user.email === chat.user.email && (
@@ -299,7 +299,7 @@ const MessageList = ({ items, chat }: { items: Message[] | null; chat: Chat }) =
                     {item.date &&
                       formatDistanceToNow(new Date(item.date), {
                         locale,
-                        addSuffix: true,
+                        addSuffix: true
                       })}
                   </div>
                 </div>
@@ -308,7 +308,7 @@ const MessageList = ({ items, chat }: { items: Message[] | null; chat: Chat }) =
               {item.labels.length ? (
                 <div className="flex items-center gap-2">
                   {item.labels.map((label) => (
-                    <Badge key={label} variant={item.user.email === chat.user.email ? "secondary" : "secondary"}>
+                    <Badge key={label} variant={item.user.email === chat.user.email ? 'secondary' : 'secondary'}>
                       <GetMessageLabel messageLabel={label} />
                     </Badge>
                   ))}
@@ -320,8 +320,8 @@ const MessageList = ({ items, chat }: { items: Message[] | null; chat: Chat }) =
           <div className="flex w-full h-full justify-center items-center">
             <span className="text-sm text-muted-foreground">
               {writeLang([
-                ["en", "No messages yet."],
-                ["pt", "Nenhuma mensagem ainda."],
+                ['en', 'No messages yet.'],
+                ['pt', 'Nenhuma mensagem ainda.']
               ])}
             </span>
           </div>
@@ -332,29 +332,29 @@ const MessageList = ({ items, chat }: { items: Message[] | null; chat: Chat }) =
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
 const MailFooter = ({
   chat,
   name,
-  sendMessage,
+  sendMessage
 }: {
-  chat: Chat;
-  name: string;
-  sendMessage: (message: Message) => void;
+  chat: Chat
+  name: string
+  sendMessage: (message: Message) => void
 }) => {
-  const { writeLang } = useLanguage();
+  const { writeLang } = useLanguage()
 
-  const [labels, setLabels] = useState<MessageLabel[]>([]);
+  const [labels, setLabels] = useState<MessageLabel[]>([])
 
   const form = useForm<CreateMessageSchema>({
     resolver: zodResolver(createMessageSchema),
     defaultValues: {
-      chat_id: chat?.id ?? undefined,
+      chat_id: chat?.id ?? undefined
     },
-    mode: "onChange",
-  });
+    mode: 'onChange'
+  })
 
   async function onSubmit(data: CreateMessageSchema) {
     sendMessage({
@@ -369,16 +369,16 @@ const MailFooter = ({
         name: chat.user.name,
         email: chat.user.email,
         avatar: chat.user.avatar,
-        is_manager: chat.user.is_manager,
-      },
-    });
+        is_manager: chat.user.is_manager
+      }
+    })
 
     form.reset({
       chat_id: chat.id,
-      text: "",
-    });
+      text: ''
+    })
 
-    setLabels([]);
+    setLabels([])
   }
 
   return (
@@ -394,13 +394,13 @@ const MailFooter = ({
                   <Textarea
                     className="p-2 resize-none"
                     placeholder={`${writeLang([
-                      ["en", "Reply"],
-                      ["pt", "Responder"],
+                      ['en', 'Reply'],
+                      ['pt', 'Responder']
                     ])} ${name}...`}
                     rows={2}
                     maxLength={500}
                     onKeyUp={(e) => {
-                      if (e.ctrlKey && e.key === "Enter") onSubmit(form.getValues());
+                      if (e.ctrlKey && e.key === 'Enter') onSubmit(form.getValues())
                     }}
                     {...field}
                   />
@@ -408,8 +408,8 @@ const MailFooter = ({
                 <FormDescription>
                   <span className="ms-0">{(form.getValues().text?.length ?? 0).toString()}/500 - </span>
                   {writeLang([
-                    ["en", "Ctrl+Enter to send"],
-                    ["pt", "Ctrl+Enter para enviar"],
+                    ['en', 'Ctrl+Enter to send'],
+                    ['pt', 'Ctrl+Enter para enviar']
                   ])}
                 </FormDescription>
               </FormItem>
@@ -420,10 +420,10 @@ const MailFooter = ({
               {messageLabelTypes.map((item, i) => (
                 <Badge
                   key={i}
-                  variant={labels.find((label) => label === item) ? "secondary" : "outline"}
+                  variant={labels.find((label) => label === item) ? 'secondary' : 'outline'}
                   onClick={() => {
-                    const contains = labels.find((label) => label === item);
-                    setLabels(!contains ? [...labels, item] : labels.filter((label) => label !== item));
+                    const contains = labels.find((label) => label === item)
+                    setLabels(!contains ? [...labels, item] : labels.filter((label) => label !== item))
                   }}
                   className="cursor-pointer select-none me-2"
                 >
@@ -434,17 +434,17 @@ const MailFooter = ({
             <SubmitButton
               label={
                 writeLang([
-                  ["en", "Send"],
-                  ["pt", "Enviar"],
+                  ['en', 'Send'],
+                  ['pt', 'Enviar']
                 ]) as string
               }
-              className={cn("ml-auto", buttonVariants({ size: "sm" }))}
+              className={cn('ml-auto', buttonVariants({ size: 'sm' }))}
               type="submit"
-              state={form.formState.isSubmitting ? "loading" : "initial"}
+              state={form.formState.isSubmitting ? 'loading' : 'initial'}
             />
           </div>
         </div>
       </form>
     </Form>
-  );
-};
+  )
+}

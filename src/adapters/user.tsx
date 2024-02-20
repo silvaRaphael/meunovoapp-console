@@ -1,49 +1,49 @@
-import { z } from "zod";
+import { z } from 'zod'
 
 export const updateUserSchema = z
   .object({
     name: z
       .string({
-        required_error: "Nome é necessário.",
+        required_error: 'Nome é necessário.'
       })
       .min(1, {
-        message: "Nome é necessário.",
+        message: 'Nome é necessário.'
       }),
     email: z
       .string({
-        required_error: "E-mail é necessário.",
+        required_error: 'E-mail é necessário.'
       })
-      .email({ message: "Diite um e-mail válgido" }),
+      .email({ message: 'Diite um e-mail válgido' }),
     old_password: z
-      .string({ required_error: "Senha antiga é necessária." })
-      .min(5, { message: "Digite uma senha maior." })
-      .max(20, { message: "Digite uma senha menor." })
+      .string({ required_error: 'Senha antiga é necessária.' })
+      .min(5, { message: 'Digite uma senha maior.' })
+      .max(20, { message: 'Digite uma senha menor.' })
       .optional(),
     password: z
-      .string({ required_error: "Nova senha é necessária." })
-      .min(5, { message: "Digite uma senha maior." })
-      .max(20, { message: "Digite uma senha menor." })
-      .optional(),
+      .string({ required_error: 'Nova senha é necessária.' })
+      .min(5, { message: 'Digite uma senha maior.' })
+      .max(20, { message: 'Digite uma senha menor.' })
+      .optional()
   })
   .refine((data) => !data.password || (data.old_password && data.password), {
-    message: "Digite sua senha antiga.",
-    path: ["old_password"],
-  });
-export type UpdateUserSchema = z.infer<typeof updateUserSchema>;
+    message: 'Digite sua senha antiga.',
+    path: ['old_password']
+  })
+export type UpdateUserSchema = z.infer<typeof updateUserSchema>
 
 export const completeUserSchema = z.object({
   name: z
     .string({
-      required_error: "Nome é necessário.",
+      required_error: 'Nome é necessário.'
     })
     .min(1, {
-      message: "Nome é necessário.",
+      message: 'Nome é necessário.'
     }),
   email: z
     .string({
-      required_error: "E-mail é necessário.",
+      required_error: 'E-mail é necessário.'
     })
-    .email({ message: "Digite um e-mail válido" }),
+    .email({ message: 'Digite um e-mail válido' })
   // password: z
   //     .string({ required_error: "Senha é necessária." })
   //     .min(5, { message: "Digite uma senha maior." })
@@ -51,31 +51,31 @@ export const completeUserSchema = z.object({
   // confirm_password: z.string({
   //     required_error: "Confirme sua senha.",
   // }),
-});
+})
 // .refine((data) => data.password === data.confirm_password, {
 //     message: "As senhas devem ser iguais.",
 //     path: ["confirm_password"],
 // });
-export type CompleteUserSchema = z.infer<typeof completeUserSchema>;
+export type CompleteUserSchema = z.infer<typeof completeUserSchema>
 
 export const avatarSchema = z.object({
-  avatar: z.string({ required_error: "Imagem é necessária." }).optional(),
-});
-export type AvatarSchema = z.infer<typeof avatarSchema>;
+  avatar: z.string({ required_error: 'Imagem é necessária.' }).optional()
+})
+export type AvatarSchema = z.infer<typeof avatarSchema>
 
 export const updatePasswordSchema = z
   .object({
     password: z
-      .string({ required_error: "Senha é necessária." })
-      .min(5, { message: "Digite uma senha maior." })
-      .max(20, { message: "Digite uma senha menor." }),
+      .string({ required_error: 'Senha é necessária.' })
+      .min(5, { message: 'Digite uma senha maior.' })
+      .max(20, { message: 'Digite uma senha menor.' }),
     confirm_password: z
-      .string({ required_error: "Confirmação de senha é necessária." })
-      .min(5, { message: "Digite uma senha maior." })
-      .max(20, { message: "Digite uma senha menor." }),
+      .string({ required_error: 'Confirmação de senha é necessária.' })
+      .min(5, { message: 'Digite uma senha maior.' })
+      .max(20, { message: 'Digite uma senha menor.' })
   })
   .refine((data) => data.password === data.confirm_password, {
-    message: "As senhas não são iguais.",
-    path: ["confirm_password"],
-  });
-export type UpdatePasswordSchema = z.infer<typeof updatePasswordSchema>;
+    message: 'As senhas não são iguais.',
+    path: ['confirm_password']
+  })
+export type UpdatePasswordSchema = z.infer<typeof updatePasswordSchema>

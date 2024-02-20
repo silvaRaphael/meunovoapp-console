@@ -1,73 +1,73 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 
-import { sideBarWidth } from "./side-bar";
-import { MainNav } from "./main-nav";
-import { LanguageToggle } from "./language-toggle";
-import { ThemeToggle } from "./theme-toggle";
-import { UserNav } from "./user-nav";
-import { Button } from "../ui/button";
-import { Logo } from "./logo";
-import { Notifications } from "./notifications";
-import { useEffect, useState } from "react";
-import { Notification } from "config/notifications";
-import { HandleRequest } from "lib/handle-request";
-import { useUserData } from "./user-data-provider";
-import { socket } from "pages/chat/components/websocket";
-import { Message } from "pages/chat/data/message";
-import { toast } from "components/ui/toast/use-toast";
-import { ToastAction } from "components/ui/toast/toast";
-import { useLanguage } from "./language-provider";
-import { MessageNotifications } from "./message-notifications";
+import { sideBarWidth } from './side-bar'
+import { MainNav } from './main-nav'
+import { LanguageToggle } from './language-toggle'
+import { ThemeToggle } from './theme-toggle'
+import { UserNav } from './user-nav'
+import { Button } from '../ui/button'
+import { Logo } from './logo'
+import { Notifications } from './notifications'
+import { useEffect, useState } from 'react'
+import { Notification } from 'config/notifications'
+import { HandleRequest } from 'lib/handle-request'
+import { useUserData } from './user-data-provider'
+import { socket } from 'pages/chat/components/websocket'
+import { Message } from 'pages/chat/data/message'
+import { toast } from 'components/ui/toast/use-toast'
+import { ToastAction } from 'components/ui/toast/toast'
+import { useLanguage } from './language-provider'
+import { MessageNotifications } from './message-notifications'
 
 export function TopBar({ pathname, toggleSideBar, isOpen }: { pathname: string; toggleSideBar: any; isOpen: boolean }) {
-  const { userData } = useUserData();
-  const { language, writeLang } = useLanguage();
-  const navigate = useNavigate();
-  const location = useLocation();
+  const { userData } = useUserData()
+  const { language, writeLang } = useLanguage()
+  const navigate = useNavigate()
+  const location = useLocation()
 
-  const [notifications, setNotifications] = useState<Notification[] | null>(null);
-  const [messages, setMessages] = useState<Message[] | null>(null);
+  const [notifications, setNotifications] = useState<Notification[] | null>(null)
+  const [messages, setMessages] = useState<Message[] | null>(null)
 
   async function getNotifications() {
-    const request = await new HandleRequest().get(`/notifications`, { language });
+    const request = await new HandleRequest().get('/notifications', { language })
 
     request.onDone((response) => {
-      setNotifications(response);
-    });
+      setNotifications(response)
+    })
 
     request.onError((error) => {
-      setNotifications(null);
-      if (error.redirect) navigate(error.redirect);
-    });
+      setNotifications(null)
+      if (error.redirect) navigate(error.redirect)
+    })
   }
 
   async function getMessages() {
-    const request = await new HandleRequest().get(`/messages`, { language });
+    const request = await new HandleRequest().get('/messages', { language })
 
     request.onDone((response) => {
-      setMessages(response);
-    });
+      setMessages(response)
+    })
 
     request.onError((error) => {
-      setMessages(null);
-      if (error.redirect) navigate(error.redirect);
-    });
+      setMessages(null)
+      if (error.redirect) navigate(error.redirect)
+    })
   }
 
   useEffect(() => {
-    const controller = new AbortController();
+    const controller = new AbortController()
 
-    getNotifications();
-    getMessages();
+    getNotifications()
+    getMessages()
 
-    socket.on("offlineMessage", (message: Message) => {
+    socket.on('offlineMessage', (message: Message) => {
       toast({
-        variant: "message",
+        variant: 'message',
         title: `${
           writeLang([
-            ["en", "New message from"],
-            ["pt", "Nova mensagem de"],
+            ['en', 'New message from'],
+            ['pt', 'Nova mensagem de']
           ]) as string
         } ${message.user.name}`,
         description: <div className="line-clamp-2 text-xs">{message.text.substring(0, 200)}</div>,
@@ -75,35 +75,35 @@ export function TopBar({ pathname, toggleSideBar, isOpen }: { pathname: string; 
           <ToastAction
             altText={
               writeLang([
-                ["en", "Open chat."],
-                ["pt", "Abrir chat"],
+                ['en', 'Open chat.'],
+                ['pt', 'Abrir chat']
               ]) as string
             }
             onClick={() => {
-              navigate(`/chat`);
+              navigate('/chat')
             }}
           >
             {writeLang([
-              ["en", "Open chat."],
-              ["pt", "Abrir chat"],
+              ['en', 'Open chat.'],
+              ['pt', 'Abrir chat']
             ])}
           </ToastAction>
-        ),
-      });
+        )
+      })
 
-      setMessages([message, ...(messages ?? [])]);
-    });
+      setMessages([message, ...(messages ?? [])])
+    })
 
-    if (location.pathname !== "/chat") {
-      socket.emit("logoutChats");
+    if (location.pathname !== '/chat') {
+      socket.emit('logoutChats')
     }
 
     return () => {
-      controller.abort();
-    };
+      controller.abort()
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [])
 
   return (
     <>
@@ -111,7 +111,7 @@ export function TopBar({ pathname, toggleSideBar, isOpen }: { pathname: string; 
         <div
           className="flex justify-between items-center px-4 h-full border-r"
           style={{
-            width: sideBarWidth,
+            width: sideBarWidth
           }}
         >
           <Link to="/" className="flex items-center text-sm font-medium">
@@ -134,5 +134,5 @@ export function TopBar({ pathname, toggleSideBar, isOpen }: { pathname: string; 
       </div>
       <div className="h-12"></div>
     </>
-  );
+  )
 }

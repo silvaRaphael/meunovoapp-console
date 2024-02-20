@@ -1,70 +1,70 @@
-import { useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { api } from "lib/axios";
-import { SectionHeader } from "components/shared/section-header";
-import { Page } from "components/shared/page";
-import { useLanguage } from "components/shared/language-provider";
-import { Note } from "./data/note";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "components/ui/card";
-import { Badge } from "components/ui/badge";
-import { CreateNoteForm } from "./forms/create";
-import { ConfirmationAlert } from "components/shared/confirmation-alert";
-import { Button, buttonVariants } from "components/ui/button";
-import { Ban, Loader, Trash2 } from "lucide-react";
-import { SubmitButton } from "components/shared/submit-button";
-import { Alert, AlertDescription } from "components/ui/alert";
-import { queryClient } from "components/shared/query";
+import { useState } from 'react'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { api } from 'lib/axios'
+import { SectionHeader } from 'components/shared/section-header'
+import { Page } from 'components/shared/page'
+import { useLanguage } from 'components/shared/language-provider'
+import { Note } from './data/note'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from 'components/ui/card'
+import { Badge } from 'components/ui/badge'
+import { CreateNoteForm } from './forms/create'
+import { ConfirmationAlert } from 'components/shared/confirmation-alert'
+import { Button, buttonVariants } from 'components/ui/button'
+import { Ban, Loader, Trash2 } from 'lucide-react'
+import { SubmitButton } from 'components/shared/submit-button'
+import { Alert, AlertDescription } from 'components/ui/alert'
+import { queryClient } from 'components/shared/query'
 
 export function Notes() {
-  const { language, writeLang } = useLanguage();
+  const { language, writeLang } = useLanguage()
 
-  const [deleteIsOpen, setDeleteIsOpen] = useState<boolean>(false);
+  const [deleteIsOpen, setDeleteIsOpen] = useState<boolean>(false)
 
   const getNotes = async (): Promise<Note[]> =>
-    (await api.get("/notes", { headers: { "Content-Language": language.locale } })).data;
+    (await api.get('/notes', { headers: { 'Content-Language': language.locale } })).data
 
   const { data: notes, isLoading } = useQuery({
-    queryKey: ["notes"],
-    queryFn: getNotes,
-  });
+    queryKey: ['notes'],
+    queryFn: getNotes
+  })
 
   const deleteNote = async (id: string) => {
-    return await api.delete(`/notes/${id}`, { headers: { "Content-Language": language.locale } });
-  };
+    return await api.delete(`/notes/${id}`, { headers: { 'Content-Language': language.locale } })
+  }
 
   const { mutate: deleteNoteFn } = useMutation({
-    mutationKey: ["notes"],
+    mutationKey: ['notes'],
     mutationFn: deleteNote,
     onSuccess(_, variables) {
-      queryClient.setQueryData(["notes"], (items: Note[]) => items.filter((item) => item.id !== variables));
-      setDeleteIsOpen(false);
-    },
-  });
+      queryClient.setQueryData(['notes'], (items: Note[]) => items.filter((item) => item.id !== variables))
+      setDeleteIsOpen(false)
+    }
+  })
 
   function handleDelete(id: string) {
-    deleteNoteFn(id);
+    deleteNoteFn(id)
   }
 
   const Loading = () => (
     <div className="flex w-full h-[500px] justify-center items-center">
       <Loader size={16} className="animate-spin" />
     </div>
-  );
+  )
 
   return (
     <Page
       pathname={
         writeLang([
-          ["en", "/notes"],
-          ["pt", "/notas"],
+          ['en', '/notes'],
+          ['pt', '/notas']
         ]) as string
       }
       header={
         <SectionHeader
           title={
             writeLang([
-              ["en", `Notes (${notes?.length ?? 0})`],
-              ["pt", `Notas (${notes?.length ?? 0})`],
+              ['en', `Notes (${notes?.length ?? 0})`],
+              ['pt', `Notas (${notes?.length ?? 0})`]
             ]) as string
           }
         >
@@ -79,8 +79,8 @@ export function Notes() {
           <Ban className="h-4 w-4" />
           <AlertDescription className="mt-[.35rem]">
             {writeLang([
-              ["en", "No notes yet!"],
-              ["pt", "Nenhuma nota ainda!"],
+              ['en', 'No notes yet!'],
+              ['pt', 'Nenhuma nota ainda!']
             ])}
           </AlertDescription>
         </Alert>
@@ -94,14 +94,14 @@ export function Notes() {
                   <ConfirmationAlert
                     title={
                       writeLang([
-                        ["en", "Delete this Note"],
-                        ["pt", "Excluir esta Nota"],
+                        ['en', 'Delete this Note'],
+                        ['pt', 'Excluir esta Nota']
                       ]) as string
                     }
                     description={
                       writeLang([
-                        ["en", "This action cannot be undone!"],
-                        ["pt", "Esta ação não poderá ser desfeita!"],
+                        ['en', 'This action cannot be undone!'],
+                        ['pt', 'Esta ação não poderá ser desfeita!']
                       ]) as string
                     }
                     triggerButton={
@@ -113,11 +113,11 @@ export function Notes() {
                       <SubmitButton
                         type="button"
                         onSubmit={async () => handleDelete(item.id)}
-                        className={buttonVariants({ variant: "destructive" })}
+                        className={buttonVariants({ variant: 'destructive' })}
                         label={
                           writeLang([
-                            ["en", "Delete Note"],
-                            ["pt", "Excluir Nota"],
+                            ['en', 'Delete Note'],
+                            ['pt', 'Excluir Nota']
                           ]) as string
                         }
                       />
@@ -131,7 +131,7 @@ export function Notes() {
                 <CardDescription>{item.content}</CardDescription>
                 <CardFooter className="gap-2 p-0">
                   {item.markers.map((item, i) => (
-                    <Badge key={i} variant={i === 0 ? "default" : "outline"} className="pointer-events-none">
+                    <Badge key={i} variant={i === 0 ? 'default' : 'outline'} className="pointer-events-none">
                       {item}
                     </Badge>
                   ))}
@@ -142,5 +142,5 @@ export function Notes() {
         </div>
       )}
     </Page>
-  );
+  )
 }

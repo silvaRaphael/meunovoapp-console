@@ -1,5 +1,5 @@
-import { ReactElement, ReactNode } from "react";
-import { Button } from "../ui/button";
+import { ReactElement, ReactNode } from 'react'
+import { Button } from '../ui/button'
 import {
   Dialog,
   DialogClose,
@@ -8,18 +8,18 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-} from "../ui/dialog";
+  DialogTrigger
+} from '../ui/dialog'
 
 interface Props {
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
-  triggerButton?: ReactElement;
-  title: string;
-  description?: string;
-  children?: ReactNode;
-  confirmButton?: ReactElement;
-  hideCloseButton?: boolean;
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+  triggerButton?: ReactElement
+  title: string
+  description?: string
+  children?: ReactNode
+  confirmButton?: ReactElement
+  hideCloseButton?: boolean
 }
 
 export function ContentAlert({
@@ -30,7 +30,7 @@ export function ContentAlert({
   description,
   children,
   confirmButton,
-  hideCloseButton,
+  hideCloseButton
 }: Props) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -53,5 +53,5 @@ export function ContentAlert({
         )}
       </DialogContent>
     </Dialog>
-  );
+  )
 }

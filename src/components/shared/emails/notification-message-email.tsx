@@ -1,26 +1,26 @@
-import { Text } from "@react-email/components";
-import { EmailBase } from "./email-base";
+import { Text } from '@react-email/components'
+import { EmailBase } from './email-base'
 
 export function NotificationMessageEmail({
   title,
   name,
   projectName,
-  description,
+  description
 }: {
-  title: string;
-  name: string;
-  projectName: string;
-  description: string;
+  title: string
+  name: string
+  projectName: string
+  description: string
 }) {
   return (
     <EmailBase title={title}>
-      <Text style={{ fontSize: 18 }}>{name ? `Olá ${name},` : "Olá,"}</Text>
+      <Text style={{ fontSize: 18 }}>{name ? `Olá ${name},` : 'Olá,'}</Text>
       <Text>
         Gostaríamos de informar que houve recentes atualizações no projeto {projectName}. Estamos comprometidos em
         manter você sempre informado sobre o progresso e as novas tarefas.
       </Text>
       <Text style={{ fontSize: 18 }}>Resumo das Atualizações</Text>
-      <div style={{ fontSize: 14, whiteSpace: "pre-wrap" }}>{description}</div>
+      <div style={{ fontSize: 14, whiteSpace: 'pre-wrap' }}>{description}</div>
       <Text style={{ fontSize: 18 }}>Próximos Passos:</Text>
       <Text>
         <span style={{ fontWeight: 600 }}>Acessar as Atualizações: </span>
@@ -54,5 +54,5 @@ export function NotificationMessageEmail({
         MeuNovoApp
       </Text>
     </EmailBase>
-  );
+  )
 }

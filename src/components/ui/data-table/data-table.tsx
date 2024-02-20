@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react'
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -11,26 +11,26 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+  useReactTable
+} from '@tanstack/react-table'
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../ui/table'
 
-import { DataTablePagination } from "./data-table-pagination";
-import { useLanguage } from "components/shared/language-provider";
+import { DataTablePagination } from './data-table-pagination'
+import { useLanguage } from 'components/shared/language-provider'
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+  columns: ColumnDef<TData, TValue>[]
+  data: TData[]
 }
 
 export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
-  const { writeLang } = useLanguage();
+  const { writeLang } = useLanguage()
 
-  const [rowSelection, setRowSelection] = React.useState({});
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [rowSelection, setRowSelection] = React.useState({})
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+  const [sorting, setSorting] = React.useState<SortingState>([])
 
   const table = useReactTable({
     data,
@@ -39,7 +39,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
       sorting,
       columnVisibility,
       rowSelection,
-      columnFilters,
+      columnFilters
     },
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
@@ -51,8 +51,8 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-  });
+    getFacetedUniqueValues: getFacetedUniqueValues()
+  })
 
   return (
     <div className="space-y-4 ">
@@ -66,7 +66,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                     <TableHead key={header.id}>
                       {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
-                  );
+                  )
                 })}
               </TableRow>
             ))}
@@ -74,9 +74,9 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {row.getVisibleCells().map((cell, i) => (
-                    <TableCell key={cell.id} className={i === 0 ? "ps-3" : ""}>
+                    <TableCell key={cell.id} className={i === 0 ? 'ps-3' : ''}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
@@ -86,8 +86,8 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
                   {writeLang([
-                    ["en", "No result."],
-                    ["pt", "Sem resultados."],
+                    ['en', 'No result.'],
+                    ['pt', 'Sem resultados.']
                   ])}
                 </TableCell>
               </TableRow>
@@ -97,5 +97,5 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
       </div>
       <DataTablePagination table={table} />
     </div>
-  );
+  )
 }

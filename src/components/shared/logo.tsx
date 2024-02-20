@@ -1,20 +1,20 @@
-import { cn } from "lib/utils";
+import { cn } from 'lib/utils'
 
 type props = {
-  iconOnly?: boolean;
-  scale?: number;
-  className?: string;
-};
+  iconOnly?: boolean
+  scale?: number
+  className?: string
+}
 
 export function Logo(props?: props) {
-  const scale = props?.scale ?? 1;
+  const scale = props?.scale ?? 1
 
   return (
     <div
-      className={cn("flex items-center", props?.className)}
+      className={cn('flex items-center', props?.className)}
       style={{
         transform: `scale(${scale})`,
-        transformOrigin: "left",
+        transformOrigin: 'left'
       }}
     >
       <img height={24} width={24} src="/images/icon-transparent.png" alt="Ícone do Site" title="Ícone do Site" />
@@ -24,5 +24,5 @@ export function Logo(props?: props) {
         </h2>
       )}
     </div>
-  );
+  )
 }

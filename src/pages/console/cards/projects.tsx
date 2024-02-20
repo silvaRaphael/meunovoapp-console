@@ -1,33 +1,33 @@
-import { Langs } from "config/languages";
-import { useNavigate } from "react-router-dom";
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
+import { Langs } from 'config/languages'
+import { useNavigate } from 'react-router-dom'
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 
 export function ProjectsCard({
   projects,
-  writeLang,
+  writeLang
 }: {
   projects: {
-    id: string;
-    name: string;
-    progress: number;
-    due: Date;
-  }[];
-  writeLang: (texts: [Langs, React.ReactNode][]) => React.ReactNode;
+    id: string
+    name: string
+    progress: number
+    due: Date
+  }[]
+  writeLang: (texts: [Langs, React.ReactNode][]) => React.ReactNode
 }) {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const goToProject = (e: any) => {
-    const project = e.id ? e : projects[e.index];
+    const project = e.id ? e : projects[e.index]
 
-    if (!project.id) return;
+    if (!project.id) return
 
     navigate(
       `${writeLang([
-        ["en", "/projects"],
-        ["pt", "/projetos"],
-      ])}/${project.id}`,
-    );
-  };
+        ['en', '/projects'],
+        ['pt', '/projetos']
+      ])}/${project.id}`
+    )
+  }
 
   return (
     <ResponsiveContainer width="100%" height={200}>
@@ -57,12 +57,12 @@ export function ProjectsCard({
         <div className="flex w-full h-full justify-center items-center">
           <span className="font-medium text-muted-foreground">
             {writeLang([
-              ["en", "No projects yet."],
-              ["pt", "Nenhum projeto ainda."],
+              ['en', 'No projects yet.'],
+              ['pt', 'Nenhum projeto ainda.']
             ])}
           </span>
         </div>
       )}
     </ResponsiveContainer>
-  );
+  )
 }

@@ -1,10 +1,10 @@
-import { Link, Text } from "@react-email/components";
-import { EmailBase } from "./email-base";
+import { Link, Text } from '@react-email/components'
+import { EmailBase } from './email-base'
 
 export function ResetPasswordEmail({ resetPasswordKey, name }: { resetPasswordKey: string; name: string }) {
   return (
     <EmailBase title="Recuperar sua senha">
-      <Text style={{ fontSize: 18 }}>{name ? `Olá ${name},` : "Olá,"}</Text>
+      <Text style={{ fontSize: 18 }}>{name ? `Olá ${name},` : 'Olá,'}</Text>
       <Text>
         Recebemos uma solicitação para recuperação de senha associada à sua conta na MeuNovoApp. Estamos aqui para
         ajudar a restabelecer seu acesso.
@@ -45,7 +45,7 @@ export function ResetPasswordEmail({ resetPasswordKey, name }: { resetPasswordKe
       <Text style={{ fontSize: 18 }}>Problemas ou Dúvidas?</Text>
       <Text>
         Se você enfrentar qualquer problema durante o processo ou tiver dúvidas, por favor, responda a este e-mail ou
-        entre em contato conosco através de{" "}
+        entre em contato conosco através de{' '}
         <Link href="https://meunovoapp.com.br" target="_blank">
           MeuNovoApp
         </Link>
@@ -73,5 +73,5 @@ export function ResetPasswordEmail({ resetPasswordKey, name }: { resetPasswordKe
         MeuNovoApp
       </Text>
     </EmailBase>
-  );
+  )
 }

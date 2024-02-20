@@ -1,30 +1,30 @@
-import { ChevronLeftIcon, ChevronRightIcon, DoubleArrowLeftIcon, DoubleArrowRightIcon } from "@radix-ui/react-icons";
-import { Table } from "@tanstack/react-table";
+import { ChevronLeftIcon, ChevronRightIcon, DoubleArrowLeftIcon, DoubleArrowRightIcon } from '@radix-ui/react-icons'
+import { Table } from '@tanstack/react-table'
 
-import { Button } from "../button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../select";
-import { useLanguage } from "components/shared/language-provider";
+import { Button } from '../button'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../select'
+import { useLanguage } from 'components/shared/language-provider'
 
 interface DataTablePaginationProps<TData> {
-  table: Table<TData>;
+  table: Table<TData>
 }
 
 export function DataTablePagination<TData>({ table }: DataTablePaginationProps<TData>) {
-  const { writeLang } = useLanguage();
+  const { writeLang } = useLanguage()
 
   return (
     <div className="flex items-center justify-between px-2">
       <div className="flex items-center space-x-2">
         <p className="text-sm font-medium">
           {writeLang([
-            ["en", "Rows per page"],
-            ["pt", "Resultados por página"],
+            ['en', 'Rows per page'],
+            ['pt', 'Resultados por página']
           ])}
         </p>
         <Select
           value={`${table.getState().pagination.pageSize}`}
           onValueChange={(value) => {
-            table.setPageSize(Number(value));
+            table.setPageSize(Number(value))
           }}
         >
           <SelectTrigger className="h-8 w-[70px]">
@@ -42,17 +42,17 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
       <div className="flex w-[100px] items-center justify-center text-sm font-medium">
         {writeLang([
           [
-            "en",
+            'en',
             <>
               Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
-            </>,
+            </>
           ],
           [
-            "pt",
+            'pt',
             <>
               Página {table.getState().pagination.pageIndex + 1} de {table.getPageCount()}
-            </>,
-          ],
+            </>
+          ]
         ])}
       </div>
       <div className="flex items-center space-x-2">
@@ -94,5 +94,5 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
         </Button>
       </div>
     </div>
-  );
+  )
 }
